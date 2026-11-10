@@ -1,11 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
-  <rect width="128" height="128" rx="24" fill="#0969da"/>
-  <g fill="#fff" fill-rule="evenodd">
-    <!-- M : legs x 14..24 and 50..60 , diagonals meet at (37,55)/(37,70) , y 28..100 -->
-    <path d="M14 100 V28 H24 L37 55 L50 28 H60 V100 H50 V50 L37 70 L24 50 V100 Z"/>
-    <!-- D : straight left x 68..78 , arc radius 36 → rightmost x 114 , y 28..100 .
-             Inner hole: straight starts at x 78 , arc radius 26 → rightmost x 104 .
-             Even 10-px stroke on all sides. -->
-    <path d="M68 28 H78 A36 36 0 0 1 78 100 H68 Z M78 38 V90 A26 26 0 0 0 78 38 Z"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>rect{fill:#315fc0}@media(prefers-color-scheme:dark){rect{fill:#2f81f7}}</style>
+  <rect width="32" height="32" rx="9"/>
+  <text x="16" y="21" fill="white" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="15" font-weight="750" letter-spacing="-1">M↓</text>
 </svg>

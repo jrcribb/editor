@@ -1,6 +1,4 @@
-git remote -v
-git remote remove origingit remote -v
-git remote remove origin<p align="left"><img src="icon.svg" alt="MD" width="96" height="96"></p>
+<p align="left"><img src="./icon.svg" alt="Editor logo" width="96" height="96"></p>
 
 # Editor
 
@@ -14,15 +12,18 @@ Editor is based on a fork of [ibmua/markdown-viewer-html](https://github.com/ibm
 DOMPurify, highlight.js + theme) are inlined into `index.html`, so the whole
 app is one self-contained file you can double-click offline.
 
-![Screenshot](screenshot.png)
+## Screenshots
 
-### Preparation mock
+Both screenshots show [`preparation-mock.md`](preparation-mock.md) open in Chrome
+from the local `index.html`.
 
-The repository also includes [`preparation-mock.md`](preparation-mock.md), a small
-design-review document that exercises headings, a callout, a table, lists, code,
-and task checkboxes in Editor.
+**Light theme · Preview**
 
-![Preparation mock rendered in Editor](preparation-mock.png)
+![Editor in light theme with the rendered Markdown preview](screenshot.png)
+
+**Dark theme · Split view**
+
+![Editor in dark theme with Markdown source beside the rendered preview](preparation-mock.png)
 
 ## Features
 
@@ -175,8 +176,9 @@ and New actions. No build or external fonts are required.
 Design values live in CSS custom properties (`--bg`, `--fg`, `--accent`,
 `--reading-width`, `--ui-radius`); dark colors follow the OS media query.
 Below 560px the sidebar becomes a compact top file list and Split stacks vertically.
-`icon.svg` is the repository artwork; the application favicon is embedded in the HTML
-so copying only that file retains it. Project City's `/mdview` serves the same `index.html`.
+`icon.svg` mirrors the embedded application favicon for use in the README. The app
+keeps its favicon when copied as a single file. Project City's `/mdview` serves the
+same `index.html`.
 
 `main_windows.go` embeds the canonical HTML and hosts it with Wails and WebView2.
 `files_windows.go` adapts Windows startup paths and file dialogs to the same
@@ -191,6 +193,4 @@ headless Chrome on the actual file URL: new document, source edits, all four mod
 light/dark desktop and 390px mobile, with no page errors or mobile page overflow.
 
 September 21, 2026 (Kyiv): added `preparation-mock.md` as a reusable visual smoke test
-and captured `preparation-mock.png` from Editor after opening that file through
-the browser file picker. The screenshot is included here so the repository landing page
-shows the editor with a representative document open.
+for headings, tables, lists, code and task checkboxes.
