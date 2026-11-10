@@ -1,47 +1,46 @@
-# Design review / preparation mock
+# Revisión de diseño de Editor
 
-> A small, local-first workspace for turning rough notes into something you can
-> read, edit, and keep.
+> Un espacio de trabajo local para convertir borradores en documentos que puedas
+> leer, editar y conservar.
 
-| Review | Status |
+| Revisión | Estado |
 | --- | --- |
-| Layout direction | Ready for a first pass |
-| Interaction model | Preview, split, edit, and rich modes |
-| Data boundary | Local files only |
+| Diseño de la interfaz | Listo para la primera revisión |
+| Modos de trabajo | Vista previa, dividida, fuente y visual |
+| Ubicación de los datos | Archivos locales |
 
-## The feeling we want
+## Una experiencia sencilla
 
-Editor should feel quiet and capable. The document stays in focus, while
-the file list and controls make the next action obvious.
+Editor busca que el documento ocupe el centro de la atención. La lista de archivos
+y los controles permiten encontrar la siguiente acción con facilidad.
 
-### Three useful promises
+### Tres funciones para el trabajo diario
 
-- **Bring your own files** — open a document from disk, with no upload step.
-- **Move at your speed** — read in Preview, write in Edit, or use Split.
-- **Keep your work** — save back to the original file when the browser allows it.
+- **Abre tus archivos** desde el disco y trabaja con ellos en tu equipo.
+- **Elige cómo trabajar** con vista previa, código fuente o vista dividida.
+- **Conserva tus cambios** guardándolos en el archivo original cuando el navegador lo permita.
 
-> Good tools get out of the way. The interface should make the content easier
-> to see, without trying to become the content.
+> La interfaz debe facilitar la lectura y la edición del contenido.
 
-## A small implementation note
+## Un detalle de implementación
 
-Editor is intentionally a single offline-capable HTML file:
+Editor funciona sin conexión desde un único archivo HTML.
 
 ```js
-const experience = {
-  source: "your markdown file",
-  modes: ["preview", "split", "edit", "rich"],
-  privacy: "local"
+const documento = {
+  nombre: "Mis notas.md",
+  formato: "Markdown",
+  ubicacion: "local"
 };
 ```
 
-## Before sharing
+## Antes de compartir
 
-- [x] Confirm the page works without a server
-- [x] Check light and dark themes
-- [x] Check a narrow screen
-- [ ] Add the final review notes
+- [x] Comprobar el funcionamiento sin servidor
+- [x] Revisar los temas claro y oscuro
+- [x] Probar una pantalla estrecha
+- [ ] Añadir las notas de la revisión final
 
 ---
 
-_Prepared as a visual smoke-test document for Editor._
+_Documento de ejemplo para comprobar la presentación de Editor._
