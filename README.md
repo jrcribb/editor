@@ -44,8 +44,12 @@ Chrome desde el archivo local `index.html`.
   cerrarlos individualmente. Un punto amarillo identifica los que tienen cambios pendientes.
 - **Nuevo archivo** para empezar un documento desde cero.
 - Markdown compatible con GitHub, incluidas tablas, listas de tareas, bloques de código y notas al pie.
-- Resaltado de sintaxis con highlight.js.
-- Tema claro u oscuro según la configuración del sistema.
+- **Configuración** permite elegir el tema claro, oscuro o automático y previsualizar
+  los estilos de highlight.js disponibles para cada tema. El editor recuerda un estilo por tema.
+- Los documentos nuevos se guardan como temporarios en el almacenamiento local del
+  navegador o de la aplicación de escritorio. Se recuperan al reabrir el Editor.
+  La actualización automática del temporario se puede desactivar en Configuración.
+  Guardar en una ruta local elimina el temporario. Descargar una copia lo conserva.
 - Saneamiento del HTML con DOMPurify antes de mostrarlo.
 
 ## Uso
@@ -176,7 +180,7 @@ clics reutilizan las acciones de abrir y crear archivos. La aplicación funciona
 sin compilación ni fuentes externas.
 
 Los valores de diseño se definen mediante propiedades CSS como `--bg`, `--fg`,
-`--accent`, `--reading-width` y `--ui-radius`. Los colores oscuros siguen la
+`--accent`, `--reading-width` y `--ui-radius`. El tema automático sigue la
 preferencia del sistema. Por debajo de 560 píxeles, la barra lateral se convierte
 en una lista superior compacta y la vista dividida coloca sus paneles verticalmente.
 
