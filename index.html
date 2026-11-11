@@ -1327,7 +1327,9 @@ return He}()
   .file-item:hover{background:var(--hover)}
   .file-item.active{background:var(--active);color:var(--accent);font-weight:600}
   .file-item:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
-  .file-item .name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .file-item .file-text{flex:1;min-width:0}
+  .file-item .name,.file-item .subtitle{display:block;white-space:pre-wrap;overflow-wrap:anywhere}
+  .file-item .subtitle{color:var(--muted);font-size:12px;font-weight:400}
   .file-item .draft-badge{flex-shrink:0;padding:1px 5px;border-radius:4px;
     background:var(--warn-bg);color:var(--warn-fg);font-size:11px;font-weight:600}
   .file-item .dot{width:8px;height:8px;border-radius:50%;background:var(--warn-border);
@@ -1366,6 +1368,11 @@ return He}()
   #warnBar strong{font-weight:600}
 
   #body{flex:1;overflow:auto;position:relative}
+  .line-marker{position:absolute;z-index:1;width:9px;height:9px;
+    background:var(--accent);border:1px solid var(--bg);transform:translate(-50%,-50%) rotate(45deg);
+    pointer-events:none}
+  .line-marker.return{border:2px solid var(--accent);background:var(--bg);
+    border-radius:50%;transform:translate(-50%,-50%)}
   #body.split{display:flex;overflow:hidden}
   #editor{display:none;width:100%;height:100%;border:0;resize:none;
     padding:24px 32px;background:var(--bg);color:var(--fg);
@@ -1462,7 +1469,6 @@ return He}()
   #files{padding:0 10px 12px}
   .file-item{padding:10px 9px;margin-bottom:3px;min-height:40px;border:1px solid transparent}
   .file-item.active{border-color:var(--border);box-shadow:inset 3px 0 var(--accent)}
-  .file-item .name{white-space:normal;overflow-wrap:anywhere}
   .empty{text-align:left;padding:12px;color:var(--muted)}
   .sidebar-footer{padding:16px 20px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);display:flex;align-items:center;gap:7px}
   .sidebar-footer svg{width:14px;height:14px;flex-shrink:0}
@@ -1623,6 +1629,8 @@ return He}()
            tabindex="0"></div>
       <div id="content" class="welcome"></div>
       <div id="wysiwyg" contenteditable="true" spellcheck="true" aria-label="Editor visual de Markdown"></div>
+      <span id="pinMarker" class="line-marker" aria-hidden="true" hidden></span>
+      <span id="returnMarker" class="line-marker return" aria-hidden="true" hidden></span>
     </div>
   </main>
   <dialog class="editor-dialog" id="syntaxThemeDialog" aria-labelledby="syntaxThemeTitle">
@@ -1691,6 +1699,9 @@ saludar("Ana");</code></pre>
   const $editor   = document.getElementById('editor');
   const $wysiwyg  = document.getElementById('wysiwyg');
   const $body     = document.getElementById('body');
+  const $pinMarker = document.getElementById('pinMarker');
+  const $returnMarker = document.getElementById('returnMarker');
+  let markerFrame = 0;
   const $toolbar  = document.getElementById('toolbar');
   const $curSize  = document.getElementById('curSize');
   const $openFileSelect = document.getElementById('openFileSelect');
@@ -1983,12 +1994,23 @@ saludar("Ana");</code></pre>
 
   function fileLabel(f){
     if (!f.draftId) return f.name;
-    const words = [];
-    for (const [word] of f.text.matchAll(/[\p{L}\p{N}][\p{L}\p{N}\p{M}]*/gu)){
-      words.push(word);
-      if (words.length === 3) break;
+    let label = '';
+    let end = 0;
+    let count = 0;
+    for (const { 0: word, index } of f.text.matchAll(/[\p{L}\p{N}][\p{L}\p{N}\p{M}]*/gu)){
+      if (count){
+        const breaks = f.text.slice(end, index).match(/\r\n|\r|\n/g);
+        label += breaks ? '\n'.repeat(breaks.length) : ' ';
+      }
+      label += word;
+      end = index + word.length;
+      if (++count === 3) break;
     }
-    return words.join(' ') || 'Documento vacío';
+    return label || 'Documento vacío';
+  }
+
+  function fileSubtitle(f){
+    return f.draftId ? '' : f.text.match(/^[^\r\n]*/)[0];
   }
 
   function renderSidebar(){
@@ -2014,12 +2036,24 @@ saludar("Ana");</code></pre>
       name.className = 'name';
       name.title = label;
       name.textContent = label;
+      const fileText = document.createElement('span');
+      fileText.className = 'file-text';
+      fileText.append(name);
+      const firstLine = fileSubtitle(f);
+      if (firstLine){
+        const subtitle = document.createElement('span');
+        subtitle.className = 'subtitle';
+        subtitle.textContent = firstLine;
+        subtitle.title = firstLine;
+        fileText.append(subtitle);
+        el.setAttribute('aria-description', firstLine);
+      }
       const closeBtn = document.createElement('button');
       closeBtn.className = 'close';
       closeBtn.title = `Cerrar ${label}`;
       closeBtn.setAttribute('aria-label', closeBtn.title);
       closeBtn.textContent = '×';
-      el.append(dot, name);
+      el.append(dot, fileText);
       if (f.draftId){
         const badge = document.createElement('span');
         badge.className = 'draft-badge';
@@ -2096,6 +2130,7 @@ saludar("Ana");</code></pre>
   }
 
   function updateToolbar(){
+    scheduleLineMarkers();
     $clearBtn.disabled = files.length === 0;
     const f = cur();
     $pinLineBtn.setAttribute('aria-pressed', String(!!f?.pin));
@@ -2217,6 +2252,7 @@ saludar("Ana");</code></pre>
 
   let findIndex = 0;
   function refreshFind(step = 0, reveal = false){
+    scheduleLineMarkers();
     CSS.highlights?.delete('document-current');
     if ($findBar.classList.contains('hidden') || !cur()) return;
     const surface = navigationSurface();
@@ -2263,6 +2299,55 @@ saludar("Ana");</code></pre>
   $findPrev.addEventListener('click', () => refreshFind(-1, true));
   $findNext.addEventListener('click', () => refreshFind(1, true));
   document.getElementById('findClose').addEventListener('click', () => toggleFind(false));
+
+  function scheduleLineMarkers(){
+    if (markerFrame) return;
+    markerFrame = requestAnimationFrame(() => {
+      markerFrame = 0;
+      const f = cur();
+      const surface = navigationSurface();
+      const source = surface === $editor;
+      const markers = [[$pinMarker, f?.pin], [$returnMarker, f?.returnLine]];
+      const visible = markers.filter(([element, mark]) => {
+        element.hidden = true;
+        return mark && (source ? mark.mode === 'edit' || mark.mode === 'split' : mark.mode === mode);
+      });
+      if (!visible.length) return;
+
+      const body = $body.getBoundingClientRect();
+      const bounds = surface.getBoundingClientRect();
+      const style = getComputedStyle(surface);
+      const viewport = source ? bounds : body;
+      const left = bounds.left - body.left + $body.scrollLeft + parseFloat(style.paddingLeft) / 2;
+      function place(element, y){
+        if (y < viewport.top + 5 || y > viewport.bottom - 5) return;
+        element.style.left = left + 'px';
+        element.style.top = y - body.top + $body.scrollTop + 'px';
+        element.hidden = false;
+      }
+
+      if (source){
+        measureSource(top => {
+          for (const [element, mark] of visible){
+            const offset = Math.min(mark.offset, $editor.value.length);
+            place(element, bounds.top + top(offset) - $editor.scrollTop + parseFloat(style.fontSize) / 2);
+          }
+        });
+      } else {
+        const index = textIndex(surface);
+        if (!index.entries.length) return;
+        for (const [element, mark] of visible){
+          const rect = textRange(index, Math.min(mark.offset, index.text.length)).getBoundingClientRect();
+          place(element, rect.top + rect.height / 2);
+        }
+      }
+    });
+  }
+
+  $body.addEventListener('scroll', scheduleLineMarkers, { capture: true, passive: true });
+  $body.addEventListener('load', scheduleLineMarkers, true);
+  const markerResize = new ResizeObserver(scheduleLineMarkers);
+  for (const pane of [$body, $editor, $content, $wysiwyg]) markerResize.observe(pane);
 
   function currentLine(){
     const surface = navigationSurface();
@@ -2352,6 +2437,7 @@ saludar("Ana");</code></pre>
       f.returnLine = here;
       jumpToLine(f.pin);
     }
+    scheduleLineMarkers();
   });
 
   function scrollProgress(pane){
@@ -2501,23 +2587,21 @@ saludar("Ana");</code></pre>
   }
 
   function updateText(f, text){
-    const previousLabel = f.draftId ? fileLabel(f) : null;
+    const previousPreview = f.draftId ? fileLabel(f) : fileSubtitle(f);
     movePinnedOffsets(f, text);
     f.text = text;
     if (f.draftId && $autoSaveDrafts.checked) persistDraft(f);
     f.size = new Blob([text]).size;
     const dirty = text !== f.savedText;
-    if (dirty !== f.dirty){
+    const dirtyChanged = dirty !== f.dirty;
+    if (dirtyChanged || f.draftId){
       f.dirty = dirty;
       updateToolbar();
-      renderSidebar();
-    } else if (f.draftId){
-      updateToolbar();
-      if (fileLabel(f) !== previousLabel) renderSidebar();
     } else {
       $curSize.textContent = fmtBytes(f.size);
       updateHistoryButtons(f);
     }
+    if (dirtyChanged || (f.draftId ? fileLabel(f) : fileSubtitle(f)) !== previousPreview) renderSidebar();
   }
 
   function movePinnedOffsets(f, text){
