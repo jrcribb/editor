@@ -44,6 +44,8 @@ Chrome desde el archivo local `index.html`.
   cerrarlos individualmente. Un punto amarillo identifica los que tienen cambios pendientes.
 - **Nuevo archivo** para empezar un documento desde cero.
 - Markdown compatible con GitHub, incluidas tablas, listas de tareas, bloques de código y notas al pie.
+- **Marcar línea** para volver a ella desde cualquier lugar y, además, retornar a la línea original.
+- **Intercambio** entre los dos archivos usados por último para ir de uno a otro rápidamente.
 - **Configuración** permite elegir el tema claro, oscuro o automático y previsualizar
   los estilos de highlight.js disponibles para cada tema. El editor recuerda un estilo por tema.
 - Los documentos nuevos se guardan como temporarios en el almacenamiento local del
