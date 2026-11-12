@@ -42,6 +42,8 @@ Chrome desde el archivo local `index.html`.
   para abrirlo como un archivo nuevo.
 - **Varios archivos abiertos** en una barra lateral que permite cambiar entre ellos y
   cerrarlos individualmente. Un punto amarillo identifica los que tienen cambios pendientes.
+- **Recuperar la sesión web** al volver a abrir Editor en el mismo navegador. La lista
+  de archivos, la pestaña activa y los borradores se conservan en el almacenamiento local del sitio.
 - **Nuevo archivo** para empezar un documento desde cero.
 - Markdown compatible con GitHub, incluidas tablas, listas de tareas, bloques de código y notas al pie.
 - Resaltado de sintaxis con highlight.js.
