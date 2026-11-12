@@ -162,6 +162,9 @@ funciona sin descargar bibliotecas de la red, incluso desde una memoria USB o si
 
 Para actualizar una dependencia, descarga su versión minificada y sustituye el
 contenido del bloque `<script>` correspondiente.
+PowerShell se carga desde el bloque separado `highlight-powershell`. Al
+actualizar highlight.js, actualiza también esa gramática a la misma versión
+y comprueba que PowerShell siga disponible en **Ver como**.
 
 ## Licencia
 
