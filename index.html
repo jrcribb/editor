@@ -1371,6 +1371,14 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
   .file-item .file-text{flex:1;min-width:0}
   .file-item .name,.file-item .subtitle{display:block;white-space:pre-wrap;overflow-wrap:anywhere}
   .file-item .subtitle{color:var(--muted);font-size:12px;font-weight:400}
+  .file-heading{display:flex;align-items:baseline;gap:6px;min-width:0}
+  .file-heading .name{min-width:0}
+  .extension-badge{flex:0 1 auto;min-width:0;max-width:45%;padding:1px 5px;border-radius:4px;
+    background:var(--fg);color:var(--bg);font-size:11px;font-weight:600;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #activeFileHeading{flex:1 1 100%;font-size:13px;font-weight:600}
+  #activeFileHeading .name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #app.menu-collapsed #activeFileHeading{display:none}
   .file-item .draft-badge{flex-shrink:0;padding:1px 5px;border-radius:4px;
     background:var(--warn-bg);color:var(--warn-fg);font-size:11px;font-weight:600}
   .file-item .dot{width:8px;height:8px;border-radius:50%;background:var(--warn-border);
@@ -1506,7 +1514,13 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
   .btn.small{min-height:32px}
   .btn-row{gap:7px}
   #openBtn{flex:1}
-  .files-label{padding:8px 22px;color:var(--muted);font-size:12px;font-weight:600}
+  .files-label{display:flex;align-items:center;gap:6px;padding:4px 10px}
+  .files-label select{flex:1;min-width:0;min-height:32px;padding:4px 6px;
+    background:var(--bg);color:var(--fg);border:1px solid var(--border);
+    border-radius:var(--ui-radius);font:inherit;font-size:12px}
+  #groupFiles[aria-pressed="true"]{background:var(--active);color:var(--accent)}
+  .file-group-title{margin:8px 4px 3px;padding:0 5px;color:var(--muted);
+    font-size:12px;font-weight:600;overflow-wrap:anywhere}
   #files{padding:0 10px 12px}
   .file-item{padding:10px 9px;margin-bottom:3px;min-height:40px;border:1px solid transparent}
   .file-item.active{border-color:var(--border);box-shadow:inset 3px 0 var(--accent)}
@@ -1562,7 +1576,9 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
     #app.menu-collapsed .brand-name{display:inline}
     #sidebar h1{font-size:13px;gap:7px}.brand-mark{width:28px;height:28px}
     #sidebar .btn{padding:6px 8px}#clearBtn{display:none}
-    .files-label,.sidebar-footer,#sideResizer{display:none}
+    .sidebar-footer,#sideResizer{display:none}
+    #sidebar:not(:has(.file-item)) .files-label{display:none}
+    .files-label select{flex:0 1 auto}
     #files:has(.empty){display:none}
     #files{max-height:84px;padding:0 10px 6px}
     .file-item{padding:6px 9px;min-height:34px}
@@ -1578,6 +1594,36 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
   }
   @media(prefers-reduced-motion:reduce){.btn.busy svg{animation:none}}
 
+  #outlineBtn[hidden]{display:none}
+  #outlinePanel{max-height:min(32vh,18rem);overflow:auto;padding:6px 12px;
+    background:var(--sidebar);border-bottom:1px solid var(--border)}
+  #outlinePanel button{display:block;width:100%;text-align:start;overflow-wrap:anywhere;
+    padding-inline-start:calc(8px + var(--depth) * 12px)}
+  #outlinePanel p{margin:6px;color:var(--muted)}
+  #outlineBtn[aria-expanded="true"],#lineNumbersBtn[aria-pressed="true"]{
+    background:var(--active);color:var(--accent)}
+  #lineTags{display:contents}
+  #lineTags .btn{background:var(--fg);color:var(--bg);border-color:var(--fg);font-variant-numeric:tabular-nums}
+  #lineTags .btn:hover,#lineTags .btn[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--bg)}
+  #sourceNumbers{position:absolute;z-index:1;overflow:hidden;pointer-events:none;
+    width:var(--gutter-width);background:var(--bg);color:var(--muted);
+    text-align:right;font:13px ui-monospace,SFMono-Regular,Menlo,monospace}
+  #sourceNumbers span{position:absolute;right:6px;transform:translateY(-50%)}
+  #body.numbered #editor{padding-left:calc(var(--gutter-width) + 24px)}
+  @media print{
+    :root[data-theme]{--bg:#fff;--fg:#111;--muted:#444;--border:#bbb;
+      --sidebar:#fff;--code-bg:#f5f5f5;--accent:#174f89}
+    html,body,#app,#main,#body{display:block!important;height:auto!important;overflow:visible!important}
+    #sidebar,#sideResizer,#toolbar,#outlinePanel,#findBar,#warnBar,#richToolbar,
+    #editor,#splitResizer,#wysiwyg,#sourceNumbers,.line-marker,#dropzone{display:none!important}
+    #body #content{display:block!important;width:auto!important;max-width:none;min-height:0;
+      margin:0!important;padding:0!important;overflow:visible!important;border:0;color:var(--fg)}
+    #content :is(h1,h2,h3,h4,h5,h6){break-after:avoid}
+    #content table{display:table;width:100%;overflow-wrap:anywhere}
+    #content thead{display:table-header-group}
+    #content tr,#content img{break-inside:avoid}
+    #content :is(.hljs,.hljs *){color:inherit!important;background:transparent!important}
+  }
   .hidden{display:none !important}
 </style>
 </head>
@@ -1599,7 +1645,15 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
         <button class="btn" id="clearBtn" title="Cerrar todos los archivos" aria-label="Cerrar todos los archivos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       </div>
     </header>
-    <div class="files-label">Tus archivos</div>
+    <div class="files-label">
+      <select id="fileSort" aria-label="Ordenar archivos abiertos" title="Ordenar archivos abiertos">
+        <option value="name-asc">Nombre · ascendente</option>
+        <option value="name-desc">Nombre · descendente</option>
+        <option value="updated-asc">Actualización · más antiguos primero</option>
+        <option value="updated-desc">Actualización · más recientes primero</option>
+      </select>
+      <button class="btn small" id="groupFiles" aria-label="Agrupar por extensión" title="Agrupar por extensión" aria-pressed="false" aria-controls="files"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6V4h18v2M3 10h18v4H3zM3 18h18v4H3z"/></svg></button>
+    </div>
     <div id="files" role="list"></div>
     <div class="sidebar-footer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Los archivos se mantienen en este equipo.</div>
     <input type="file" id="fileInput" multiple hidden>
@@ -1609,6 +1663,10 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
        tabindex="0"></div>
   <main id="main">
     <div id="toolbar" class="hidden">
+      <div id="activeFileHeading" class="file-heading">
+        <span id="activeFileName" class="name"></span>
+        <span id="activeFileExtension" class="extension-badge" hidden></span>
+      </div>
       <div class="seg" id="modeSeg" role="group" aria-label="Modo de edición">
         <button class="btn small on" data-mode="view" aria-pressed="true" title="Vista previa" aria-label="Vista previa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
         <button class="btn small" data-mode="split" aria-pressed="false" title="Dividida" aria-label="Dividida"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 3v18"/></svg></button>
@@ -1625,14 +1683,19 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
       </label>
       <select id="openFileSelect" aria-label="Archivos abiertos"></select>
       <span class="size" id="curSize"></span>
+      <button class="btn small" id="outlineBtn" title="Índice de encabezados" aria-label="Índice de encabezados" aria-controls="outlinePanel" aria-expanded="false" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 5h1m4 0h11M7 12h1m4 0h8M10 19h1m4 0h5"/></svg></button>
+      <button class="btn small" id="lineNumbersBtn" title="Mostrar u ocultar números de línea" aria-label="Números de línea" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 3 5 21M19 3l-4 18M4 8h17M3 16h17"/></svg></button>
+      <button class="btn small" id="pdfBtn" title="Exportar a PDF desde el diálogo de impresión" aria-label="Exportar a PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8V3h12v5M6 17H3V8h18v9h-3M6 14h12v7H6zM17 11h1"/></svg></button>
       <button class="btn small" id="findBtn" title="Buscar en el documento" aria-label="Buscar en el documento" aria-controls="findBar" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></button>
       <button class="btn small" id="pinLineBtn" title="Anclar línea" aria-label="Anclar línea" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3h8l-1 6 4 4v2H5v-2l4-4-1-6ZM12 15v6"/></svg></button>
       <button class="btn small" id="goLineBtn" title="Ir a la línea anclada o volver" aria-label="Ir a la línea anclada o volver" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h15m-4-4 4 4-4 4M20 16H5m4-4-4 4 4 4"/></svg></button>
+      <span id="lineTags" role="group" aria-label="Líneas marcadas"></span>
       <button class="btn small" id="previousFileBtn" title="Volver al archivo anterior" aria-label="Volver al archivo anterior" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 10-5 5 5 5M4 15h12a4 4 0 0 0 0-8h-4"/></svg></button>
       <button class="btn small" id="reloadBtn" title="Recargar desde el archivo original" aria-label="Recargar desde el archivo original"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button>
       <button class="btn small" id="saveBtn" title="Guardar en el archivo original" aria-label="Guardar en el archivo original"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg><span id="saveAsLabel" hidden>Guardar como</span></button>
       <button class="btn small primary" id="downloadBtn" title="Descargar una copia" aria-label="Descargar una copia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span id="downloadLabel" hidden>Descargar copia</span></button>
     </div>
+    <nav id="outlinePanel" aria-label="Índice de encabezados" hidden></nav>
     <div id="findBar" class="hidden" role="search" aria-label="Buscar en el documento">
       <input id="findText" type="search" placeholder="Buscar en el documento" aria-label="Texto a buscar" autocomplete="off" spellcheck="false">
       <span id="findStatus" role="status"></span>
@@ -1671,7 +1734,8 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
            tabindex="0"></div>
       <div id="content" class="welcome"></div>
       <div id="wysiwyg" contenteditable="true" spellcheck="true" aria-label="Editor visual de Markdown"></div>
-      <span id="pinMarker" class="line-marker" aria-hidden="true" hidden></span>
+      <div id="sourceNumbers" aria-hidden="true" hidden></div>
+      <div id="pinMarkers" aria-hidden="true"></div>
       <span id="returnMarker" class="line-marker return" aria-hidden="true" hidden></span>
     </div>
   </main>
@@ -1691,6 +1755,9 @@ function saludar(nombre) {
   return "Hola, " + nombre;
 }
 saludar("Ana");</code></pre>
+      <label class="draft-option">
+        <input id="defaultLineNumbers" type="checkbox"> Mostrar números de línea de forma predeterminada
+      </label>
       <label class="draft-option"><input id="autoSaveDrafts" type="checkbox"> Autoguardar documentos temporarios</label>
       <div class="btn-row">
         <button class="btn primary">Cerrar</button>
@@ -1741,12 +1808,29 @@ saludar("Ana");</code></pre>
   const $editor   = document.getElementById('editor');
   const $wysiwyg  = document.getElementById('wysiwyg');
   const $body     = document.getElementById('body');
-  const $pinMarker = document.getElementById('pinMarker');
+  const $pinMarkers = document.getElementById('pinMarkers');
+  const $lineTags = document.getElementById('lineTags');
+  const $sourceNumbers = document.getElementById('sourceNumbers');
+  const $lineNumbersBtn = document.getElementById('lineNumbersBtn');
+  const $defaultLineNumbers = document.getElementById('defaultLineNumbers');
+  const $outlineBtn = document.getElementById('outlineBtn');
+  const $outlinePanel = document.getElementById('outlinePanel');
+  let numberedText;
+  let lineStarts = [];
+  let outlineText;
+  let outlineHeadings = [];
+  let parsedMarkdown;
+  let previewVersion;
   const $returnMarker = document.getElementById('returnMarker');
   let markerFrame = 0;
   const $toolbar  = document.getElementById('toolbar');
   const $curSize  = document.getElementById('curSize');
   const $openFileSelect = document.getElementById('openFileSelect');
+  const $fileSort = document.getElementById('fileSort');
+  const $groupFiles = document.getElementById('groupFiles');
+  const fileCollator = new Intl.Collator('es', { numeric: true, sensitivity: 'base' });
+  const $activeFileName = document.getElementById('activeFileName');
+  const $activeFileExtension = document.getElementById('activeFileExtension');
   const $viewAs = document.getElementById('viewAs');
   const $previousFileBtn = document.getElementById('previousFileBtn');
   const $findBtn = document.getElementById('findBtn');
@@ -1869,14 +1953,136 @@ saludar("Ana");</code></pre>
   const escHtml = s => String(s).replace(/[&<>"']/g, c => (
     {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]
   ));
-  const render = text => {
+  const render = (text, tokens) => {
     try {
-      return DOMPurify.sanitize(marked.parse(text), {ADD_ATTR:['target']});
+      return DOMPurify.sanitize(tokens ? marked.parser(tokens, outlineOptions) : marked.parse(text), {ADD_ATTR:['target']});
     } catch(e){
       console.error('render failed', e);
       return `<div style="color:var(--warn-fg);background:var(--warn-bg);padding:12px;border-radius:6px">No se pudo mostrar el documento. ${escHtml(e && e.message || String(e))}</div>`;
     }
   };
+  const outlineIds = new WeakMap();
+  const outlineOptions = {
+    ...marked.defaults,
+    extensions: {
+      renderers: {
+        heading(token){
+          const index = outlineIds.get(token);
+          if (index === undefined) return false;
+          const { depth, tokens } = token;
+          return '<h' + depth + ' data-outline-index="' + index + '">' +
+            this.parser.parseInline(tokens) + '</h' + depth + '>\n';
+        },
+      },
+    },
+  };
+
+  function markdownTokens(text){
+    if (parsedMarkdown?.text === text) return parsedMarkdown;
+    // Marked expands leading tabs before tokenizing. Map heading offsets back to the textarea.
+    const indents = [];
+    let extra = 0;
+    const source = text.replace(/\r\n?/g, '\n').replace(/^( *)(\t+)/gm, (indent, spaces, tabs, start) => {
+      const expanded = spaces + '    '.repeat(tabs.length);
+      const end = start + extra + expanded.length;
+      extra += expanded.length - indent.length;
+      indents.push({ end, extra });
+      return expanded;
+    });
+    const offsets = new WeakMap();
+    const tokenizer = new marked.Tokenizer();
+    const heading = tokenizer.heading;
+    tokenizer.heading = function(rest){
+      const token = heading.call(this, rest);
+      if (token) offsets.set(token, source.length - rest.length);
+      return token;
+    };
+    const tokens = marked.lexer(source, { ...marked.defaults, tokenizer });
+    const headings = [];
+    let indent = 0;
+    for (const token of tokens){
+      const offset = offsets.get(token);
+      if (offset === undefined) continue;
+      while (indent < indents.length && indents[indent].end <= offset) indent++;
+      outlineIds.set(token, headings.length);
+      headings.push({
+        offset: offset - (indents[indent - 1]?.extra || 0),
+        depth: token.depth,
+        text: token.text,
+      });
+    }
+    parsedMarkdown = { text, tokens, headings };
+    return parsedMarkdown;
+  }
+
+  function updateOutline(){
+    const f = cur();
+    $outlineBtn.hidden = !f || !!f.viewAs;
+    if ($outlineBtn.hidden) $outlinePanel.hidden = true;
+    $outlineBtn.setAttribute('aria-expanded', String(!$outlinePanel.hidden));
+    if ($outlinePanel.hidden || outlineText === f.text) return;
+    outlineText = f.text;
+    outlineHeadings = markdownTokens(f.text).headings;
+    const items = outlineHeadings.map(({ depth, text }, index) => {
+      const button = document.createElement('button');
+      button.className = 'btn small';
+      button.style.setProperty('--depth', depth - 1);
+      button.dataset.heading = index;
+      const label = document.createElement('span');
+      label.innerHTML = DOMPurify.sanitize(marked.parseInline(text), { ALLOWED_TAGS: [] });
+      button.textContent = label.textContent || 'Encabezado sin texto';
+      return button;
+    });
+    if (!items.length){
+      const empty = document.createElement('p');
+      empty.textContent = 'No hay encabezados con #.';
+      items.push(empty);
+    }
+    $outlinePanel.replaceChildren(...items);
+  }
+
+  $outlineBtn.addEventListener('click', () => {
+    $outlinePanel.hidden = !$outlinePanel.hidden;
+    updateOutline();
+  });
+  $outlinePanel.addEventListener('click', e => {
+    const button = e.target.closest('[data-heading]');
+    if (!button) return;
+    const index = Number(button.dataset.heading);
+    const heading = outlineHeadings[index];
+    if (mode === 'edit' || mode === 'split'){
+      $editor.focus({ preventScroll: true });
+      revealSource(Math.min(heading.offset, $editor.value.length));
+    }
+    if (mode === 'wysiwyg'){
+      const rendered = document.createElement('template');
+      rendered.innerHTML = render(cur().text, markdownTokens(cur().text).tokens);
+      const headings = ':is(h1,h2,h3,h4,h5,h6)';
+      const order = [...rendered.content.querySelectorAll(headings)]
+        .findIndex(element => element.dataset.outlineIndex === String(index));
+      const element = $wysiwyg.querySelectorAll(headings)[order];
+      if (element){
+        element.scrollIntoView({ block: 'start' });
+        return;
+      }
+      setMode('edit');
+      revealSource(Math.min(heading.offset, $editor.value.length));
+    } else if (mode !== 'edit'){
+      if (mode === 'split') renderPreview();
+      const element = $content.querySelector('[data-outline-index="' + index + '"]');
+      if (mode === 'split' && element){
+        $content.scrollTop += element.getBoundingClientRect().top - $content.getBoundingClientRect().top;
+        splitScrollPositions.set($content, $content.scrollTop);
+      } else element?.scrollIntoView({ block: 'start' });
+    }
+  });
+
+  document.getElementById('pdfBtn').addEventListener('click', () => window.print());
+  window.addEventListener('beforeprint', () => {
+    const f = cur();
+    if (f && (previewVersion?.text !== f.text || previewVersion.viewAs !== f.viewAs)) renderPreview();
+  });
+
   const welcomeHTML = `<div class="welcome-icon" aria-hidden="true">M↓</div>
     <h2>Escribe en Markdown</h2>
     <p class="intro">Lee y edita documentos Markdown. Para empezar, arrastra un archivo o ábrelo desde aquí.</p>
@@ -2042,8 +2248,15 @@ saludar("Ana");</code></pre>
     return text ? text + '\n' : '';
   }
 
+  function fileNameParts(name){
+    const dot = name.lastIndexOf('.');
+    return dot > 0 && dot < name.length - 1
+      ? { base: name.slice(0, dot), extension: name.slice(dot + 1) }
+      : { base: name, extension: '' };
+  }
+
   function fileLabel(f){
-    if (!f.draftId) return f.name;
+    if (!f.draftId) return fileNameParts(f.name).base;
     let label = '';
     let end = 0;
     let count = 0;
@@ -2060,78 +2273,140 @@ saludar("Ana");</code></pre>
   }
 
   function fileSubtitle(f){
-    return f.draftId ? '' : f.text.match(/^[^\r\n]*/)[0];
+    return f.text.match(/[\p{L}\p{N}][\p{M}]*(?:[^\r\n]*[\p{L}\p{N}][\p{M}]*)?/u)?.[0] || '';
+  }
+
+  function setExtensionBadge(badge, extension){
+    badge.hidden = !extension;
+    badge.textContent = extension;
+    badge.title = extension ? 'Extensión: ' + extension : '';
+  }
+
+  function sortedFileGroups(){
+    const [field, direction] = $fileSort.value.split('-');
+    const sign = direction === 'desc' ? -1 : 1;
+    const entries = files.map(file => ({ file, label: fileLabel(file) }));
+    entries.sort((a, b) => {
+      const byName = fileCollator.compare(a.label, b.label);
+      const difference = field === 'updated' ? a.file.updatedAt - b.file.updatedAt : byName;
+      return sign * (difference || byName || a.file.id - b.file.id);
+    });
+    if (!panes.groupFiles) return [['', entries]];
+    const groups = new Map();
+    for (const entry of entries){
+      const extension = fileNameParts(entry.file.name).extension.toLowerCase();
+      if (!groups.has(extension)) groups.set(extension, []);
+      groups.get(extension).push(entry);
+    }
+    return [...groups].sort(([a], [b]) => fileCollator.compare(a, b));
   }
 
   function renderSidebar(){
     rememberBrowserFiles();
-    $openFileSelect.replaceChildren(...files.map(f =>
-      new Option(fileLabel(f) + (f.draftId ? ' (temporario)' : '') + (f.dirty ? ' •' : ''),
-        f.id, false, f.id === activeId)));
-    if (files.length === 0){ $files.innerHTML = '<div class="empty">No hay archivos abiertos</div>'; return; }
-    $files.innerHTML = '';
-    for (const f of files){
-      const label = fileLabel(f);
-      const el = document.createElement('div');
-      el.className = 'file-item'
-        + (f.id === activeId ? ' active' : '')
-        + (f.dirty ? ' dirty' : '');
-      el.setAttribute('role', 'listitem');
-      el.setAttribute('tabindex', '0');
-      el.setAttribute('aria-label', label + (f.draftId ? ' (temporario)' : '') + (f.dirty ? ' (sin guardar)' : ''));
-      const dot = document.createElement('span');
-      dot.className = 'dot';
-      dot.title = 'Cambios sin guardar';
-      const name = document.createElement('span');
-      name.className = 'name';
-      name.title = label;
-      name.textContent = label;
-      const fileText = document.createElement('span');
-      fileText.className = 'file-text';
-      fileText.append(name);
-      const firstLine = fileSubtitle(f);
-      if (firstLine){
-        const subtitle = document.createElement('span');
-        subtitle.className = 'subtitle';
-        subtitle.textContent = firstLine;
-        subtitle.title = firstLine;
-        fileText.append(subtitle);
-        el.setAttribute('aria-description', firstLine);
-      }
-      const closeBtn = document.createElement('button');
-      closeBtn.className = 'close';
-      closeBtn.title = `Cerrar ${label}`;
-      closeBtn.setAttribute('aria-label', closeBtn.title);
-      closeBtn.textContent = '×';
-      el.append(dot, fileText);
-      if (f.draftId){
-        const badge = document.createElement('span');
-        badge.className = 'draft-badge';
-        badge.textContent = 'Temporario';
-        badge.setAttribute('aria-hidden', 'true');
-        el.append(badge);
-      }
-      el.append(closeBtn);
-      el.addEventListener('click', e => {
-        if (e.target === closeBtn) return;
-        activate(f.id);
-      });
-      el.addEventListener('keydown', e => {
-        if (e.target === closeBtn) return;
-        if (e.key === 'Enter' || e.key === ' '){
-          e.preventDefault();
-          activate(f.id);
-        }
-      });
-      closeBtn.addEventListener('click', e => {
-        e.stopPropagation(); closeFile(f.id);
-      });
-      $files.appendChild(el);
+    const grouped = !!panes.groupFiles;
+    $openFileSelect.replaceChildren();
+    $files.replaceChildren();
+    if (!files.length){
+      $files.innerHTML = '<div class="empty">No hay archivos abiertos</div>';
+      return;
     }
+    for (const [extension, entries] of sortedFileGroups()){
+      const options = entries.map(({ file: f, label }) =>
+        new Option((f.draftId ? label + ' (temporario)' : f.name) + (f.dirty ? ' •' : ''),
+          f.id, false, f.id === activeId));
+      let list = $files;
+      if (grouped){
+        const title = extension || 'Sin extensión';
+        const optionGroup = document.createElement('optgroup');
+        optionGroup.label = title;
+        optionGroup.append(...options);
+        $openFileSelect.append(optionGroup);
+
+        list = document.createElement('div');
+        list.setAttribute('role', 'group');
+        list.setAttribute('aria-label', title);
+        const heading = document.createElement('div');
+        heading.className = 'file-group-title';
+        heading.textContent = title;
+        heading.setAttribute('aria-hidden', 'true');
+        list.append(heading);
+        $files.append(list);
+      } else $openFileSelect.append(...options);
+      for (const { file, label } of entries) list.append(sidebarFileItem(file, label, grouped));
+    }
+    $openFileSelect.value = String(activeId);
+  }
+
+  function sidebarFileItem(f, label, grouped){
+    const el = document.createElement('div');
+    el.className = 'file-item'
+      + (f.id === activeId ? ' active' : '')
+      + (f.dirty ? ' dirty' : '');
+    el.setAttribute('role', 'listitem');
+    el.setAttribute('tabindex', '0');
+    el.setAttribute('aria-label', (f.draftId ? label + ' (temporario)' : f.name) + (f.dirty ? ' (sin guardar)' : ''));
+    const dot = document.createElement('span');
+    dot.className = 'dot';
+    dot.title = 'Cambios sin guardar';
+    const name = document.createElement('span');
+    name.className = 'name';
+    name.title = f.draftId ? label : f.name;
+    name.textContent = label;
+    const heading = document.createElement('span');
+    heading.className = 'file-heading';
+    heading.append(name);
+    if (!grouped){
+      const extension = document.createElement('span');
+      extension.className = 'extension-badge';
+      setExtensionBadge(extension, fileNameParts(f.name).extension);
+      heading.append(extension);
+    }
+    const fileText = document.createElement('span');
+    fileText.className = 'file-text';
+    fileText.append(heading);
+    const firstLine = fileSubtitle(f);
+    if (firstLine){
+      const subtitle = document.createElement('span');
+      subtitle.className = 'subtitle';
+      subtitle.textContent = firstLine;
+      subtitle.title = firstLine;
+      fileText.append(subtitle);
+      el.setAttribute('aria-description', firstLine);
+    }
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'close';
+    closeBtn.title = `Cerrar ${label}`;
+    closeBtn.setAttribute('aria-label', closeBtn.title);
+    closeBtn.textContent = '×';
+    el.append(dot, fileText);
+    if (f.draftId){
+      const badge = document.createElement('span');
+      badge.className = 'draft-badge';
+      badge.textContent = 'Temporario';
+      badge.setAttribute('aria-hidden', 'true');
+      el.append(badge);
+    }
+    el.append(closeBtn);
+    el.addEventListener('click', e => {
+      if (e.target === closeBtn) return;
+      activate(f.id);
+    });
+    el.addEventListener('keydown', e => {
+      if (e.target === closeBtn) return;
+      if (e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        activate(f.id);
+      }
+    });
+    closeBtn.addEventListener('click', e => {
+      e.stopPropagation(); closeFile(f.id);
+    });
+    return el;
   }
 
   function renderPreview(){
     const f = cur(); if (!f) return;
+    previewVersion = { text: f.text, viewAs: f.viewAs };
     if (f.viewAs){
       const pre = document.createElement('pre');
       const code = document.createElement('code');
@@ -2143,7 +2418,7 @@ saludar("Ana");</code></pre>
       else highlightCodeBlocks($content);
       return;
     }
-    $content.innerHTML = render(f.text);
+    $content.innerHTML = render(f.text, markdownTokens(f.text).tokens);
     setupTaskLists($content, false);
     highlightCodeBlocks($content);
     $content.querySelectorAll('a[href]').forEach(a => {
@@ -2179,7 +2454,7 @@ saludar("Ana");</code></pre>
 
   function renderWysiwyg(){
     const f = cur(); if (!f) return;
-    $wysiwyg.innerHTML = render(f.text);
+    $wysiwyg.innerHTML = render(f.text, markdownTokens(f.text).tokens);
     setupTaskLists($wysiwyg, true);
     savedRichRange = null;
     highlightCodeBlocks($wysiwyg);
@@ -2194,10 +2469,14 @@ saludar("Ana");</code></pre>
     scheduleLineMarkers();
     $clearBtn.disabled = files.length === 0;
     const f = cur();
-    $pinLineBtn.setAttribute('aria-pressed', String(!!f?.pin));
-    $goLineBtn.disabled = !f?.pin;
+    updateOutline();
+    updateLineTags(f);
+    updateLineNumbers();
     updateHistoryButtons(f);
-    const title = f ? (f.name.replace(ACCEPTED_EXT, '') || f.name) : 'Editor';
+    const { base: title, extension } = fileNameParts(f?.name || 'Editor');
+    $activeFileName.textContent = title;
+    $activeFileName.title = f?.name || '';
+    setExtensionBadge($activeFileExtension, extension);
     document.title = title;
     if (desktop) window.runtime.WindowSetTitle(title);
     if (!f){
@@ -2361,6 +2640,65 @@ saludar("Ana");</code></pre>
   $findNext.addEventListener('click', () => refreshFind(1, true));
   document.getElementById('findClose').addEventListener('click', () => toggleFind(false));
 
+  function updateLineNumbers(){
+    const show = panes.lineNumbers ?? (panes.defaultLineNumbers === true);
+    const source = !!cur() && navigationSurface() === $editor;
+    $lineNumbersBtn.setAttribute('aria-pressed', String(show));
+    $body.classList.toggle('numbered', source && show);
+    $sourceNumbers.hidden = !source || !show;
+    scheduleLineMarkers();
+  }
+
+  function drawSourceNumbers(source){
+    if (!source || $sourceNumbers.hidden) return;
+    const value = $editor.value;
+    if (numberedText !== value){
+      numberedText = value;
+      lineStarts = [0];
+      for (let i = value.indexOf('\n'); i !== -1; i = value.indexOf('\n', i + 1)) lineStarts.push(i + 1);
+    }
+    $body.style.setProperty('--gutter-width', Math.max(3, String(lineStarts.length).length + 2) + 'ch');
+    const bounds = $editor.getBoundingClientRect();
+    const body = $body.getBoundingClientRect();
+    const height = $editor.clientHeight;
+    const scroll = $editor.scrollTop;
+    $sourceNumbers.style.left = bounds.left - body.left + $body.scrollLeft + 'px';
+    $sourceNumbers.style.top = bounds.top - body.top + $body.scrollTop + 'px';
+    $sourceNumbers.style.height = height + 'px';
+    const center = parseFloat(getComputedStyle($editor).fontSize) / 2;
+    measureSource(top => {
+      let low = 0, high = lineStarts.length;
+      while (low < high){
+        const mid = (low + high) >>> 1;
+        if (top(lineStarts[mid]) + center < scroll) low = mid + 1;
+        else high = mid;
+      }
+      const numbers = document.createDocumentFragment();
+      for (let i = low; i < lineStarts.length; i++){
+        const y = top(lineStarts[i]) + center - scroll;
+        if (y >= height) break;
+        const number = document.createElement('span');
+        number.style.top = y + 'px';
+        number.textContent = i + 1;
+        numbers.append(number);
+      }
+      $sourceNumbers.replaceChildren(numbers);
+    });
+  }
+
+  $lineNumbersBtn.addEventListener('click', () => {
+    panes.lineNumbers = $lineNumbersBtn.getAttribute('aria-pressed') !== 'true';
+    writePanes(panes);
+    if (panes.lineNumbers && navigationSurface() !== $editor) setMode('split');
+    updateLineNumbers();
+  });
+  $defaultLineNumbers.addEventListener('change', () => {
+    panes.defaultLineNumbers = $defaultLineNumbers.checked;
+    delete panes.lineNumbers;
+    writePanes(panes);
+    updateLineNumbers();
+  });
+
   function scheduleLineMarkers(){
     if (markerFrame) return;
     markerFrame = requestAnimationFrame(() => {
@@ -2368,7 +2706,14 @@ saludar("Ana");</code></pre>
       const f = cur();
       const surface = navigationSurface();
       const source = surface === $editor;
-      const markers = [[$pinMarker, f?.pin], [$returnMarker, f?.returnLine]];
+      drawSourceNumbers(source);
+      const pins = (f?.pins || []).map(mark => {
+        const element = document.createElement('span');
+        element.className = 'line-marker';
+        return [element, mark];
+      });
+      $pinMarkers.replaceChildren(...pins.map(([element]) => element));
+      const markers = [...pins, [$returnMarker, f?.returnLine]];
       const visible = markers.filter(([element, mark]) => {
         element.hidden = true;
         return mark && (source ? mark.mode === 'edit' || mark.mode === 'split' : mark.mode === mode);
@@ -2379,7 +2724,8 @@ saludar("Ana");</code></pre>
       const bounds = surface.getBoundingClientRect();
       const style = getComputedStyle(surface);
       const viewport = source ? bounds : body;
-      const left = bounds.left - body.left + $body.scrollLeft + parseFloat(style.paddingLeft) / 2;
+      const left = bounds.left - body.left + $body.scrollLeft + parseFloat(style.paddingLeft)
+        - (source ? 10 : parseFloat(style.paddingLeft) / 2);
       function place(element, y){
         if (y < viewport.top + 5 || y > viewport.bottom - 5) return;
         element.style.left = left + 'px';
@@ -2478,26 +2824,71 @@ saludar("Ana");</code></pre>
     }
   }
 
-  for (const button of [$pinLineBtn, $goLineBtn]){
+  function updateLineTags(f){
+    const pins = f?.pins || [];
+    const tags = pins.map(mark => {
+      if (!mark.button){
+        const button = document.createElement('button');
+        button.className = 'btn small';
+        button.addEventListener('click', () => visitPin(f, mark));
+        mark.button = button;
+      }
+      const button = mark.button;
+      const source = ['edit', 'split'].includes(mark.mode);
+      const surface = mark.mode === 'wysiwyg' ? $wysiwyg : $content;
+      const text = source ? f.text.replace(/\r\n?/g, '\n') : textIndex(surface).text;
+      const line = source || mark.mode === mode
+        ? text.slice(0, mark.offset).split('\n').length : mark.line;
+      mark.line = line;
+      button.textContent = 'L' + line;
+      button.title = 'Ir a la línea marcada ' + line;
+      button.setAttribute('aria-pressed', String(f.pin === mark));
+      return button;
+    });
+    if (tags.length !== $lineTags.children.length || tags.some((tag, i) => $lineTags.children[i] !== tag)){
+      $lineTags.replaceChildren(...tags);
+    }
+    $pinLineBtn.setAttribute('aria-pressed', String(!!f?.pins.length));
+    $goLineBtn.disabled = !f?.pin;
+  }
+
+  function visitPin(f, mark){
+    const here = currentLine();
+    if (!sameLine(here, mark)){
+      f.returnLine = here;
+      jumpToLine(mark);
+    }
+    f.pin = mark;
+    f.visitedPins = [mark, ...f.visitedPins.filter(pin => pin !== mark)];
+    updateLineTags(f);
+    scheduleLineMarkers();
+  }
+
+  for (const button of [$pinLineBtn, $goLineBtn, $lineTags]){
     button.addEventListener('mousedown', e => e.preventDefault());
   }
   $pinLineBtn.addEventListener('click', () => {
     const f = cur();
     const here = currentLine();
-    f.pin = f.pin && sameLine(here, f.pin) ? null : here;
-    f.returnLine = null;
-    updateToolbar();
+    const existing = f.pins.find(mark => sameLine(here, mark));
+    if (existing){
+      f.pins = f.pins.filter(mark => mark !== existing);
+      f.visitedPins = f.visitedPins.filter(mark => mark !== existing);
+      if (f.pin === existing) f.pin = f.visitedPins[0] || f.pins.at(-1);
+    } else {
+      f.pins.push(here);
+      if (!f.visitedPins.length) f.pin = here;
+    }
+    if (!f.pin) f.returnLine = null;
+    updateLineTags(f);
+    scheduleLineMarkers();
   });
   $goLineBtn.addEventListener('click', () => {
     const f = cur();
     if (!f?.pin) return;
-    const here = currentLine();
-    if (sameLine(here, f.pin)){
+    if (sameLine(currentLine(), f.pin)){
       if (f.returnLine) jumpToLine(f.returnLine);
-    } else {
-      f.returnLine = here;
-      jumpToLine(f.pin);
-    }
+    } else visitPin(f, f.pin);
     scheduleLineMarkers();
   });
 
@@ -2560,6 +2951,8 @@ saludar("Ana");</code></pre>
       setScrollProgress(m === 'edit' ? $editor : $body, progress);
     }
     refreshFind();
+    updateLineNumbers();
+    updateLineTags(cur());
   }
 
   function captureScroll(f){
@@ -2602,6 +2995,7 @@ saludar("Ana");</code></pre>
       toggleFind(false);
       $content.classList.add('welcome');
       $content.innerHTML = welcomeHTML;
+      previewVersion = null;
       $editor.value = '';
       $wysiwyg.innerHTML = '';
       setMode('view'); updateToolbar(); renderSidebar();
@@ -2648,9 +3042,13 @@ saludar("Ana");</code></pre>
   }
 
   function updateText(f, text){
-    const previousPreview = f.draftId ? fileLabel(f) : fileSubtitle(f);
+    const previousSubtitle = fileSubtitle(f);
+    const previousLabel = f.draftId ? fileLabel(f) : '';
     movePinnedOffsets(f, text);
     f.text = text;
+    f.updatedAt = Date.now();
+    updateOutline();
+    if (f.pins.length) updateLineTags(f);
     if (f.draftId && $autoSaveDrafts.checked) persistDraft(f);
     f.size = new Blob([text]).size;
     const dirty = text !== f.savedText;
@@ -2662,11 +3060,14 @@ saludar("Ana");</code></pre>
       $curSize.textContent = fmtBytes(f.size);
       updateHistoryButtons(f);
     }
-    if (dirtyChanged || (f.draftId ? fileLabel(f) : fileSubtitle(f)) !== previousPreview) renderSidebar();
+    if ($fileSort.value.startsWith('updated-') || dirtyChanged ||
+        fileSubtitle(f) !== previousSubtitle || (f.draftId && fileLabel(f) !== previousLabel)){
+      renderSidebar();
+    }
   }
 
   function movePinnedOffsets(f, text){
-    const marks = [f.pin, f.returnLine].filter(mark => mark && (mark.mode === 'split' || mark.mode === 'edit'));
+    const marks = [...f.pins, f.returnLine].filter(mark => mark && (mark.mode === 'split' || mark.mode === 'edit'));
     if (!marks.length) return;
     const before = f.text.replace(/\r\n?/g, '\n');
     const after = text.replace(/\r\n?/g, '\n');
@@ -2759,12 +3160,15 @@ saludar("Ana");</code></pre>
       viewAs: detectViewAs(opts.name, opts.text),
       dirty: !!opts.dirty,
       savedText: opts.dirty ? null : opts.text,
+      pins: [],
+      visitedPins: [],
       undo: [],
       redo: [],
       lastTyping: 0,
       handle: opts.handle || null,
       source: opts.source || null,
       lastModified: opts.lastModified || 0,
+      updatedAt: opts.lastModified || Date.now(),
     };
     files.push(f);
     return f;
@@ -3029,9 +3433,11 @@ saludar("Ana");</code></pre>
 
   $viewAs.addEventListener('change', () => {
     const f = cur(); if (!f) return;
-    for (const key of ['pin', 'returnLine']){
-      if (f[key] && !['edit', 'split'].includes(f[key].mode)) f[key] = null;
-    }
+    const sourceMark = mark => mark && ['edit', 'split'].includes(mark.mode);
+    f.pins = f.pins.filter(sourceMark);
+    f.visitedPins = f.visitedPins.filter(sourceMark);
+    if (!sourceMark(f.pin)) f.pin = f.visitedPins[0] || f.pins.at(-1);
+    if (!sourceMark(f.returnLine)) f.returnLine = null;
     f.viewAs = $viewAs.value;
     updateToolbar();
     if (mode === 'edit' || mode === 'wysiwyg') setMode('split');
@@ -3350,6 +3756,7 @@ saludar("Ana");</code></pre>
       f.lastTyping = 0;
       f.size = file.size;
       f.lastModified = file.lastModified || Date.now();
+      f.updatedAt = f.lastModified;
       f.source = { name: f.name, size: file.size, lastModified: file.lastModified, text };
       f.dirty = false;
       if (activeId === f.id){
@@ -3406,6 +3813,7 @@ saludar("Ana");</code></pre>
       f.handle = handle;
       f.name = handle.name || f.name;
       f.lastModified = Date.now();
+      f.updatedAt = Math.max(f.updatedAt, f.lastModified);
       f.savedText = text;
       f.dirty = f.text !== text;
       if (f.draftId && !f.dirty){
@@ -3546,7 +3954,7 @@ saludar("Ana");</code></pre>
       for (const { id, file } of records){
         const text = await file.text();
         if (!files.some(f => f.draftId === id)){
-          recovered.push(addFile({ name: file.name, text, dirty: true, draftId: id, backedUpText: text }));
+          recovered.push(addFile({ name: file.name, text, dirty: true, draftId: id, backedUpText: text, lastModified: file.lastModified }));
         }
       }
       if (!cur() && recovered.length){
@@ -3609,6 +4017,19 @@ saludar("Ana");</code></pre>
     try { localStorage.setItem(STORE_KEY, JSON.stringify(p)); } catch(_){}
   };
   const panes = readPanes();
+  if ([...$fileSort.options].some(option => option.value === panes.fileSort)) $fileSort.value = panes.fileSort;
+  $groupFiles.setAttribute('aria-pressed', String(!!panes.groupFiles));
+  $fileSort.addEventListener('change', () => {
+    panes.fileSort = $fileSort.value;
+    writePanes(panes);
+    renderSidebar();
+  });
+  $groupFiles.addEventListener('click', () => {
+    panes.groupFiles = !panes.groupFiles;
+    $groupFiles.setAttribute('aria-pressed', String(panes.groupFiles));
+    writePanes(panes);
+    renderSidebar();
+  });
 
   // Hojas oficiales de highlight.js 11.9.0 (BSD-3), limitadas a las vistas de código.
   const syntaxThemes = [
@@ -3667,6 +4088,7 @@ saludar("Ana");</code></pre>
 
   $appearanceSelect.value = ['light', 'dark'].includes(panes.appearance) ? panes.appearance : 'auto';
   $autoSaveDrafts.checked = panes.autoSaveDrafts !== false;
+  $defaultLineNumbers.checked = panes.defaultLineNumbers === true;
   applyAppearance();
   systemDark.addEventListener('change', applyAppearance);
   $appearanceSelect.addEventListener('change', () => {

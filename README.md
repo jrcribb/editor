@@ -42,11 +42,23 @@ Chrome desde el archivo local `index.html`.
   para abrirlo como un archivo nuevo.
 - **Varios archivos abiertos** en una barra lateral que permite cambiar entre ellos y
   cerrarlos individualmente. Un punto amarillo identifica los que tienen cambios pendientes.
+- **Ordenar y agrupar archivos** por nombre o actualización, en ambos sentidos.
+  Al agrupar por extensión, el tipo aparece en el encabezado del grupo. El subtítulo
+  muestra la primera línea que contiene letras o números, sin signos en los extremos.
 - **Recuperar la sesión web** al volver a abrir Editor en el mismo navegador. La lista
   de archivos, la pestaña activa y los borradores se conservan en el almacenamiento local del sitio.
 - **Nuevo archivo** para empezar un documento desde cero.
 - Markdown compatible con GitHub, incluidas tablas, listas de tareas, bloques de código y notas al pie.
-- **Marcar línea** para volver a ella desde cualquier lugar y, además, retornar a la línea original.
+- **Índice de Markdown** con los encabezados escritos con `#`. Haz clic en uno para
+  saltar a su posición en el documento.
+- **Números de línea** en Fuente y Dividida. El botón **Números** recuerda tu
+  elección y **Configuración** permite establecer el valor predeterminado.
+- **Marcar líneas** agrega una etiqueta por posición en la barra. Pulsa una etiqueta
+  para saltar a esa marca. **Ir/volver** salta a la última marca visitada y, desde
+  allí, vuelve al punto previo al salto. Para quitar una marca, vuelve a marcar
+  esa línea. Las marcas se mantienen por archivo mientras está abierto.
+- **Exportar a PDF** abre la impresión del documento completo. En Chrome, elige
+  **Guardar como PDF** como destino.
 - **Intercambio** entre los dos archivos usados por último para ir de uno a otro rápidamente.
 - **Configuración** permite elegir el tema claro, oscuro o automático y previsualizar
   los estilos de highlight.js disponibles para cada tema. El editor recuerda un estilo por tema.
