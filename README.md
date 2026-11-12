@@ -46,8 +46,14 @@ Chrome desde el archivo local `index.html`.
   de archivos, la pestaña activa y los borradores se conservan en el almacenamiento local del sitio.
 - **Nuevo archivo** para empezar un documento desde cero.
 - Markdown compatible con GitHub, incluidas tablas, listas de tareas, bloques de código y notas al pie.
-- Resaltado de sintaxis con highlight.js.
-- Tema claro u oscuro según la configuración del sistema.
+- **Marcar línea** para volver a ella desde cualquier lugar y, además, retornar a la línea original.
+- **Intercambio** entre los dos archivos usados por último para ir de uno a otro rápidamente.
+- **Configuración** permite elegir el tema claro, oscuro o automático y previsualizar
+  los estilos de highlight.js disponibles para cada tema. El editor recuerda un estilo por tema.
+- Los documentos nuevos se guardan como temporarios en el almacenamiento local del
+  navegador o de la aplicación de escritorio. Se recuperan al reabrir el Editor.
+  La actualización automática del temporario se puede desactivar en Configuración.
+  Guardar en una ruta local elimina el temporario. Descargar una copia lo conserva.
 - Saneamiento del HTML con DOMPurify antes de mostrarlo.
 
 ## Uso
@@ -158,6 +164,9 @@ funciona sin descargar bibliotecas de la red, incluso desde una memoria USB o si
 
 Para actualizar una dependencia, descarga su versión minificada y sustituye el
 contenido del bloque `<script>` correspondiente.
+PowerShell se carga desde el bloque separado `highlight-powershell`. Al
+actualizar highlight.js, actualiza también esa gramática a la misma versión
+y comprueba que PowerShell siga disponible en **Ver como**.
 
 ## Licencia
 
@@ -178,7 +187,7 @@ clics reutilizan las acciones de abrir y crear archivos. La aplicación funciona
 sin compilación ni fuentes externas.
 
 Los valores de diseño se definen mediante propiedades CSS como `--bg`, `--fg`,
-`--accent`, `--reading-width` y `--ui-radius`. Los colores oscuros siguen la
+`--accent`, `--reading-width` y `--ui-radius`. El tema automático sigue la
 preferencia del sistema. Por debajo de 560 píxeles, la barra lateral se convierte
 en una lista superior compacta y la vista dividida coloca sus paneles verticalmente.
 
