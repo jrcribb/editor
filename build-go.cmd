@@ -1,0 +1,1 @@
+go build -tags production -ldflags -H=windowsgui -o Editor.exe .

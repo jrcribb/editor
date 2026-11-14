@@ -32,7 +32,8 @@ func main() {
 			Middleware: func(next http.Handler) http.Handler {
 				return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 					// The document renders untrusted Markdown, while the app itself uses inline scripts.
-					w.Header().Set("Content-Security-Policy", "script-src 'self' 'unsafe-inline'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'")
+				// html2canvas renders a clone in a local about:blank frame.
+				w.Header().Set("Content-Security-Policy", "script-src 'self' 'unsafe-inline'; frame-src about:; object-src 'none'; base-uri 'none'; form-action 'none'")
 					next.ServeHTTP(w, r)
 				})
 			},

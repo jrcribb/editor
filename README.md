@@ -116,6 +116,13 @@ archivos leídos desde TR mediante SSH.
 
 ## Guardar los cambios
 
+El botón **Exportar a PDF** genera un archivo PDF con el resaltado de sintaxis.
+Puedes elegir **Típico (A4)** o **Compacto (A5)** para leer en el celular.
+En **Contenido**, elige **Imagen** para rasterizar la página o **Texto editable
+y seleccionable** para buscar y copiar texto, o modificarlo con un editor de
+PDF. Algunos caracteres Unicode fuera del repertorio de las fuentes PDF
+integradas se conservan como imagen.
+
 JavaScript en el navegador necesita autorización para escribir en el disco.
 
 - En **Chrome, Edge, Arc, Brave, Opera** y otros navegadores Chromium compatibles

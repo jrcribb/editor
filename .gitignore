@@ -7,3 +7,4 @@ node_modules/
 /build/
 
 /.sites-stage-editor
+/.site-publish/.sites-checkout

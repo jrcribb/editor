@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"os"
@@ -26,8 +27,9 @@ type Desktop struct {
 }
 
 type FileHandle struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
+	ID     int    `json:"id"`
+	Name   string `json:"name"`
+	Folder string `json:"folder"`
 }
 
 type FileInfo struct {
@@ -211,6 +213,7 @@ func (d *Desktop) addPath(path string) (FileHandle, error) {
 		return FileHandle{}, err
 	}
 	name := filepath.Base(path)
+	folder := filepath.Dir(path)
 	// Resolve aliases for existing files so replacing a file keeps a symlink intact.
 	if resolved, err := filepath.EvalSymlinks(path); err == nil {
 		path = resolved
@@ -219,12 +222,12 @@ func (d *Desktop) addPath(path string) (FileHandle, error) {
 	defer d.mu.Unlock()
 	for id, existing := range d.paths {
 		if existing == path {
-			return FileHandle{id, name}, nil
+			return FileHandle{ID: id, Name: name, Folder: folder}, nil
 		}
 	}
 	id := len(d.paths) + 1
 	d.paths[id] = path
-	return FileHandle{id, name}, nil
+	return FileHandle{ID: id, Name: name, Folder: folder}, nil
 }
 
 func (d *Desktop) path(id int) (string, error) {
@@ -272,13 +275,35 @@ func (d *Desktop) Write(id int, text string) error {
 	if err != nil {
 		return err
 	}
+	return writeEditorFile(path, []byte(text))
+}
+
+func (d *Desktop) SavePDF(name, encoded string) error {
+	data, err := base64.StdEncoding.DecodeString(encoded)
+	if err != nil || !bytes.HasPrefix(data, []byte("%PDF-")) {
+		return errors.New("el PDF generado no es válido")
+	}
+	path, err := runtime.SaveFileDialog(d.ctx, runtime.SaveDialogOptions{
+		Title: "Guardar PDF", DefaultFilename: filepath.Base(name),
+		Filters: []runtime.FileFilter{{DisplayName: "Documento PDF (*.pdf)", Pattern: "*.pdf"}},
+	})
+	if err != nil || path == "" {
+		return err
+	}
+	if filepath.Ext(path) == "" {
+		path += ".pdf"
+	}
+	return writeEditorFile(path, data)
+}
+
+func writeEditorFile(path string, data []byte) error {
 	// Stage the complete edit alongside the destination before replacing it.
 	file, err := os.CreateTemp(filepath.Dir(path), ".markdown-editor-*")
 	if err != nil {
 		return err
 	}
 	defer os.Remove(file.Name())
-	if _, err = file.WriteString(text); err == nil {
+	if _, err = file.Write(data); err == nil {
 		err = file.Sync()
 	}
 	closeErr := file.Close()
