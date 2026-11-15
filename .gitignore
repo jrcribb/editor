@@ -8,3 +8,4 @@ node_modules/
 
 /.sites-stage-editor
 /.site-publish/.sites-checkout
+/.openai/hosting.json

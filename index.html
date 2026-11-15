@@ -1432,7 +1432,7 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
   #warnBar strong{font-weight:600}
 
   #body{flex:1;overflow:auto;position:relative}
-  .line-marker{position:absolute;z-index:1;width:9px;height:9px;
+  .line-marker{position:absolute;z-index:2;width:9px;height:9px;
     background:var(--accent);border:1px solid var(--bg);transform:translate(-50%,-50%) rotate(45deg);
     pointer-events:none}
   .line-marker.return{border:2px solid var(--accent);background:var(--bg);
@@ -1609,17 +1609,7 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
   }
   @media(prefers-reduced-motion:reduce){.btn.busy svg{animation:none}}
 
-  #outlineBtn[hidden]{display:none}
-  #outlinePanel{max-height:min(32vh,18rem);overflow:auto;padding:6px 12px;
-    background:var(--sidebar);border-bottom:1px solid var(--border)}
-  #outlinePanel button{display:block;width:100%;text-align:start;overflow-wrap:anywhere;
-    padding-inline-start:calc(8px + var(--depth) * 12px)}
-  #outlinePanel p{margin:6px;color:var(--muted)}
-  #outlineBtn[aria-expanded="true"],#lineNumbersBtn[aria-pressed="true"]{
-    background:var(--active);color:var(--accent)}
-  #lineTags{display:contents}
-  #lineTags .btn{background:var(--fg);color:var(--bg);border-color:var(--fg);font-variant-numeric:tabular-nums}
-  #lineTags .btn:hover,#lineTags .btn[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--bg)}
+  #lineNumbersBtn[aria-pressed="true"]{background:var(--active);color:var(--accent)}
   #sourceNumbers{position:absolute;z-index:1;overflow:hidden;pointer-events:none;
     width:var(--gutter-width);background:var(--bg);color:var(--muted);
     text-align:right;font:13px ui-monospace,SFMono-Regular,Menlo,monospace}
@@ -1629,7 +1619,7 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
     :root[data-theme]{--bg:#fff;--fg:#111;--muted:#444;--border:#bbb;
       --sidebar:#fff;--code-bg:#f5f5f5;--accent:#174f89}
     html,body,#app,#main,#body{display:block!important;height:auto!important;overflow:visible!important}
-    #sidebar,#sideResizer,#toolbar,#outlinePanel,#findBar,#warnBar,#richToolbar,
+    #sidebar,#sideResizer,#toolbar,#findBar,#warnBar,#richToolbar,
     #editor,#splitResizer,#wysiwyg,#sourceNumbers,.line-marker,#dropzone{display:none!important}
     #body #content{display:block!important;width:auto!important;max-width:none;min-height:0;
       margin:0!important;padding:0!important;overflow:visible!important;border:0;color:var(--fg)}
@@ -1640,7 +1630,8 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
     #content :is(.hljs,.hljs *){color:inherit!important;background:transparent!important}
   }
   .hidden{display:none !important}
-  #content.pdf-document{display:flow-root;width:100%;max-width:none;margin:0;padding:4px 0 0;overflow:visible}
+  #content.pdf-document{display:flow-root;width:100%;max-width:none;margin:0;padding:4px 0 0;
+    overflow:visible;background:var(--bg)}
   #content.pdf-document :is(h1,h2,h3,h4,h5,h6){
     white-space:normal;overflow-wrap:anywhere;letter-spacing:normal;font-variant-ligatures:none}
   #content.pdf-document:not(.welcome){--document-accent:var(--accent)}
@@ -1734,21 +1725,17 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
       </label>
       <select id="openFileSelect" aria-label="Archivos abiertos"></select>
       <span class="size" id="curSize"></span>
-      <button class="btn small" id="outlineBtn" title="Índice de encabezados" aria-label="Índice de encabezados" aria-controls="outlinePanel" aria-expanded="false" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 5h1m4 0h11M7 12h1m4 0h8M10 19h1m4 0h5"/></svg></button>
       <button class="btn small" id="lineNumbersBtn" title="Mostrar u ocultar números de línea" aria-label="Números de línea" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 3 5 21M19 3l-4 18M4 8h17M3 16h17"/></svg></button>
-      <button class="btn small" id="pdfBtn" title="Exportar a PDF desde el diálogo de impresión" aria-label="Exportar a PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8V3h12v5M6 17H3V8h18v9h-3M6 14h12v7H6zM17 11h1"/></svg></button>
       <button class="btn small" id="findBtn" title="Buscar en el documento" aria-label="Buscar en el documento" aria-controls="findBar" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></button>
       <button class="btn small" id="pinLineBtn" title="Anclar línea" aria-label="Anclar línea" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3h8l-1 6 4 4v2H5v-2l4-4-1-6ZM12 15v6"/></svg></button>
       <span class="bookmark-controls"><span id="bookmarks" aria-label="Marcas del documento"></span></span>
       <button class="btn small" id="goLineBtn" title="Ir a la línea anclada o volver" aria-label="Ir a la línea anclada o volver" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h15m-4-4 4 4-4 4M20 16H5m4-4-4 4 4 4"/></svg></button>
-      <span id="lineTags" role="group" aria-label="Líneas marcadas"></span>
       <button class="btn small" id="previousFileBtn" title="Volver al archivo anterior" aria-label="Volver al archivo anterior" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 10-5 5 5 5M4 15h12a4 4 0 0 0 0-8h-4"/></svg></button>
       <button class="btn small" id="reloadBtn" title="Recargar desde el archivo original" aria-label="Recargar desde el archivo original"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button>
       <button class="btn small" id="saveBtn" title="Guardar en el archivo original" aria-label="Guardar en el archivo original"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg><span id="saveAsLabel" hidden>Guardar como</span></button>
       <button type="button" class="btn small" id="printBtn" title="Exportar a PDF" aria-label="Exportar a PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6zM6 12h.01"/></svg></button>
       <button class="btn small primary" id="downloadBtn" title="Descargar una copia" aria-label="Descargar una copia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span id="downloadLabel" hidden>Descargar copia</span></button>
     </div>
-    <nav id="outlinePanel" aria-label="Índice de encabezados" hidden></nav>
     <div id="findBar" class="hidden" role="search" aria-label="Buscar en el documento">
       <input id="findText" type="search" placeholder="Buscar en el documento" aria-label="Texto a buscar" autocomplete="off" spellcheck="false">
       <span id="findStatus" role="status"></span>
@@ -1803,7 +1790,7 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
       <label for="pdfContent">Contenido</label>
       <select id="pdfContent">
         <option value="image">Imagen</option>
-        <option value="text">Texto editable y seleccionable</option>
+        <option value="text">Texto seleccionable</option>
       </select>
       <div class="btn-row">
         <button class="btn" value="cancelar">Cancelar</button>
@@ -1881,26 +1868,16 @@ saludar("Ana");</code></pre>
   const $wysiwyg  = document.getElementById('wysiwyg');
   const $body     = document.getElementById('body');
   const $pinMarkers = document.getElementById('pinMarkers');
-  const $lineTags = document.getElementById('lineTags');
   const $sourceNumbers = document.getElementById('sourceNumbers');
   const $lineNumbersBtn = document.getElementById('lineNumbersBtn');
   const $defaultLineNumbers = document.getElementById('defaultLineNumbers');
-  const $outlineBtn = document.getElementById('outlineBtn');
-  const $outlinePanel = document.getElementById('outlinePanel');
   let numberedText;
   let lineStarts = [];
-  let outlineText;
-  let outlineHeadings = [];
-  let parsedMarkdown;
-  let previewVersion;
   const $returnMarker = document.getElementById('returnMarker');
   let markerFrame = 0;
   const $toolbar  = document.getElementById('toolbar');
   const $curSize  = document.getElementById('curSize');
   const $openFileSelect = document.getElementById('openFileSelect');
-  const $fileSort = document.getElementById('fileSort');
-  const $groupFiles = document.getElementById('groupFiles');
-  const fileCollator = new Intl.Collator('es', { numeric: true, sensitivity: 'base' });
   const $activeFileName = document.getElementById('activeFileName');
   const $activeFileExtension = document.getElementById('activeFileExtension');
   const $viewAs = document.getElementById('viewAs');
@@ -2025,136 +2002,14 @@ saludar("Ana");</code></pre>
   const escHtml = s => String(s).replace(/[&<>"']/g, c => (
     {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]
   ));
-  const render = (text, tokens) => {
+  const render = text => {
     try {
-      return DOMPurify.sanitize(tokens ? marked.parser(tokens, outlineOptions) : marked.parse(text), {ADD_ATTR:['target']});
+      return DOMPurify.sanitize(marked.parse(text), {ADD_ATTR:['target']});
     } catch(e){
       console.error('render failed', e);
       return `<div style="color:var(--warn-fg);background:var(--warn-bg);padding:12px;border-radius:6px">No se pudo mostrar el documento. ${escHtml(e && e.message || String(e))}</div>`;
     }
   };
-  const outlineIds = new WeakMap();
-  const outlineOptions = {
-    ...marked.defaults,
-    extensions: {
-      renderers: {
-        heading(token){
-          const index = outlineIds.get(token);
-          if (index === undefined) return false;
-          const { depth, tokens } = token;
-          return '<h' + depth + ' data-outline-index="' + index + '">' +
-            this.parser.parseInline(tokens) + '</h' + depth + '>\n';
-        },
-      },
-    },
-  };
-
-  function markdownTokens(text){
-    if (parsedMarkdown?.text === text) return parsedMarkdown;
-    // Marked expands leading tabs before tokenizing. Map heading offsets back to the textarea.
-    const indents = [];
-    let extra = 0;
-    const source = text.replace(/\r\n?/g, '\n').replace(/^( *)(\t+)/gm, (indent, spaces, tabs, start) => {
-      const expanded = spaces + '    '.repeat(tabs.length);
-      const end = start + extra + expanded.length;
-      extra += expanded.length - indent.length;
-      indents.push({ end, extra });
-      return expanded;
-    });
-    const offsets = new WeakMap();
-    const tokenizer = new marked.Tokenizer();
-    const heading = tokenizer.heading;
-    tokenizer.heading = function(rest){
-      const token = heading.call(this, rest);
-      if (token) offsets.set(token, source.length - rest.length);
-      return token;
-    };
-    const tokens = marked.lexer(source, { ...marked.defaults, tokenizer });
-    const headings = [];
-    let indent = 0;
-    for (const token of tokens){
-      const offset = offsets.get(token);
-      if (offset === undefined) continue;
-      while (indent < indents.length && indents[indent].end <= offset) indent++;
-      outlineIds.set(token, headings.length);
-      headings.push({
-        offset: offset - (indents[indent - 1]?.extra || 0),
-        depth: token.depth,
-        text: token.text,
-      });
-    }
-    parsedMarkdown = { text, tokens, headings };
-    return parsedMarkdown;
-  }
-
-  function updateOutline(){
-    const f = cur();
-    $outlineBtn.hidden = !f || !!f.viewAs;
-    if ($outlineBtn.hidden) $outlinePanel.hidden = true;
-    $outlineBtn.setAttribute('aria-expanded', String(!$outlinePanel.hidden));
-    if ($outlinePanel.hidden || outlineText === f.text) return;
-    outlineText = f.text;
-    outlineHeadings = markdownTokens(f.text).headings;
-    const items = outlineHeadings.map(({ depth, text }, index) => {
-      const button = document.createElement('button');
-      button.className = 'btn small';
-      button.style.setProperty('--depth', depth - 1);
-      button.dataset.heading = index;
-      const label = document.createElement('span');
-      label.innerHTML = DOMPurify.sanitize(marked.parseInline(text), { ALLOWED_TAGS: [] });
-      button.textContent = label.textContent || 'Encabezado sin texto';
-      return button;
-    });
-    if (!items.length){
-      const empty = document.createElement('p');
-      empty.textContent = 'No hay encabezados con #.';
-      items.push(empty);
-    }
-    $outlinePanel.replaceChildren(...items);
-  }
-
-  $outlineBtn.addEventListener('click', () => {
-    $outlinePanel.hidden = !$outlinePanel.hidden;
-    updateOutline();
-  });
-  $outlinePanel.addEventListener('click', e => {
-    const button = e.target.closest('[data-heading]');
-    if (!button) return;
-    const index = Number(button.dataset.heading);
-    const heading = outlineHeadings[index];
-    if (mode === 'edit' || mode === 'split'){
-      $editor.focus({ preventScroll: true });
-      revealSource(Math.min(heading.offset, $editor.value.length));
-    }
-    if (mode === 'wysiwyg'){
-      const rendered = document.createElement('template');
-      rendered.innerHTML = render(cur().text, markdownTokens(cur().text).tokens);
-      const headings = ':is(h1,h2,h3,h4,h5,h6)';
-      const order = [...rendered.content.querySelectorAll(headings)]
-        .findIndex(element => element.dataset.outlineIndex === String(index));
-      const element = $wysiwyg.querySelectorAll(headings)[order];
-      if (element){
-        element.scrollIntoView({ block: 'start' });
-        return;
-      }
-      setMode('edit');
-      revealSource(Math.min(heading.offset, $editor.value.length));
-    } else if (mode !== 'edit'){
-      if (mode === 'split') renderPreview();
-      const element = $content.querySelector('[data-outline-index="' + index + '"]');
-      if (mode === 'split' && element){
-        $content.scrollTop += element.getBoundingClientRect().top - $content.getBoundingClientRect().top;
-        splitScrollPositions.set($content, $content.scrollTop);
-      } else element?.scrollIntoView({ block: 'start' });
-    }
-  });
-
-  document.getElementById('pdfBtn').addEventListener('click', () => window.print());
-  window.addEventListener('beforeprint', () => {
-    const f = cur();
-    if (f && (previewVersion?.text !== f.text || previewVersion.viewAs !== f.viewAs)) renderPreview();
-  });
-
   const welcomeHTML = `<div class="welcome-icon" aria-hidden="true">M↓</div>
     <h2>Escribe en Markdown</h2>
     <p class="intro">Lee y edita documentos Markdown. Para empezar, arrastra un archivo o ábrelo desde aquí.</p>
@@ -2327,6 +2182,11 @@ saludar("Ana");</code></pre>
       : { base: name, extension: '' };
   }
 
+  function setExtensionBadge(badge, extension){
+    badge.textContent = extension;
+    badge.hidden = !extension;
+  }
+
   function fileLabel(f){
     if (!f.draftId) return fileNameParts(f.name).base;
     let label = '';
@@ -2381,103 +2241,39 @@ saludar("Ana");</code></pre>
       if (sort === 'oldest') return a.lastModified - b.lastModified;
       return sort === 'open' ? 0 : compare(a, b, sort);
     });
-    $openFileSelect.replaceChildren(...ordered.map(f =>
-      new Option(fileLabel(f) + (f.draftId ? ' (temporario)' : '') + (f.dirty ? ' •' : ''),
-        f.id, false, f.id === activeId)));
-    if (files.length === 0){ $files.innerHTML = '<div class="empty">No hay archivos abiertos</div>'; return; }
-    $files.innerHTML = '';
+    $openFileSelect.replaceChildren();
+    if (ordered.length === 0){
+      $files.innerHTML = '<div class="empty">No hay archivos abiertos</div>';
+      return;
+    }
+    $files.replaceChildren();
     let previousGroup;
+    let list = $files;
+    let options = $openFileSelect;
     for (const f of ordered){
       if (group !== 'none'){
         const key = fileCategory(f, group);
         if (key !== previousGroup){
+          const title = group === 'day' ? dayFormat.format(key) : key;
+          list = document.createElement('div');
+          list.setAttribute('role', 'group');
+          list.setAttribute('aria-label', title);
           const heading = document.createElement('div');
           heading.className = 'file-group';
-          heading.textContent = group === 'day' ? dayFormat.format(key) : key;
-          $files.append(heading);
+          heading.textContent = title;
+          heading.setAttribute('aria-hidden', 'true');
+          list.append(heading);
+          $files.append(list);
+          options = document.createElement('optgroup');
+          options.label = title;
+          $openFileSelect.append(options);
           previousGroup = key;
         }
       }
       const label = fileLabel(f);
-      const el = document.createElement('div');
-      el.className = 'file-item'
-        + (f.id === activeId ? ' active' : '')
-        + (f.dirty ? ' dirty' : '');
-      el.setAttribute('role', 'listitem');
-      el.setAttribute('tabindex', '0');
-      el.setAttribute('aria-label', label + (f.draftId ? ' (temporario)' : '') + (f.dirty ? ' (sin guardar)' : ''));
-      const dot = document.createElement('span');
-      dot.className = 'dot';
-      dot.title = 'Cambios sin guardar';
-      const name = document.createElement('span');
-      name.className = 'name';
-      name.title = label;
-      name.textContent = label;
-      const fileText = document.createElement('span');
-      fileText.className = 'file-text';
-      fileText.append(name);
-      const firstLine = fileSubtitle(f);
-      if (firstLine){
-        const subtitle = document.createElement('span');
-        subtitle.className = 'subtitle';
-        subtitle.textContent = firstLine;
-        subtitle.title = firstLine;
-        fileText.append(subtitle);
-        el.setAttribute('aria-description', firstLine);
-      }
-      const closeBtn = document.createElement('button');
-      closeBtn.className = 'close';
-      closeBtn.title = `Cerrar ${label}`;
-      closeBtn.setAttribute('aria-label', closeBtn.title);
-      closeBtn.textContent = '×';
-      el.append(dot, fileText);
-      if (f.draftId){
-        const badge = document.createElement('span');
-        badge.className = 'draft-badge';
-        badge.textContent = 'Temporario';
-        badge.setAttribute('aria-hidden', 'true');
-        el.append(badge);
-      }
-      el.append(closeBtn);
-      el.addEventListener('click', e => {
-        if (e.target === closeBtn) return;
-        activate(f.id);
-      });
-      el.addEventListener('keydown', e => {
-        if (e.target === closeBtn) return;
-        if (e.key === 'Enter' || e.key === ' '){
-          e.preventDefault();
-          activate(f.id);
-        }
-      });
-      closeBtn.addEventListener('click', e => {
-        e.stopPropagation(); closeFile(f.id);
-      });
-      $files.appendChild(el);
-    }
-    for (const [extension, entries] of sortedFileGroups()){
-      const options = entries.map(({ file: f, label }) =>
-        new Option((f.draftId ? label + ' (temporario)' : f.name) + (f.dirty ? ' •' : ''),
-          f.id, false, f.id === activeId));
-      let list = $files;
-      if (grouped){
-        const title = extension || 'Sin extensión';
-        const optionGroup = document.createElement('optgroup');
-        optionGroup.label = title;
-        optionGroup.append(...options);
-        $openFileSelect.append(optionGroup);
-
-        list = document.createElement('div');
-        list.setAttribute('role', 'group');
-        list.setAttribute('aria-label', title);
-        const heading = document.createElement('div');
-        heading.className = 'file-group-title';
-        heading.textContent = title;
-        heading.setAttribute('aria-hidden', 'true');
-        list.append(heading);
-        $files.append(list);
-      } else $openFileSelect.append(...options);
-      for (const { file, label } of entries) list.append(sidebarFileItem(file, label, grouped));
+      options.append(new Option((f.draftId ? label + ' (temporario)' : f.name) + (f.dirty ? ' •' : ''),
+        f.id, false, f.id === activeId));
+      list.append(sidebarFileItem(f, label, group === 'type'));
     }
     $openFileSelect.value = String(activeId);
   }
@@ -2602,7 +2398,7 @@ saludar("Ana");</code></pre>
 
   function renderWysiwyg(){
     const f = cur(); if (!f) return;
-    $wysiwyg.innerHTML = render(f.text, markdownTokens(f.text).tokens);
+    $wysiwyg.innerHTML = render(f.text);
     setupTaskLists($wysiwyg, true);
     savedRichRange = null;
     highlightCodeBlocks($wysiwyg);
@@ -2618,10 +2414,12 @@ saludar("Ana");</code></pre>
     renderBookmarks();
     $clearBtn.disabled = files.length === 0;
     const f = cur();
-    updateOutline();
-    updateLineTags(f);
+
+
     updateLineNumbers();
     updateHistoryButtons(f);
+    $pinLineBtn.setAttribute('aria-pressed', String(!!f?.bookmarks?.length));
+    $goLineBtn.disabled = !f?.pin;
     const { base: title, extension } = fileNameParts(f?.name || 'Editor');
     $activeFileName.textContent = title;
     $activeFileName.title = f?.name || '';
@@ -2711,15 +2509,30 @@ saludar("Ana");</code></pre>
       fontWeight: style.fontWeight, whiteSpace: style.whiteSpace,
       overflowWrap: style.overflowWrap, tabSize: style.tabSize,
     });
-    const node = document.createTextNode($editor.value + '\u200b');
+    // Give empty lines a measurable glyph without changing their wrapping.
+    const emptyLines = [];
+    let start = 0;
+    const text = $editor.value.split('\n').map(line => {
+      if (!line) emptyLines.push(start);
+      start += line.length + 1;
+      return line || '\u200b';
+    }).join('\n');
+    const node = document.createTextNode(text);
     mirror.append(node);
     document.body.append(mirror);
     const origin = mirror.getBoundingClientRect().top;
     const range = document.createRange();
     try {
       return read(offset => {
-        range.setStart(node, offset);
-        range.collapse(true);
+        let low = 0, high = emptyLines.length;
+        while (low < high){
+          const mid = (low + high) >>> 1;
+          if (emptyLines[mid] < offset) low = mid + 1;
+          else high = mid;
+        }
+        const index = offset + low;
+        range.setStart(node, index);
+        range.setEnd(node, text[index] && text[index] !== '\n' ? index + 1 : index);
         const rect = range.getBoundingClientRect();
         return rect.top - origin;
       });
@@ -2819,13 +2632,13 @@ saludar("Ana");</code></pre>
       let low = 0, high = lineStarts.length;
       while (low < high){
         const mid = (low + high) >>> 1;
-        if (top(lineStarts[mid]) + center < scroll) low = mid + 1;
+        if (top(lineStarts[mid]) + center * 2 <= scroll) low = mid + 1;
         else high = mid;
       }
       const numbers = document.createDocumentFragment();
       for (let i = low; i < lineStarts.length; i++){
         const y = top(lineStarts[i]) + center - scroll;
-        if (y >= height) break;
+        if (y - center >= height) break;
         const number = document.createElement('span');
         number.style.top = y + 'px';
         number.textContent = i + 1;
@@ -2855,16 +2668,15 @@ saludar("Ana");</code></pre>
       const f = cur();
       const surface = navigationSurface();
       const source = surface === $editor;
-      // Cada marca numerada necesita su propio rombo; el pin de navegación es
-      // solamente una copia de la última marca creada o visitada.
-      $body.querySelectorAll('.bookmark-marker').forEach(element => element.remove());
+      drawSourceNumbers(source);
+      $pinMarkers.replaceChildren();
       const marks = f?.bookmarks || [];
-      const markers = [[$pinMarker, null], [$returnMarker, f?.returnLine]];
+      const markers = [[$returnMarker, f?.returnLine]];
       for (const mark of marks){
         const element = document.createElement('span');
         element.className = 'line-marker bookmark-marker';
         element.setAttribute('aria-hidden', 'true');
-        $body.append(element);
+        $pinMarkers.append(element);
         markers.push([element, mark]);
       }
       const visible = markers.filter(([element, mark]) => {
@@ -2977,34 +2789,6 @@ saludar("Ana");</code></pre>
     }
   }
 
-  function updateLineTags(f){
-    const pins = f?.pins || [];
-    const tags = pins.map(mark => {
-      if (!mark.button){
-        const button = document.createElement('button');
-        button.className = 'btn small';
-        button.addEventListener('click', () => visitPin(f, mark));
-        mark.button = button;
-      }
-      const button = mark.button;
-      const source = ['edit', 'split'].includes(mark.mode);
-      const surface = mark.mode === 'wysiwyg' ? $wysiwyg : $content;
-      const text = source ? f.text.replace(/\r\n?/g, '\n') : textIndex(surface).text;
-      const line = source || mark.mode === mode
-        ? text.slice(0, mark.offset).split('\n').length : mark.line;
-      mark.line = line;
-      button.textContent = 'L' + line;
-      button.title = 'Ir a la línea marcada ' + line;
-      button.setAttribute('aria-pressed', String(f.pin === mark));
-      return button;
-    });
-    if (tags.length !== $lineTags.children.length || tags.some((tag, i) => $lineTags.children[i] !== tag)){
-      $lineTags.replaceChildren(...tags);
-    }
-    $pinLineBtn.setAttribute('aria-pressed', String(!!f?.pins.length));
-    $goLineBtn.disabled = !f?.pin;
-  }
-
   function visitPin(f, mark){
     const here = currentLine();
     if (!sameLine(here, mark)){
@@ -3012,12 +2796,12 @@ saludar("Ana");</code></pre>
       jumpToLine(mark);
     }
     f.pin = mark;
-    f.visitedPins = [mark, ...f.visitedPins.filter(pin => pin !== mark)];
-    updateLineTags(f);
+    updateToolbar();
+
     scheduleLineMarkers();
   }
 
-  for (const button of [$pinLineBtn, $goLineBtn, $lineTags]){
+  for (const button of [$pinLineBtn, $goLineBtn]){
     button.addEventListener('mousedown', e => e.preventDefault());
   }
   $pinLineBtn.addEventListener('click', () => {
@@ -3028,7 +2812,7 @@ saludar("Ana");</code></pre>
     const end = index.text.indexOf('\n', here.offset);
     here.label = index.text.slice(start, end < 0 ? undefined : end).trim().slice(0, 60) || 'Marca ' + ((f.bookmarks || []).length + 1);
     (f.bookmarks ||= []).push(here);
-    f.pin = { ...here };
+    f.pin = here;
     f.returnLine = null;
     updateToolbar();
   });
@@ -3140,12 +2924,13 @@ saludar("Ana");</code></pre>
       go.title = 'Marca ' + (i + 1) + ': ' + mark.label + ' (Mayús + clic para eliminar)';
       go.setAttribute('aria-label', go.title);
       go.addEventListener('click', e => {
-        if (e.shiftKey){ f.bookmarks.splice(i, 1); renderBookmarks(); scheduleLineMarkers(); }
-        else {
-          f.returnLine = currentLine();
-          f.pin = { ...mark };
-          jumpToLine(mark);
+        if (e.shiftKey){
+          f.bookmarks.splice(i, 1);
+          if (f.pin === mark) f.pin = f.bookmarks.at(-1);
           updateToolbar();
+        }
+        else {
+          visitPin(f, mark);
         }
       });
       $bookmarks.append(go);
@@ -3212,7 +2997,6 @@ saludar("Ana");</code></pre>
     }
     refreshFind();
     updateLineNumbers();
-    updateLineTags(cur());
   }
 
   function captureScroll(f){
@@ -3255,7 +3039,7 @@ saludar("Ana");</code></pre>
       toggleFind(false);
       $content.classList.add('welcome');
       $content.innerHTML = welcomeHTML;
-      previewVersion = null;
+
       $editor.value = '';
       $wysiwyg.innerHTML = '';
       setMode('view'); updateToolbar(); renderSidebar();
@@ -3320,12 +3104,13 @@ saludar("Ana");</code></pre>
       $curSize.textContent = fmtBytes(f.size);
       updateHistoryButtons(f);
     }
-    if (dirtyChanged || (f.draftId ? fileLabel(f) : fileSubtitle(f)) !== previousPreview ||
+    if (dirtyChanged || fileSubtitle(f) !== previousSubtitle ||
+        (f.draftId && fileLabel(f) !== previousLabel) ||
         ['recent', 'oldest'].includes($fileSort.value) || $fileGroup.value === 'day') renderSidebar();
   }
 
   function movePinnedOffsets(f, text){
-    const marks = [f.pin, f.returnLine, ...(f.bookmarks || [])].filter(mark => mark && (mark.mode === 'split' || mark.mode === 'edit'));
+    const marks = [...new Set([f.pin, f.returnLine, ...(f.bookmarks || [])])].filter(mark => mark && (mark.mode === 'split' || mark.mode === 'edit'));
     if (!marks.length) return;
     const before = f.text.replace(/\r\n?/g, '\n');
     const after = text.replace(/\r\n?/g, '\n');
@@ -3418,8 +3203,6 @@ saludar("Ana");</code></pre>
       viewAs: detectViewAs(opts.name, opts.text),
       dirty: !!opts.dirty,
       savedText: opts.dirty ? null : opts.text,
-      pins: [],
-      visitedPins: [],
       undo: [],
       redo: [],
       lastTyping: 0,
@@ -3693,9 +3476,8 @@ saludar("Ana");</code></pre>
   $viewAs.addEventListener('change', () => {
     const f = cur(); if (!f) return;
     const sourceMark = mark => mark && ['edit', 'split'].includes(mark.mode);
-    f.pins = f.pins.filter(sourceMark);
-    f.visitedPins = f.visitedPins.filter(sourceMark);
-    if (!sourceMark(f.pin)) f.pin = f.visitedPins[0] || f.pins.at(-1);
+    f.bookmarks = (f.bookmarks || []).filter(sourceMark);
+    if (!sourceMark(f.pin)) f.pin = f.bookmarks.at(-1);
     if (!sourceMark(f.returnLine)) f.returnLine = null;
     f.viewAs = $viewAs.value;
     updateToolbar();
@@ -4131,8 +3913,7 @@ saludar("Ana");</code></pre>
   const $pdfDialog = document.getElementById('pdfDialog');
   const $pdfFormat = document.getElementById('pdfFormat');
   const $pdfContent = document.getElementById('pdfContent');
-  async function drawPdfDocument(surface, width, height, margin, worker, editable){
-    // Draw from the live WebView layout, independently of the iframe capture.
+  async function drawPdfDocument(surface, width, height, margin, format, selectable){
     const host = document.createElement('div');
     Object.assign(host.style, { position: 'fixed', left: '-10000px', top: '0', width: width + 'mm' });
     host.append(surface);
@@ -4149,6 +3930,10 @@ saludar("Ana");</code></pre>
       const background = getComputedStyle(document.body).backgroundColor;
       const paint = [];
       const rows = [];
+      const captureOptions = {
+        margin, backgroundColor: background, enableLinks: false, pagebreak: { mode: [] },
+        jsPDF: { unit: 'mm', format, orientation: 'portrait' },
+      };
       paint.push(() => {
       for (const element of surface.querySelectorAll('*')){
         const style = getComputedStyle(element);
@@ -4200,7 +3985,7 @@ saludar("Ana");</code></pre>
             bold: Number(style.fontWeight) >= 600,
             italic: style.fontStyle !== 'normal',
             fontSize: parseFloat(style.fontSize),
-            editable: editable && /^[\x20-\x7e\u00a0-\u00ff\u2010-\u2014\u2018-\u201d\u2022\u2026\u20ac]+$/.test(text),
+            selectable: selectable && /^[\x20-\x7e\u00a0-\u00ff\u2010-\u2014\u2018-\u201d\u2022\u2026\u20ac]+$/.test(text),
           };
           rows.push(row);
           if (heading){
@@ -4232,12 +4017,13 @@ saludar("Ana");</code></pre>
       // Keep the raster surface to one page so large scripts fit WebView2's canvas limits.
       const seed = document.createElement('canvas');
       seed.width = seed.height = 1;
-      const pdf = await worker.from(seed, 'canvas').toPdf().get('pdf');
+      const pdf = await html2pdf().set(captureOptions).from(seed, 'canvas').toPdf().get('pdf');
       pdf.deletePage(1);
       // A page break must not cross a heading that fits on a fresh page.
       // Process from bottom to top so moving a break cannot cut an earlier fragment.
       const breakRanges = [...rows, ...Array.from(headings.values()).filter(box => box.bottom - box.top < pageHeight)]
         .sort((a, b) => b.top - a.top);
+      let canCapture = true;
       for (let top = 0; top < Math.max(1, bounds.height);){
         let bottom = top + pageHeight;
         for (const row of breakRanges){
@@ -4250,29 +4036,61 @@ saludar("Ana");</code></pre>
         ctx.beginPath();
         ctx.rect(0, 0, canvas.width / 2, bottom - top);
         ctx.clip();
-        ctx.translate(0, -top);
-        for (const draw of paint) draw();
-        for (const row of rows){
-          if (row.editable || row.bottom <= top || row.top >= bottom) continue;
-          ctx.font = row.font;
-          ctx.fillStyle = row.color;
-          ctx.textBaseline = 'middle';
-          ctx.fillText(row.text, row.x, (row.top + row.bottom) / 2, row.lineWidth);
+        const pageRows = rows.filter(row => row.bottom > top && row.top < bottom);
+        let capture;
+        if (canCapture){
+          const worker = html2pdf().set({
+            ...captureOptions,
+            html2canvas: { scale: 2, y: top, width: bounds.width,
+              height: Math.ceil(bottom - top), backgroundColor: background, logging: false },
+          }).from(surface);
+          try {
+            capture = await worker.toCanvas().get('canvas');
+            if (pageRows.some(row => row.text.trim())){
+              const pixels = capture.getContext('2d').getImageData(0, 0, capture.width, capture.height).data;
+              let hasContent = false;
+              for (let i = 4; i < pixels.length; i += 4){
+                if (pixels[i] !== pixels[0] || pixels[i + 1] !== pixels[1] ||
+                    pixels[i + 2] !== pixels[2] || pixels[i + 3] !== pixels[3]){
+                  hasContent = true;
+                  break;
+                }
+              }
+              if (!hasContent) throw new Error('captura vacía');
+            }
+          } catch (e){
+            console.warn('Se usará el renderizado alternativo del PDF.', e);
+            (await worker.get('overlay').catch(() => null))?.remove();
+            canCapture = false;
+            capture = null;
+          }
+        }
+        if (capture){
+          ctx.drawImage(capture, 0, 0, capture.width / 2, capture.height / 2);
+        } else {
+          ctx.translate(0, -top);
+          for (const draw of paint) draw();
+          for (const row of pageRows){
+            ctx.font = row.font;
+            ctx.fillStyle = row.color;
+            ctx.textBaseline = 'alphabetic';
+            const metrics = ctx.measureText(row.text);
+            ctx.fillText(row.text, row.x, row.top + metrics.fontBoundingBoxAscent, row.lineWidth);
+          }
         }
         ctx.restore();
         pdf.addPage();
-        pdf.addImage(canvas.toDataURL('image/jpeg', 0.96), 'JPEG', margin, margin, width, pageHeight * 25.4 / 96);
-        for (const row of rows){
-          if (!row.editable || row.top < top || row.top >= bottom) continue;
+        pdf.addImage(canvas, 'PNG', margin, margin, width, pageHeight * 25.4 / 96, undefined, 'FAST');
+        for (const row of pageRows){
+          if (!row.selectable || row.top < top) continue;
           const fontStyle = row.bold ? (row.italic ? 'bolditalic' : 'bold') : (row.italic ? 'italic' : 'normal');
-          const [red, green, blue] = row.color.match(/[\d.]+/g).map(Number);
           pdf.setFont(row.family, fontStyle);
           pdf.setFontSize(row.fontSize * 0.75);
-          pdf.setTextColor(red, green, blue);
           const textWidth = pdf.getTextWidth(row.text);
           const horizontalScale = textWidth > 0 ? Math.min(1, row.lineWidth * 25.4 / 96 / textWidth) : 1;
           pdf.text(row.text, margin + row.x * 25.4 / 96,
-            margin + ((row.top + row.bottom) / 2 - top) * 25.4 / 96, { baseline: 'middle', horizontalScale });
+            margin + ((row.top + row.bottom) / 2 - top) * 25.4 / 96,
+            { baseline: 'middle', horizontalScale, renderingMode: 'invisible' });
         }
         top = bottom;
       }
@@ -4295,7 +4113,7 @@ saludar("Ana");</code></pre>
     const f = cur();
     if (!f || event.submitter?.value !== 'exportar') return;
     const format = $pdfFormat.value;
-    const editable = $pdfContent.value === 'text';
+    const selectable = $pdfContent.value === 'text';
     panes.pdfFormat = format;
     panes.pdfContent = $pdfContent.value;
     writePanes(panes);
@@ -4308,45 +4126,13 @@ saludar("Ana");</code></pre>
       renderDocument(surface, f);
       const margin = format === 'a5' ? 9 : 15;
       const filename = (f.name.replace(/\.[^./\\]+$/, '') || 'Documento') + '.pdf';
-      let worker = html2pdf().set({
-        filename,
-        margin,
-        image: { type: 'jpeg', quality: 0.96 },
-        html2canvas: { scale: 2, backgroundColor: getComputedStyle(document.body).backgroundColor },
-        jsPDF: { unit: 'mm', format, orientation: 'portrait' },
-        pagebreak: { mode: ['css'], avoid: ['p', 'li', 'tr', 'pre', 'img'] },
-      });
-      if (desktop || editable){
-        const width = (format === 'a5' ? 148 : 210) - 2 * margin;
-        const height = (format === 'a5' ? 210 : 297) - 2 * margin;
-        const pdf = await drawPdfDocument(surface, width, height, margin, worker, editable);
-        if (desktop){
-          const encoded = pdf.output('datauristring').split(',', 2)[1];
-          await desktop.SavePDF(filename, encoded);
-        } else {
-          pdf.save(filename);
-        }
-        return;
-      }
-      worker = worker.from(surface);
-      if (surface.textContent.trim()){
-        const canvas = await worker.toCanvas().get('canvas');
-        const context = canvas.getContext('2d');
-        const background = context.getImageData(0, 0, 1, 1).data;
-        let hasContent = false;
-        for (let y = 0; y < canvas.height && !hasContent; y += 128){
-          const pixels = context.getImageData(0, y, canvas.width, Math.min(128, canvas.height - y)).data;
-          for (let i = 0; i < pixels.length; i += 4){
-            if (pixels[i] !== background[0] || pixels[i + 1] !== background[1] ||
-                pixels[i + 2] !== background[2] || pixels[i + 3] !== background[3]){
-              hasContent = true;
-              break;
-            }
-          }
-        }
-        if (!hasContent) throw new Error('el documento se renderizó en blanco');
-      }
-      await worker.save();
+      const width = (format === 'a5' ? 148 : 210) - 2 * margin;
+      const height = (format === 'a5' ? 210 : 297) - 2 * margin;
+      const pdf = await drawPdfDocument(surface, width, height, margin, format, selectable);
+      if (desktop){
+        const encoded = pdf.output('datauristring').split(',', 2)[1];
+        await desktop.SavePDF(filename, encoded);
+      } else pdf.save(filename);
     } catch(e){
       await notify(`No se pudo exportar el PDF (${e.message || e}).`);
     } finally {

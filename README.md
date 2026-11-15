@@ -49,16 +49,15 @@ Chrome desde el archivo local `index.html`.
   de archivos, la pestaña activa y los borradores se conservan en el almacenamiento local del sitio.
 - **Nuevo archivo** para empezar un documento desde cero.
 - Markdown compatible con GitHub, incluidas tablas, listas de tareas, bloques de código y notas al pie.
-- **Índice de Markdown** con los encabezados escritos con `#`. Haz clic en uno para
-  saltar a su posición en el documento.
+- **Índice de Markdown** en la barra lateral con los encabezados escritos con `#`.
+  Haz clic en uno para saltar a su posición en el documento.
 - **Números de línea** en Fuente y Dividida. El botón **Números** recuerda tu
   elección y **Configuración** permite establecer el valor predeterminado.
 - **Marcar líneas** agrega una etiqueta por posición en la barra. Pulsa una etiqueta
   para saltar a esa marca. **Ir/volver** salta a la última marca visitada y, desde
   allí, vuelve al punto previo al salto. Para quitar una marca, vuelve a marcar
   esa línea. Las marcas se mantienen por archivo mientras está abierto.
-- **Exportar a PDF** abre la impresión del documento completo. En Chrome, elige
-  **Guardar como PDF** como destino.
+- **Exportar a PDF** genera un archivo PDF del documento completo.
 - **Intercambio** entre los dos archivos usados por último para ir de uno a otro rápidamente.
 - **Configuración** permite elegir el tema claro, oscuro o automático y previsualizar
   los estilos de highlight.js disponibles para cada tema. El editor recuerda un estilo por tema.
@@ -132,10 +131,9 @@ archivos leídos desde TR mediante SSH.
 
 El botón **Exportar a PDF** genera un archivo PDF con el resaltado de sintaxis.
 Puedes elegir **Típico (A4)** o **Compacto (A5)** para leer en el celular.
-En **Contenido**, elige **Imagen** para rasterizar la página o **Texto editable
-y seleccionable** para buscar y copiar texto, o modificarlo con un editor de
-PDF. Algunos caracteres Unicode fuera del repertorio de las fuentes PDF
-integradas se conservan como imagen.
+En **Contenido**, elige **Imagen** para rasterizar la página o **Texto seleccionable**
+para añadir una capa que permite buscar y copiar texto. Algunos caracteres Unicode
+fuera del repertorio de las fuentes PDF integradas se conservan como imagen.
 
 JavaScript en el navegador necesita autorización para escribir en el disco.
 
