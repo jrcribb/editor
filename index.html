@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Editor</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cstyle%3Erect%7Bfill%3A%23315fc0%7D%40media%28prefers-color-scheme%3Adark%29%7Brect%7Bfill%3A%232f81f7%7D%7D%3C%2Fstyle%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%229%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2221%22%20fill%3D%22white%22%20text-anchor%3D%22middle%22%20font-family%3D%22Segoe%20UI%2Csans-serif%22%20font-size%3D%2215%22%20font-weight%3D%22750%22%20letter-spacing%3D%22-1%22%3EM%E2%86%93%3C%2Ftext%3E%3C%2Fsvg%3E">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,viewport-fit=cover">
 <script>
 /* marked.js 12 — MIT — github.com/markedjs/marked */
 /**
@@ -1329,8 +1329,8 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
   *{box-sizing:border-box}
   html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
-    font-size:15px;line-height:1.55}
-  #app{display:flex;height:100%}
+    font-size:15px;line-height:1.55;width:100%;max-width:100%;overflow-x:hidden}
+  #app{display:flex;height:100%;width:100%;max-width:100%;overflow-x:hidden}
   #sidebar{width:var(--sidebar-w,280px);flex-shrink:0;
     background:var(--sidebar);
     display:flex;flex-direction:column;min-width:0}
@@ -1369,8 +1369,17 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
   .side-tabs{display:flex;gap:4px;padding:0 10px 6px}
   .side-tabs [aria-selected="true"]{background:var(--active);color:var(--accent)}
   #outline[hidden],#files[hidden],.file-controls[hidden]{display:none}
-  .outline-entry{display:block;width:100%;text-align:left;white-space:normal;overflow-wrap:anywhere;border:0;border-radius:5px;background:transparent;color:var(--fg);cursor:pointer;padding:6px 8px;font:inherit;font-size:13px}
+  .outline-entry{display:flex;align-items:center;gap:6px;width:100%;text-align:left;white-space:normal;overflow-wrap:anywhere;border:0;border-radius:5px;background:transparent;color:var(--fg);cursor:pointer;padding:5px 8px;font:inherit;font-size:13px}
   .outline-entry:hover,.outline-entry:focus-visible{background:var(--hover)}
+  .outline-tag{display:inline-flex;align-items:center;justify-content:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;font-weight:700;min-width:18px;height:18px;padding:0 3px;border-radius:4px;flex-shrink:0;line-height:1}
+  .outline-tag-function{background:#1f6feb;color:#fff}
+  .outline-tag-procedure{background:#8957e5;color:#fff}
+  .outline-tag-package{background:#d29922;color:#fff}
+  .outline-tag-trigger{background:#da3633;color:#fff}
+  .outline-tag-class{background:#238636;color:#fff}
+  .outline-name{flex:1;min-width:0;overflow-wrap:anywhere}
+  .lock-badge{display:inline-flex;align-items:center;color:var(--muted);flex-shrink:0}
+  #encryptBtn.on{background:var(--active);color:var(--accent)}
   .bookmark-controls{display:inline-flex;align-items:center;gap:4px;min-width:0;max-width:220px}
   #bookmarks{display:flex;gap:3px;overflow-x:auto;min-width:0;max-width:140px}
   #bookmarks:empty{display:none}
@@ -1386,7 +1395,7 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
   .file-item .file-text{flex:1;min-width:0}
   .file-item .name,.file-item .subtitle{display:block;white-space:pre-wrap;overflow-wrap:anywhere}
   .file-item .subtitle{color:var(--muted);font-size:12px;font-weight:400}
-  .file-heading{display:flex;align-items:baseline;gap:6px;min-width:0}
+  .file-heading{display:flex;align-items:center;gap:6px;min-width:0}
   .file-heading .name{min-width:0}
   .extension-badge{flex:0 1 auto;min-width:0;max-width:45%;padding:1px 5px;border-radius:4px;
     background:var(--fg);color:var(--bg);font-size:11px;font-weight:600;
@@ -1396,9 +1405,9 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
   #app.menu-collapsed #activeFileHeading{display:none}
   .file-item .draft-badge{flex-shrink:0;padding:1px 5px;border-radius:4px;
     background:var(--warn-bg);color:var(--warn-fg);font-size:11px;font-weight:600}
-  .file-item .dot{width:8px;height:8px;border-radius:50%;background:var(--warn-border);
-    visibility:hidden;flex-shrink:0}
-  .file-item.dirty .dot{visibility:visible}
+  .file-item .dot{display:none}
+  .file-item.dirty .name{background:var(--fg);color:var(--bg);border-radius:3px;padding:0 4px;display:inline-block}
+  #activeFileName.dirty{background:var(--fg);color:var(--bg);border-radius:4px;padding:1px 6px;display:inline-block}
   .file-item .close{opacity:0;border:none;background:transparent;color:inherit;
     cursor:pointer;padding:0 4px;font-size:16px;line-height:1}
   .file-item:hover .close,.file-item.active .close,
@@ -1407,7 +1416,7 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
   .file-item .close:focus-visible{outline:1px solid var(--accent);outline-offset:1px}
   .empty{padding:20px;color:var(--muted);font-size:13px;text-align:center}
 
-  #main{flex:1;display:flex;flex-direction:column;min-width:0;position:relative}
+  #main{flex:1;display:flex;flex-direction:column;min-width:0;width:100%;max-width:100%;overflow-x:hidden;position:relative}
   #dropzone{position:fixed;inset:0;display:none;align-items:center;
     justify-content:center;background:rgba(9,105,218,.08);
     border:3px dashed var(--accent);pointer-events:none;z-index:10;
@@ -1416,7 +1425,7 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
 
   #toolbar{background:var(--bg);border-bottom:1px solid var(--border);
     padding:8px 16px;display:flex;align-items:center;gap:10px;font-size:13px;
-    color:var(--muted);flex-shrink:0}
+    color:var(--muted);flex-shrink:0;max-width:100%;box-sizing:border-box}
   #toolbar .size{flex-shrink:0}
   #findBar{display:flex;align-items:center;flex-wrap:wrap;flex-shrink:0;gap:6px;padding:6px 12px;
     background:var(--sidebar);border-bottom:1px solid var(--border)}
@@ -1426,10 +1435,8 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
   ::highlight(document-current){color:var(--bg);background:var(--accent)}
   #pinLineBtn[aria-pressed="true"]{background:var(--active);color:var(--accent)}
   .source-measure{position:fixed;left:-10000px;top:0;visibility:hidden;box-sizing:border-box}
-  #warnBar{background:var(--warn-bg);border-bottom:1px solid var(--warn-border);
-    color:var(--warn-fg);padding:8px 16px;font-size:13px;display:none}
-  #warnBar.show{display:block}
-  #warnBar strong{font-weight:600}
+  #warnBar{display:none!important}
+  #warnBar.show{display:none!important}
 
   #body{flex:1;overflow:auto;position:relative}
   .line-marker{position:absolute;z-index:2;width:9px;height:9px;
@@ -1523,12 +1530,12 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
   .sidebar-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}
   #app.menu-collapsed #sidebar{width:auto}
   #app.menu-collapsed .sidebar-heading{flex-direction:column}
-  #app.menu-collapsed :is(#newBtn,#clearBtn,#openBtnLabel,.files-label,#files,.sidebar-footer,#sideResizer,.brand-name){display:none}
+  #app.menu-collapsed :is(#newBtn,#clearBtn,.files-label,#files,.sidebar-footer,#sideResizer,.brand-name){display:none}
   .btn{min-height:34px;border-radius:var(--ui-radius);font-family:inherit}
   .btn:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
   .btn.small{min-height:32px}
   .btn-row{gap:7px}
-  #openBtn{flex:1}
+  #sidebarActions{display:flex;align-items:center;gap:6px}
   .files-label{padding:8px 22px;color:var(--muted);font-size:12px;font-weight:600}
   .file-controls{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 10px 8px}
   .file-controls label{min-width:0;font-size:12px;color:var(--muted)}
@@ -1584,28 +1591,44 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
     #body.split #content,#editor{padding:22px}
   }
   @media(max-width:560px){
-    #app{flex-direction:column;height:100dvh}
-    #sidebar{width:100%;max-height:180px;flex-shrink:0;border-bottom:1px solid var(--border)}
-    #sidebar header{flex-direction:row;align-items:center;justify-content:space-between;padding:12px;gap:8px;flex-wrap:wrap}
+    #app{flex-direction:column;height:100dvh;width:100%;max-width:100vw;overflow-x:hidden}
+    #sidebar{width:100%;max-width:100%;max-height:180px;flex-shrink:0;border-bottom:1px solid var(--border);box-sizing:border-box;overflow-x:hidden}
+    #sidebar header{flex-direction:row;align-items:center;justify-content:space-between;padding:8px 10px;gap:6px;flex-wrap:wrap;max-width:100%;box-sizing:border-box}
+    .sidebar-heading{display:flex;align-items:center;gap:6px;min-width:0}
     #app.menu-collapsed .sidebar-heading{flex-direction:row;flex:1}
     #app.menu-collapsed .brand-name{display:inline}
     #sidebar h1{font-size:13px;gap:7px}.brand-mark{width:28px;height:28px}
-    #sidebar .btn{padding:6px 8px}#clearBtn{display:none}
+    #sidebar .btn{padding:4px 6px;min-height:28px}
+    #clearBtn{display:none}
     .sidebar-footer,#sideResizer{display:none}
     #sidebar:not(:has(.file-item)) .files-label{display:none}
     .files-label select{flex:0 1 auto}
     #files:has(.empty){display:none}
-    #files{max-height:84px;padding:0 10px 6px}
-    .file-item{padding:6px 9px;min-height:34px}
-    #main{min-height:0}
-    #content.welcome{margin:24px auto 0;padding:24px}
-    #content.welcome h2{font-size:28px}
-    #content,#wysiwyg{padding:24px 20px 60px}
+    #files{max-height:84px;padding:0 8px 6px}
+    .file-item{padding:6px 8px;min-height:32px}
+    #main{min-height:0;width:100%;max-width:100vw;overflow-x:hidden}
+    #toolbar{padding:6px 8px;gap:4px;flex-wrap:wrap;width:100%;max-width:100vw;box-sizing:border-box}
+    #toolbar .size{display:none}
+    #activeFileHeading{flex:1 1 100%;min-width:0;max-width:100%}
+    #activeFileName{min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    #findBar{padding:4px 8px;gap:4px;width:100%;max-width:100vw;box-sizing:border-box}
+    #findText{flex:1 1 100px;max-width:100%}
+    #richToolbar{padding:4px 8px;gap:4px;width:100%;max-width:100vw;box-sizing:border-box}
+    #content,#wysiwyg{padding:14px 10px 60px;width:100%;max-width:100%;box-sizing:border-box}
+    #editor{padding:12px 8px;width:100%;max-width:100%;box-sizing:border-box}
+    #body.numbered #editor{padding-left:calc(var(--gutter-width) + 6px)}
     #body.split{flex-direction:column}
     #body.split #editor{flex:0 0 42%;min-height:0;width:100%}
     #body.split #content{min-height:0;width:100%;border-top:1px solid var(--border)}
     #body.split #splitResizer{display:none}
-    #toolbar .size{display:none}
+    .bookmark-controls{max-width:100px}
+    #bookmarks{max-width:65px}
+    #content.welcome{margin:16px auto 0;padding:16px 12px}
+    #content.welcome h2{font-size:24px}
+    .welcome-actions{gap:8px}
+    .welcome-actions .btn{padding:6px 10px;font-size:13px}
+    .welcome-shortcuts{gap:6px 12px}
+    .editor-dialog{width:min(500px,calc(100% - 16px));padding:14px;box-sizing:border-box}
   }
   @media(prefers-reduced-motion:reduce){.btn.busy svg{animation:none}}
 
@@ -1667,14 +1690,14 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
         <button type="button" class="btn small" id="syntaxThemeBtn" title="Configuración" aria-label="Configuración" aria-haspopup="dialog" aria-controls="syntaxThemeDialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2h4l.6 3 1.8.8L19 4.5 21.5 7l-1.3 2.6.8 1.8 1 .6-1 .6-.8 1.8 1.3 2.6-2.5 2.5-2.6-1.3-1.8.8-.6 3h-4l-.6-3-1.8-.8L5 19.5 2.5 17l1.3-2.6-.8-1.8L2 12l1-.6.8-1.8L2.5 7 5 4.5l2.6 1.3L9.4 5Z"/><circle cx="12" cy="12" r="3"/></svg></button>
       </div>
       <div class="btn-row" id="sidebarActions">
-        <button class="btn primary" id="openBtn" title="Abrir archivos" aria-label="Abrir archivos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg><span id="openBtnLabel">Abrir archivos</span></button>
+        <button class="btn primary" id="openBtn" title="Abrir archivos" aria-label="Abrir archivos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></button>
         <button class="btn" id="newBtn" title="Nuevo archivo" aria-label="Nuevo archivo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></button>
         <button class="btn" id="clearBtn" title="Cerrar todos los archivos" aria-label="Cerrar todos los archivos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       </div>
     </header>
     <div class="side-tabs" role="tablist" aria-label="Panel lateral">
-      <button class="btn small" id="filesTab" role="tab" aria-selected="true" aria-controls="files">Archivos</button>
-      <button class="btn small" id="outlineTab" role="tab" aria-selected="false" aria-controls="outline">Índice</button>
+      <button class="btn small" id="filesTab" role="tab" aria-selected="true" aria-controls="files" title="Archivos" aria-label="Archivos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></button>
+      <button class="btn small" id="outlineTab" role="tab" aria-selected="false" aria-controls="outline" title="Índice" aria-label="Índice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></button>
     </div>
     <div class="file-controls">
       <label>Ordenar
@@ -1717,7 +1740,7 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
       </div>
       <label class="view-as btn small" title="Ver el documento como otro lenguaje">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm0 0v6h6M10 12l-2 2 2 2m4-4 2 2-2 2"/></svg>
-        <svg class="chevron" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2 4 4 4 4-4"/></svg>
+        <svg class="chevron" viewBox="0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2 4 4 4 4-4"/></svg>
         <select id="viewAs" title="Ver el documento como otro lenguaje" aria-label="Ver como…">
           <option value="">Markdown renderizado</option>
           <option value="plaintext">Texto sin formato</option>
@@ -1725,6 +1748,7 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
       </label>
       <select id="openFileSelect" aria-label="Archivos abiertos"></select>
       <span class="size" id="curSize"></span>
+      <button class="btn small" id="encryptBtn" title="Cifrado del archivo" aria-label="Cifrado del archivo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg></button>
       <button class="btn small" id="lineNumbersBtn" title="Mostrar u ocultar números de línea" aria-label="Números de línea" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 3 5 21M19 3l-4 18M4 8h17M3 16h17"/></svg></button>
       <button class="btn small" id="findBtn" title="Buscar en el documento" aria-label="Buscar en el documento" aria-controls="findBar" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></button>
       <button class="btn small" id="pinLineBtn" title="Anclar línea" aria-label="Anclar línea" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3h8l-1 6 4 4v2H5v-2l4-4-1-6ZM12 15v6"/></svg></button>
@@ -1732,9 +1756,9 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
       <button class="btn small" id="goLineBtn" title="Ir a la línea anclada o volver" aria-label="Ir a la línea anclada o volver" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h15m-4-4 4 4-4 4M20 16H5m4-4-4 4 4 4"/></svg></button>
       <button class="btn small" id="previousFileBtn" title="Volver al archivo anterior" aria-label="Volver al archivo anterior" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 10-5 5 5 5M4 15h12a4 4 0 0 0 0-8h-4"/></svg></button>
       <button class="btn small" id="reloadBtn" title="Recargar desde el archivo original" aria-label="Recargar desde el archivo original"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button>
-      <button class="btn small" id="saveBtn" title="Guardar en el archivo original" aria-label="Guardar en el archivo original"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg><span id="saveAsLabel" hidden>Guardar como</span></button>
+      <button class="btn small" id="saveBtn" title="Guardar en el archivo original" aria-label="Guardar en el archivo original"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></button>
       <button type="button" class="btn small" id="printBtn" title="Exportar a PDF" aria-label="Exportar a PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6zM6 12h.01"/></svg></button>
-      <button class="btn small primary" id="downloadBtn" title="Descargar una copia" aria-label="Descargar una copia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span id="downloadLabel" hidden>Descargar copia</span></button>
+      <button class="btn small primary" id="downloadBtn" title="Descargar una copia" aria-label="Descargar una copia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
     </div>
     <div id="findBar" class="hidden" role="search" aria-label="Buscar en el documento">
       <input id="findText" type="search" placeholder="Buscar en el documento" aria-label="Texto a buscar" autocomplete="off" spellcheck="false">
@@ -1758,10 +1782,10 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
         <option value="blockquote">Cita</option>
         <option value="pre">Texto preformateado</option>
       </select>
-      <button class="btn small" data-rich-cmd="bold" title="Negrita" aria-label="Negrita"><strong>N</strong></button>
-      <button class="btn small" data-rich-cmd="italic" title="Cursiva" aria-label="Cursiva"><em>C</em></button>
-      <button class="btn small" data-rich-cmd="code" title="Código en línea" aria-label="Código en línea"><code>`</code></button>
-      <button class="btn small" data-rich-cmd="codeBlock">Bloque de código</button>
+      <button class="btn small" data-rich-cmd="bold" title="Negrita" aria-label="Negrita"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/><path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/></svg></button>
+      <button class="btn small" data-rich-cmd="italic" title="Cursiva" aria-label="Cursiva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg></button>
+      <button class="btn small" data-rich-cmd="code" title="Código en línea" aria-label="Código en línea"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></button>
+      <button class="btn small" data-rich-cmd="codeBlock" title="Bloque de código" aria-label="Bloque de código"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="m10 9-3 3 3 3"/><path d="m14 9 3 3-3 3"/></svg></button>
       <button class="btn small" data-rich-cmd="task" title="Insertar casilla de verificación" aria-label="Insertar casilla de verificación"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="m7 12 3 3 7-7"/></svg></button>
       <button class="btn small" data-rich-cmd="link" title="Enlace" aria-label="Enlace"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></button>
       <button class="btn small" data-rich-cmd="ul" title="Lista con viñetas" aria-label="Lista con viñetas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></button>
@@ -1793,8 +1817,8 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
         <option value="text">Texto seleccionable</option>
       </select>
       <div class="btn-row">
-        <button class="btn" value="cancelar">Cancelar</button>
-        <button class="btn primary" value="exportar">Exportar</button>
+        <button class="btn" value="cancelar" title="Cancelar" aria-label="Cancelar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <button class="btn primary" value="exportar" title="Exportar" aria-label="Exportar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></button>
       </div>
     </form>
   </dialog>
@@ -1819,7 +1843,7 @@ saludar("Ana");</code></pre>
       </label>
       <label class="draft-option"><input id="autoSaveDrafts" type="checkbox"> Autoguardar documentos temporarios</label>
       <div class="btn-row">
-        <button class="btn primary">Cerrar</button>
+        <button class="btn primary" title="Cerrar" aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></button>
       </div>
     </form>
   </dialog>
@@ -1833,8 +1857,8 @@ saludar("Ana");</code></pre>
       <label for="codeBlockText">Código</label>
       <textarea id="codeBlockText" rows="8" spellcheck="false" autofocus></textarea>
       <div class="btn-row">
-        <button class="btn" value="cancelar" formnovalidate>Cancelar</button>
-        <button class="btn primary" value="aplicar">Aplicar</button>
+        <button class="btn" value="cancelar" formnovalidate title="Cancelar" aria-label="Cancelar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <button class="btn primary" value="aplicar" title="Aplicar" aria-label="Aplicar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></button>
       </div>
     </form>
   </dialog>
@@ -1845,8 +1869,45 @@ saludar("Ana");</code></pre>
       <input id="linkUrl" spellcheck="false" autofocus>
       <label id="linkTextField">Texto del enlace <input id="linkText"></label>
       <div class="btn-row">
-        <button class="btn primary" value="aplicar">Aplicar</button>
-        <button class="btn" value="cancelar">Cancelar</button>
+        <button class="btn primary" value="aplicar" title="Aplicar" aria-label="Aplicar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></button>
+        <button class="btn" value="cancelar" title="Cancelar" aria-label="Cancelar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+    </form>
+  </dialog>
+  <dialog class="editor-dialog" id="openEncryptDialog" aria-labelledby="openEncryptTitle">
+    <form method="dialog">
+      <h2 id="openEncryptTitle">Abrir archivo</h2>
+      <p id="openEncryptFileName" style="font-weight:600;margin:0 0 8px;overflow-wrap:anywhere;"></p>
+      <p style="font-size:13px;color:var(--muted);margin:0 0 12px;">¿El archivo de origen está cifrado?</p>
+      <div class="btn-row">
+        <button type="button" class="btn" id="openEncryptNoBtn" value="plain" title="Abrir sin cifrar" aria-label="Abrir sin cifrar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+          </svg>
+        </button>
+        <button type="button" class="btn primary" id="openEncryptYesBtn" value="encrypted" title="Abrir como archivo cifrado" aria-label="Abrir como archivo cifrado">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </button>
+      </div>
+    </form>
+  </dialog>
+  <dialog class="editor-dialog" id="cryptoKeyDialog" aria-labelledby="cryptoKeyTitle">
+    <form method="dialog">
+      <h2 id="cryptoKeyTitle">Claves de cifrado de la sesión</h2>
+      <p id="cryptoKeyDesc" style="font-size:13px;color:var(--muted);margin:0 0 10px;">Elige una clave guardada o crea un alias nuevo. Las claves se conservan durante esta sesión.</p>
+      <label id="cryptoAliasSelectLabel" for="cryptoAliasSelect">Clave guardada</label>
+      <select id="cryptoAliasSelect"></select>
+      <label for="cryptoAliasInput">Alias</label>
+      <input type="text" id="cryptoAliasInput" autocomplete="off" spellcheck="false" maxlength="64" required>
+      <label for="cryptoKeyInput">Frase clave</label>
+      <input type="password" id="cryptoKeyInput" autocomplete="off" spellcheck="false" autofocus required>
+      <div class="btn-row">
+        <button type="button" class="btn" id="cryptoKeyCancelBtn" value="cancelar" title="Cancelar" aria-label="Cancelar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <button type="submit" class="btn primary" id="cryptoKeyOkBtn" value="aceptar" title="Aceptar" aria-label="Aceptar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></button>
       </div>
     </form>
   </dialog>
@@ -1861,6 +1922,231 @@ saludar("Ana");</code></pre>
   let nextId = 1;
   let mode = 'view';                // 'view' | 'split' | 'edit' | 'wysiwyg'
   let renderTimer = null;
+
+  // --- Funciones de Cifrado (cifrado.js / cifrado-ej.js) ---
+  function bufferToBase64(buffer) {
+    const bytes = new Uint8Array(buffer);
+    let binary = '';
+    const chunk = 16384;
+    for (let i = 0; i < bytes.length; i += chunk) {
+      binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
+    }
+    return btoa(binary);
+  }
+
+  function base64ToBuffer(base64) {
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    return bytes;
+  }
+
+  async function derivarClave(semilla, salt) {
+    const enc = new TextEncoder();
+    const materialClave = await crypto.subtle.importKey(
+      "raw",
+      enc.encode(semilla),
+      { name: "PBKDF2" },
+      false,
+      ["deriveKey"]
+    );
+    return crypto.subtle.deriveKey(
+      {
+        name: "PBKDF2",
+        salt: salt,
+        iterations: 100000,
+        hash: "SHA-256"
+      },
+      materialClave,
+      { name: "AES-GCM", length: 256 },
+      false,
+      ["encrypt", "decrypt"]
+    );
+  }
+
+  async function encriptar(textoPlano, semilla) {
+    const enc = new TextEncoder();
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const clave = await derivarClave(semilla, salt);
+    const encriptado = await crypto.subtle.encrypt(
+      { name: "AES-GCM", iv: iv },
+      clave,
+      enc.encode(textoPlano)
+    );
+    const bufferTotal = new Uint8Array(salt.byteLength + iv.byteLength + encriptado.byteLength);
+    bufferTotal.set(salt, 0);
+    bufferTotal.set(iv, salt.byteLength);
+    bufferTotal.set(new Uint8Array(encriptado), salt.byteLength + iv.byteLength);
+    return bufferToBase64(bufferTotal);
+  }
+
+  async function desencriptar(textoBase64, semilla) {
+    try {
+      const bufferTotal = base64ToBuffer(textoBase64.trim());
+      if (bufferTotal.length < 28) throw new Error("Datos insuficientes");
+      const salt = bufferTotal.slice(0, 16);
+      const iv = bufferTotal.slice(16, 28);
+      const datosEncriptados = bufferTotal.slice(28);
+      const clave = await derivarClave(semilla, salt);
+      const desencriptado = await crypto.subtle.decrypt(
+        { name: "AES-GCM", iv: iv },
+        clave,
+        datosEncriptados
+      );
+      const dec = new TextDecoder();
+      return dec.decode(desencriptado);
+    } catch (error) {
+      throw new Error("Fallo al desencriptar: semilla incorrecta o datos corruptos.");
+    }
+  }
+
+  function isLikelyCiphertext(str) {
+    if (typeof str !== 'string') return false;
+    const trimmed = str.trim();
+    if (trimmed.length < 44 || trimmed.length > 50000000) return false;
+    if (/[\s]/.test(trimmed)) return false;
+    if (!/^[A-Za-z0-9+/]+={0,2}$/.test(trimmed)) return false;
+    try {
+      const bin = atob(trimmed);
+      return bin.length >= 44;
+    } catch(_) {
+      return false;
+    }
+  }
+
+  // Las frases clave se conservan únicamente en sessionStorage durante la sesión.
+  let sessionCryptoKeys = {};
+  try {
+    sessionCryptoKeys = JSON.parse(sessionStorage.getItem('editor_crypto_keys') || '{}');
+    if (!sessionCryptoKeys || typeof sessionCryptoKeys !== 'object' || Array.isArray(sessionCryptoKeys)) sessionCryptoKeys = {};
+    const oldKey = sessionStorage.getItem('editor_crypto_key');
+    if (oldKey && !Object.keys(sessionCryptoKeys).length) sessionCryptoKeys.predeterminada = oldKey;
+    sessionStorage.removeItem('editor_crypto_key');
+  } catch(_) {}
+
+  function setSessionCryptoKey(alias, key) {
+    if (!alias || !key) return;
+    sessionCryptoKeys[alias] = key;
+    try {
+      sessionStorage.setItem('editor_crypto_keys', JSON.stringify(sessionCryptoKeys));
+    } catch(_) {}
+  }
+
+  const $cryptoKeyDialog = document.getElementById('cryptoKeyDialog');
+  const $cryptoKeyInput = document.getElementById('cryptoKeyInput');
+  const $cryptoKeyDesc = document.getElementById('cryptoKeyDesc');
+  const $cryptoKeyCancelBtn = document.getElementById('cryptoKeyCancelBtn');
+  const $cryptoAliasSelect = document.getElementById('cryptoAliasSelect');
+  const $cryptoAliasInput = document.getElementById('cryptoAliasInput');
+  const $cryptoAliasSelectLabel = document.getElementById('cryptoAliasSelectLabel');
+
+  function populateCryptoAliases(selected = ''){
+    if (!$cryptoAliasSelect) return;
+    $cryptoAliasSelect.replaceChildren(new Option('Nueva clave…', ''));
+    Object.keys(sessionCryptoKeys).sort((a, b) => a.localeCompare(b, 'es')).forEach(alias => {
+      $cryptoAliasSelect.add(new Option(alias, alias));
+    });
+    $cryptoAliasSelect.value = selected;
+  }
+
+  function validCryptoAlias(alias){
+    return typeof alias === 'string' && alias.trim().length > 0 && alias.trim().length <= 64 && !/[\r\n]/.test(alias);
+  }
+
+  function requestCryptoKey({ descText = '', alias = null, chooseAlias = false } = {}){
+    if (alias && sessionCryptoKeys[alias]) return Promise.resolve({ alias, key: sessionCryptoKeys[alias] });
+    return new Promise(resolve => {
+      if (!$cryptoKeyDialog) {
+        const fixedAlias = alias || window.prompt('Alias de la clave:');
+        const val = fixedAlias && window.prompt(descText || 'Introduce la frase clave:');
+        if (fixedAlias && val) setSessionCryptoKey(fixedAlias, val);
+        resolve(fixedAlias && val ? { alias: fixedAlias, key: val } : null);
+        return;
+      }
+      if ($cryptoKeyDesc) $cryptoKeyDesc.textContent = descText || 'Elige una clave guardada o crea un alias nuevo. Las claves se conservan durante esta sesión.';
+      populateCryptoAliases(alias || '');
+      $cryptoAliasSelect.hidden = !chooseAlias;
+      $cryptoAliasSelectLabel.hidden = !chooseAlias;
+      $cryptoAliasInput.readOnly = !!alias && !chooseAlias;
+      $cryptoAliasInput.value = alias || '';
+      $cryptoKeyInput.value = alias ? (sessionCryptoKeys[alias] || '') : '';
+      if (chooseAlias && alias) $cryptoAliasSelect.value = alias;
+      const onAliasChange = () => {
+        const selected = $cryptoAliasSelect.value;
+        $cryptoAliasInput.value = selected;
+        $cryptoKeyInput.value = selected ? (sessionCryptoKeys[selected] || '') : '';
+      };
+      $cryptoAliasSelect.addEventListener('change', onAliasChange);
+      const onCancel = () => { cleanup(); resolve(null); };
+      const onSubmit = (e) => {
+        e.preventDefault();
+        const selectedAlias = $cryptoAliasInput.value.trim();
+        const val = $cryptoKeyInput.value;
+        if (!validCryptoAlias(selectedAlias)) {
+          $cryptoAliasInput.setCustomValidity('El alias debe tener entre 1 y 64 caracteres y no incluir saltos de línea.');
+          $cryptoAliasInput.reportValidity();
+          $cryptoAliasInput.setCustomValidity('');
+          return;
+        }
+        if (!val) {
+          $cryptoKeyInput.reportValidity();
+          return;
+        }
+        cleanup();
+        $cryptoKeyDialog.close();
+        setSessionCryptoKey(selectedAlias, val);
+        resolve({ alias: selectedAlias, key: val });
+      };
+      function cleanup(){
+        $cryptoKeyCancelBtn.removeEventListener('click', onCancel);
+        $cryptoKeyDialog.querySelector('form').removeEventListener('submit', onSubmit);
+        $cryptoAliasSelect.removeEventListener('change', onAliasChange);
+      }
+      $cryptoKeyCancelBtn.addEventListener('click', onCancel, { once: true });
+      $cryptoKeyDialog.querySelector('form').addEventListener('submit', onSubmit, { once: true });
+      $cryptoKeyDialog.showModal();
+      (chooseAlias ? $cryptoAliasInput : $cryptoKeyInput).focus();
+      if (!chooseAlias) $cryptoKeyInput.select();
+    });
+  }
+
+  function readCryptoEnvelope(value){
+    const text = String(value || '').replace(/^\uFEFF/, '');
+    if (!text.startsWith('editor-')) return null;
+    const match = /^editor-([^\r\n]{1,64})\r?\n([\s\S]+)$/.exec(text);
+    if (!match) throw new Error('La cabecera editor-<alias> está incompleta o no es válida.');
+    const alias = match[1].trim();
+    if (!validCryptoAlias(alias)) throw new Error('El alias de cifrado no es válido.');
+    return { alias, payload: match[2].trim() };
+  }
+
+  function wrapCryptoEnvelope(alias, payload){
+    if (!validCryptoAlias(alias)) throw new Error('El alias de cifrado no es válido.');
+    return `editor-${alias.trim()}\n${payload}`;
+  }
+
+  async function decryptCryptoFile(value, fileName, knownEncrypted = false){
+    const envelope = readCryptoEnvelope(value);
+    if (!envelope){
+      if (knownEncrypted || isLikelyCiphertext(String(value || '').replace(/^\uFEFF/, ''))){
+        throw new Error(`"${fileName}" está cifrado, pero no contiene la cabecera editor-<alias>. Este formato no es compatible.`);
+      }
+      return { text: String(value || '').replace(/^\uFEFF/, ''), encrypted: false, alias: null };
+    }
+    const credentials = await requestCryptoKey({
+      alias: envelope.alias,
+      descText: `Introduce la frase clave del alias "${envelope.alias}" para abrir "${fileName}":`
+    });
+    if (!credentials) return null;
+    return {
+      text: await desencriptar(envelope.payload, credentials.key),
+      encrypted: true,
+      alias: envelope.alias
+    };
+  }
 
   const $files    = document.getElementById('files');
   const $content  = document.getElementById('content');
@@ -1919,10 +2205,33 @@ saludar("Ana");</code></pre>
   const $blockFmt = document.getElementById('blockFmt');
   const $reloadBtn = document.getElementById('reloadBtn');
   const $saveBtn  = document.getElementById('saveBtn');
-  const $saveAsLabel = document.getElementById('saveAsLabel');
   const $dlBtn    = document.getElementById('downloadBtn');
-  const $downloadLabel = document.getElementById('downloadLabel');
   const $clearBtn = document.getElementById('clearBtn');
+  const $encryptBtn = document.getElementById('encryptBtn');
+
+  if ($encryptBtn){
+    $encryptBtn.addEventListener('click', async () => {
+      const f = cur();
+      if (!f) return;
+      if (!f.encrypted){
+        const credentials = await requestCryptoKey({
+          chooseAlias: true,
+          descText: 'Elige una clave guardada o crea un alias y su frase clave para este archivo.'
+        });
+        if (!credentials) return;
+        f.encrypted = true;
+        f.encryptionAlias = credentials.alias;
+      } else {
+        f.encrypted = false;
+        f.encryptionAlias = null;
+      }
+      f.dirty = true;
+      if (f.draftId) persistDraft(f);
+      rememberBrowserFiles();
+      updateToolbar();
+      renderSidebar();
+    });
+  }
 
   const desktop = window.go?.main?.Desktop;
   function showDesktopMessage(text, question){
@@ -2013,7 +2322,7 @@ saludar("Ana");</code></pre>
   const welcomeHTML = `<div class="welcome-icon" aria-hidden="true">M↓</div>
     <h2>Escribe en Markdown</h2>
     <p class="intro">Lee y edita documentos Markdown. Para empezar, arrastra un archivo o ábrelo desde aquí.</p>
-    <div class="welcome-actions"><button class="btn primary" data-welcome="open">Abrir archivos</button><button class="btn" data-welcome="new">+ Nuevo documento</button></div>
+    <div class="welcome-actions"><button class="btn primary" data-welcome="open" title="Abrir archivos" aria-label="Abrir archivos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></button><button class="btn" data-welcome="new" title="Nuevo documento" aria-label="Nuevo documento"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></button></div>
     <div class="welcome-shortcuts"><span><kbd>${modKey}${isMac ? '' : '+'}O</kbd> Abrir un archivo</span><span><kbd>${modKey}${isMac ? '' : '+'}V</kbd> Pegar Markdown</span></div>`;
   $content.addEventListener('click', e => {
     const action = e.target.closest('[data-welcome]');
@@ -2302,6 +2611,14 @@ saludar("Ana");</code></pre>
       setExtensionBadge(extension, fileNameParts(f.name).extension);
       heading.append(extension);
     }
+    if (f.encrypted){
+      const lock = document.createElement('span');
+      lock.className = 'lock-badge';
+      lock.title = `Archivo cifrado con el alias "${f.encryptionAlias || 'desconocido'}"`;
+      lock.setAttribute('aria-label', `Cifrado con alias ${f.encryptionAlias || 'desconocido'}`);
+      lock.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
+      heading.append(lock);
+    }
     const fileText = document.createElement('span');
     fileText.className = 'file-text';
     fileText.append(heading);
@@ -2318,7 +2635,7 @@ saludar("Ana");</code></pre>
     closeBtn.className = 'close';
     closeBtn.title = `Cerrar ${label}`;
     closeBtn.setAttribute('aria-label', closeBtn.title);
-    closeBtn.textContent = '×';
+    closeBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
     el.append(dot, fileText);
     if (f.draftId){
       const badge = document.createElement('span');
@@ -2422,7 +2739,8 @@ saludar("Ana");</code></pre>
     $goLineBtn.disabled = !f?.pin;
     const { base: title, extension } = fileNameParts(f?.name || 'Editor');
     $activeFileName.textContent = title;
-    $activeFileName.title = f?.name || '';
+    $activeFileName.title = (f?.name || '') + (f?.dirty ? ' · Cambios sin guardar' : '');
+    $activeFileName.classList.toggle('dirty', !!f?.dirty);
     setExtensionBadge($activeFileExtension, extension);
     document.title = title;
     if (desktop) window.runtime.WindowSetTitle(title);
@@ -2441,6 +2759,16 @@ saludar("Ana");</code></pre>
     $previousFileBtn.title = previous ? `Volver a ${previous.name}` : 'Volver al archivo anterior';
     $previousFileBtn.setAttribute('aria-label', $previousFileBtn.title);
     $warnBar.classList.toggle('show', !!f.dirty);
+    if ($encryptBtn){
+      $encryptBtn.classList.toggle('on', !!f.encrypted);
+      $encryptBtn.title = f.encrypted
+        ? `Archivo cifrado con alias "${f.encryptionAlias || 'desconocido'}" (clic para desactivar el cifrado)`
+        : 'Archivo sin cifrar (clic para cifrar al guardar)';
+      $encryptBtn.setAttribute('aria-label', $encryptBtn.title);
+      $encryptBtn.innerHTML = f.encrypted
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>';
+    }
     const canOverwrite = typeof f.handle?.createWritable === 'function';
     $warnMsg.textContent = canOverwrite
       ? 'Usa Guardar para actualizar el archivo original o Descargar para obtener una copia.'
@@ -2459,8 +2787,6 @@ saludar("Ana");</code></pre>
     $saveBtn.disabled = !f.dirty || !!f.saving;
     $saveBtn.title = canOverwrite ? 'Guardar en el archivo original' : 'Guardar como';
     $saveBtn.setAttribute('aria-label', $saveBtn.title);
-    $saveAsLabel.hidden = canOverwrite;
-    $downloadLabel.hidden = canOverwrite || hasSavePicker;
     $reloadBtn.disabled = !f.handle;
     $reloadBtn.title = f.handle
       ? 'Volver a leer el archivo original'
@@ -2878,12 +3204,32 @@ saludar("Ana");</code></pre>
           if (c === "'" || c === '"'){ quote = c; code += ' '; continue; }
           code += c;
         }
-        let m = code.match(/^\s*(?:(?:create\s+(?:or\s+replace\s+)?)(?:(?:editionable|noneditionable)\s+)?)?(?:(?:async|export|default|public|private|static|protected|final|abstract)\s+)*(function|procedure|package(?:\s+body)?|class|def|func|sub)\s+([\w.$-]+)/i);
-        if (!m && /^(javascript|typescript)$/i.test(f.viewAs)){
-          m = code.match(/^\s*(?:export\s+)?(?:const|let|var)\s+([\w$]+)\s*=\s*(?:async\s*)?(?:\([^)]*\)|[\w$]+)\s*=>/);
-          if (m) m = [m[0], 'función', m[1]];
+        let m = code.match(/^\s*(?:(?:create\s+(?:or\s+replace\s+)?)(?:(?:editionable|noneditionable)\s+)?)?(?:(?:async|export|default|public|private|static|protected|final|abstract)\s+)*(function|procedure|package(?:\s+body)?|trigger|class|def|func|fn|sub)\s+([\w.$-]+)/i);
+        let kind = null, tag = null, tagTitle = null, name = null;
+        if (m){
+          const rawKind = m[1].toLowerCase();
+          name = m[2];
+          if (rawKind.startsWith('procedure')){
+            kind = 'procedure'; tag = 'P'; tagTitle = 'Procedimiento';
+          } else if (rawKind.startsWith('package')){
+            kind = 'package'; tag = 'PK'; tagTitle = 'Paquete';
+          } else if (rawKind.startsWith('trigger')){
+            kind = 'trigger'; tag = 'TR'; tagTitle = 'Disparador';
+          } else if (rawKind.startsWith('class')){
+            kind = 'class'; tag = 'C'; tagTitle = 'Clase';
+          } else {
+            kind = 'function'; tag = 'F'; tagTitle = 'Función';
+          }
+        } else if (/^(javascript|typescript)$/i.test(f.viewAs)){
+          const arrowMatch = code.match(/^\s*(?:export\s+)?(?:const|let|var)\s+([\w$]+)\s*=\s*(?:async\s*)?(?:\([^)]*\)|[\w$]+)\s*=>/);
+          if (arrowMatch){
+            name = arrowMatch[1];
+            kind = 'function'; tag = 'F'; tagTitle = 'Función';
+          }
         }
-        if (m) entries.push({label:m[1] + ' ' + m[2], level:1, offset});
+        if (name && tag){
+          entries.push({ kind, tag, tagTitle, name, label: name, level: 1, offset });
+        }
       }
       offset += line.length + 1;
     }
@@ -2900,8 +3246,20 @@ saludar("Ana");</code></pre>
     }
     for (const entry of entries){
       const button = document.createElement('button');
-      button.className = 'outline-entry'; button.textContent = entry.label;
+      button.className = 'outline-entry';
       button.style.paddingLeft = (8 + (entry.level - 1) * 14) + 'px';
+      if (entry.tag){
+        const tagSpan = document.createElement('span');
+        tagSpan.className = `outline-tag outline-tag-${entry.kind}`;
+        tagSpan.textContent = entry.tag;
+        if (entry.tagTitle) tagSpan.title = entry.tagTitle;
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'outline-name';
+        nameSpan.textContent = entry.name;
+        button.append(tagSpan, nameSpan);
+      } else {
+        button.textContent = entry.label;
+      }
       button.addEventListener('click', () => {
         if (entry.heading !== undefined && (mode === 'view' || mode === 'wysiwyg')){
           const surface = mode === 'view' ? $content : $wysiwyg;
@@ -3078,6 +3436,7 @@ saludar("Ana");</code></pre>
     } else {
       renderSidebar(); updateToolbar();
     }
+    rememberBrowserFiles();
   }
 
   function updateHistoryButtons(f){
@@ -3202,6 +3561,8 @@ saludar("Ana");</code></pre>
       text: opts.text,
       viewAs: detectViewAs(opts.name, opts.text),
       dirty: !!opts.dirty,
+      encrypted: !!opts.encrypted,
+      encryptionAlias: opts.encryptionAlias || null,
       savedText: opts.dirty ? null : opts.text,
       undo: [],
       redo: [],
@@ -3214,13 +3575,13 @@ saludar("Ana");</code></pre>
     return f;
   }
 
-  function addFromFileObject(file, handle){
-    const opened = localFileQueue.then(() => readLocalFile(file, handle));
+  function addFromFileObject(file, handle, knownEncrypted){
+    const opened = localFileQueue.then(() => readLocalFile(file, handle, knownEncrypted));
     localFileQueue = opened;
     return opened;
   }
 
-  async function readLocalFile(file, handle){
+  async function readLocalFile(file, handle, knownEncrypted){
     const name = file.name;
     const size = file.size;
     const lastModified = file.lastModified;
@@ -3232,18 +3593,31 @@ saludar("Ana");</code></pre>
       }
       if (size > MAX_FILE_SIZE &&
           !await ask(`"${name}" ocupa ${fmtBytes(size)}. Los archivos grandes pueden bloquear el navegador. ¿Quieres abrirlo?`)) return null;
-      const text = await file.text();
+      const rawText = await file.text();
+      let decoded;
+      try {
+        decoded = await decryptCryptoFile(rawText, name, knownEncrypted === true);
+      } catch(err){
+        console.error('Error al descifrar:', err);
+        await notify(`No se pudo abrir "${name}". ${err.message || 'Clave incorrecta o formato inválido.'}`);
+        return null;
+      }
+      if (!decoded) return null;
+      const { text } = decoded;
+      const isEnc = decoded.encrypted;
       // Plain file inputs expose the original snapshot but no path or handle.
       const existing = files.find(f => (!handle || !f.handle) &&
         f.source?.name === name && f.source.size === size &&
         f.source.lastModified === lastModified && f.source.text === text);
       if (existing){
         if (handle) existing.handle = handle;
+        existing.encrypted = !!isEnc;
+        existing.encryptionAlias = decoded.alias;
         return existing;
       }
       const relativePath = file.webkitRelativePath;
       const folder = relativePath?.slice(0, relativePath.lastIndexOf('/'));
-      return addFile({ name, text, size, handle, lastModified, source: { name, size, lastModified, text, folder } });
+      return addFile({ name, text, size, handle, lastModified, encrypted: !!isEnc, encryptionAlias: decoded.alias, source: { name, size, lastModified, text, folder } });
     } catch(e){
       console.error('read failed', file.name, e);
       if (desktop) await notify(`No se pudo abrir "${name}" (${e.message || e}).`);
@@ -3291,14 +3665,16 @@ saludar("Ana");</code></pre>
     };
   }
 
-  async function openHandles(handles){
+  async function openHandles(handles, metaList = null){
     let first = null;
     let rejected = 0;
     for (const h of handles){
       try {
         const file = await h.getFile();
         if (!isAcceptedFile(file)){ rejected++; continue; }
-        const f = await addFromFileObject(file, h);
+        const meta = metaList?.find(m => m.name === h.name || m.name === file.name);
+        const knownEnc = meta !== undefined ? !!meta.encrypted : undefined;
+        const f = await addFromFileObject(file, h, knownEnc);
         if (f && !first) first = f;
       } catch(e){
         console.error(e);
@@ -3354,7 +3730,7 @@ saludar("Ana");</code></pre>
     await Promise.all(files.map(f => f.draftWrite));
     if (files.some(hasUnbackedChanges) &&
         !await ask('¿Quieres cerrar todos los archivos? Los cambios sin copia de recuperación se perderán.')) return;
-    files.length = 0; recentFileIds.length = 0; activate(null);
+    files.length = 0; recentFileIds.length = 0; activate(null); rememberBrowserFiles();
   });
   $openFileSelect.addEventListener('change', () => activate(Number($openFileSelect.value)));
   $previousFileBtn.addEventListener('click', () => {
@@ -3787,10 +4163,22 @@ saludar("Ana");</code></pre>
           !await ask(`"${file.name}" ocupa ${fmtBytes(file.size)}. Los archivos grandes pueden bloquear el navegador. ¿Quieres recargarlo?`)){
         return;
       }
-      const text = await file.text();
+      const rawText = await file.text();
+      let decoded;
+      try {
+        decoded = await decryptCryptoFile(rawText, f.name, f.encrypted);
+      } catch(err){
+        console.error('Error al descifrar al recargar:', err);
+        await notify(`No se pudo recargar "${f.name}". ${err.message || 'Clave incorrecta o formato inválido.'}`);
+        return;
+      }
+      if (!decoded) return;
+      const { text } = decoded;
       f.name = file.name || f.handle.name || f.name;
       movePinnedOffsets(f, text);
       f.text = text;
+      f.encrypted = decoded.encrypted;
+      f.encryptionAlias = decoded.alias;
       f.savedText = text;
       f.undo.length = 0;
       f.redo.length = 0;
@@ -3831,6 +4219,20 @@ saludar("Ana");</code></pre>
     const f = cur(); if (!f || !f.dirty || f.saving) return;
     const original = typeof f.handle?.createWritable === 'function' ? f.handle : null;
     if (saveAs ? !hasSavePicker : !original) return;
+    let textToWrite = f.text;
+    if (f.encrypted){
+      const alias = f.encryptionAlias;
+      if (!alias){ await notify(`El archivo "${f.name}" no tiene un alias de cifrado asignado.`); return; }
+      const credentials = await requestCryptoKey({ alias, descText: `Introduce la frase clave del alias "${alias}" para guardar "${f.name}":` });
+      if (!credentials) return;
+      try {
+        textToWrite = wrapCryptoEnvelope(alias, await encriptar(f.text, credentials.key));
+      } catch(err){
+        console.error('Error al cifrar:', err);
+        await notify(`Error al cifrar "${f.name}": ${err.message || err}`);
+        return;
+      }
+    }
     const text = f.text;
     f.lastTyping = 0;
     f.saving = true;
@@ -3849,7 +4251,7 @@ saludar("Ana");</code></pre>
         }
       }
       const writable = await handle.createWritable();
-      await writable.write(text);
+      await writable.write(textToWrite);
       await writable.close();
       f.handle = handle;
       f.name = handle.name || f.name;
@@ -3857,6 +4259,7 @@ saludar("Ana");</code></pre>
       f.updatedAt = Math.max(f.updatedAt, f.lastModified);
       f.savedText = text;
       f.dirty = f.text !== text;
+      rememberBrowserFiles();
       if (f.draftId && !f.dirty){
         const id = f.draftId;
         f.draftId = null;
@@ -3880,13 +4283,26 @@ saludar("Ana");</code></pre>
   }
 
   async function triggerDownload(f){
+    let textToDownload = f.text;
+    if (f.encrypted){
+      const alias = f.encryptionAlias;
+      if (!alias){ await notify(`El archivo "${f.name}" no tiene un alias de cifrado asignado.`); return; }
+      const credentials = await requestCryptoKey({ alias, descText: `Introduce la frase clave del alias "${alias}" para descargar "${f.name}":` });
+      if (!credentials) return;
+      try {
+        textToDownload = wrapCryptoEnvelope(alias, await encriptar(f.text, credentials.key));
+      } catch(err){
+        console.error('Error al cifrar para descarga:', err);
+        await notify(`Error al cifrar "${f.name}": ${err.message || err}`);
+        return;
+      }
+    }
     if (desktop){
-      const text = f.text;
       try {
         const handle = await chooseSaveHandle(f.name);
         if (!handle) return;
         const writable = await handle.createWritable();
-        await writable.write(text);
+        await writable.write(textToDownload);
         await writable.close();
       } catch(e){
         await notify(`No se pudo guardar la copia (${e.message || e}).`);
@@ -3894,7 +4310,7 @@ saludar("Ana");</code></pre>
       return;
     }
     const mime = ACCEPTED_EXT.test(f.name) ? 'text/markdown' : 'text/plain';
-    const blob = new Blob([f.text], { type: mime });
+    const blob = new Blob([textToDownload], { type: mime });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -3904,7 +4320,11 @@ saludar("Ana");</code></pre>
   }
 
   $reloadBtn.addEventListener('click', doReload);
-  $saveBtn.addEventListener('click', () => doSave(!$saveAsLabel.hidden));
+  $saveBtn.addEventListener('click', () => {
+    const f = cur();
+    const canOverwrite = typeof f?.handle?.createWritable === 'function';
+    doSave(!canOverwrite);
+  });
   $dlBtn.addEventListener('click', () => { const f = cur(); if (f) triggerDownload(f); });
   window.addEventListener('beforeprint', () => {
     if (cur()) renderPreview();
@@ -4209,10 +4629,21 @@ saludar("Ana");</code></pre>
 
   function persistDraft(f){
     const id = f.draftId;
-    const text = f.text;
-    const file = new File([text], f.name, { type: 'text/markdown', lastModified: f.lastModified });
-    f.draftWrite = draftRequest('readwrite', store => store.put({ id, file }, id)).then(() => {
-      f.backedUpText = text;
+    const isEnc = !!f.encrypted;
+    const prepareText = async () => {
+      if (!isEnc) return f.text;
+      const alias = f.encryptionAlias;
+      if (!alias) throw new Error('El archivo temporario no tiene un alias de cifrado asignado.');
+      const credentials = await requestCryptoKey({ alias, descText: `Introduce la frase clave del alias "${alias}" para proteger el temporario "${f.name}":` });
+      if (!credentials) throw new Error('Se canceló la solicitud de la frase clave.');
+      return wrapCryptoEnvelope(alias, await encriptar(f.text, credentials.key));
+    };
+
+    f.draftWrite = prepareText().then(textToStore => {
+      const file = new File([textToStore], f.name, { type: 'text/markdown', lastModified: f.lastModified });
+      return draftRequest('readwrite', store => store.put({ id, file, encrypted: isEnc, encryptionAlias: f.encryptionAlias || null }, id));
+    }).then(() => {
+      f.backedUpText = f.text;
       f.draftError = false;
     }).catch(e => {
       f.draftError = true;
@@ -4226,11 +4657,28 @@ saludar("Ana");</code></pre>
     try {
       const records = await draftRequest('readonly', store => store.getAll());
       const recovered = [];
-      for (const { id, file } of records){
-        const text = await file.text();
+      for (const record of records){
+        const id = record.id;
+        const file = record.file;
+        let decoded;
+        try {
+          decoded = await decryptCryptoFile(await file.text(), file.name, !!record.encrypted);
+        } catch(e){
+          console.warn('No se pudo restaurar el temporario.', e);
+          continue;
+        }
+        if (!decoded) continue;
         if (!files.some(f => f.draftId === id)){
-          recovered.push(addFile({ name: file.name, text, dirty: true, draftId: id,
-            backedUpText: text, lastModified: file.lastModified }));
+          recovered.push(addFile({
+            name: file.name,
+            text: decoded.text,
+            dirty: true,
+            draftId: id,
+            encrypted: decoded.encrypted,
+            encryptionAlias: decoded.alias,
+            backedUpText: decoded.text,
+            lastModified: file.lastModified
+          }));
         }
       }
       if (!cur() && recovered.length){
@@ -4246,14 +4694,18 @@ saludar("Ana");</code></pre>
   }
 
   function rememberBrowserFiles(){
+    const meta = files.map(f => ({ name: f.name, encrypted: !!f.encrypted, encryptionAlias: f.encryptionAlias || null }));
+    try {
+      localStorage.setItem('mdv.filesMeta', JSON.stringify(meta));
+    } catch(_) {}
     if (!rememberedHandles) return;
     const handles = files.map(f => f.handle).filter(handle => handle?.kind === 'file');
-    if (handles.length === rememberedHandles.length && handles.every((h, i) => h === rememberedHandles[i])) return;
     rememberedHandles = handles;
     browserSessionDB().then(db => {
       const transaction = db.transaction('session', 'readwrite');
       transaction.onerror = () => console.warn('No se pudo guardar la lista de archivos.', transaction.error);
       transaction.objectStore('session').put(handles, 'files');
+      transaction.objectStore('session').put(meta, 'meta');
     }).catch(e => console.warn('No se pudo guardar la lista de archivos.', e));
   }
 
@@ -4265,12 +4717,20 @@ saludar("Ana");</code></pre>
         request.onsuccess = () => resolve(request.result || []);
         request.onerror = () => reject(request.error);
       });
+      let metaList = await new Promise(resolve => {
+        const request = db.transaction('session').objectStore('session').get('meta');
+        request.onsuccess = () => resolve(request.result || null);
+        request.onerror = () => resolve(null);
+      });
+      if (!metaList){
+        try { metaList = JSON.parse(localStorage.getItem('mdv.filesMeta') || '[]'); } catch(_) {}
+      }
       const handles = [];
       for (const handle of stored){
         if (await handle.queryPermission({ mode: 'read' }).catch(() => 'denied') === 'granted') handles.push(handle);
       }
       if (!files.some(f => !f.draftId) && handles.length && !new URLSearchParams(location.search).has('fetch')){
-        await openHandles(handles);
+        await openHandles(handles, metaList);
       }
       rememberedHandles = files.map(f => f.handle).filter(handle => handle?.kind === 'file');
       if (files.some(f => f.handle && !handles.includes(f.handle))){

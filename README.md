@@ -1,7 +1,5 @@
-<p align="left"><img src="./icon.png" alt="Icono de Editor" width="96" height="96"></p>
-
 # Editor
-
+![Icono de Editor](data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cstyle%3Erect%7Bfill%3A%23315fc0%7D%40media%28prefers-color-scheme%3Adark%29%7Brect%7Bfill%3A%232f81f7%7D%7D%3C%2Fstyle%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%229%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2221%22%20fill%3D%22white%22%20text-anchor%3D%22middle%22%20font-family%3D%22Segoe%20UI%2Csans-serif%22%20font-size%3D%2215%22%20font-weight%3D%22750%22%20letter-spacing%3D%22-1%22%3EM%E2%86%93%3C%2Ftext%3E%3C%2Fsvg%3E)
 Un editor de Markdown sin instalación, contenido en un único archivo. Abre
 `index.html` en cualquier navegador y arrastra tus archivos `.md` para leerlos o
 editarlos, con formato al estilo de GitHub, tema oscuro, resaltado de sintaxis y tablas.
@@ -11,19 +9,6 @@ Editor está basado en una bifurcación del proyecto
 
 **Funciona sin compilación, servidor ni conexión, y los documentos permanecen en tu equipo.**
 Todas las dependencias están incluidas en `index.html`, que puedes abrir directamente.
-
-## Capturas de pantalla
-
-Las dos capturas muestran el documento de ejemplo `preparation-mock.md` abierto en
-Chrome desde el archivo local `index.html`.
-
-**Tema claro · Vista previa**
-
-![Editor en tema claro con la vista previa del documento Markdown](screenshot.png)
-
-**Tema oscuro · Vista dividida**
-
-![Editor en tema oscuro con el código Markdown junto a la vista previa](preparation-mock.png)
 
 ## Funciones
 
@@ -38,7 +23,7 @@ Chrome desde el archivo local `index.html`.
 - **Recargar desde el disco** para incorporar los cambios realizados con otro editor
   cuando el archivo se abrió con acceso al original.
 - **Descargar una copia** del documento y recibir avisos cuando haya cambios pendientes.
-- **Pegar Markdown** con <kbd>⌘V</kbd> o <kbd>Ctrl</kbd>+<kbd>V</kbd>, fuera del área de edición,
+- **Pegar Markdown** con ⌘V o Ctrl+V, fuera del área de edición,
   para abrirlo como un archivo nuevo.
 - **Varios archivos abiertos** en una barra lateral que permite cambiar entre ellos y
   cerrarlos individualmente. Un punto amarillo identifica los que tienen cambios pendientes.
@@ -117,15 +102,15 @@ archivos leídos desde TR mediante SSH.
 ## Atajos de teclado
 
 | Atajo | Acción |
-| :--- | :--- |
-| <kbd>⌘</kbd>+<kbd>O</kbd> / <kbd>Ctrl</kbd>+<kbd>O</kbd> | Abrir archivos |
-| <kbd>⌘</kbd>+<kbd>W</kbd> / <kbd>Ctrl</kbd>+<kbd>W</kbd> | Cerrar el archivo activo |
-| <kbd>⌘</kbd>+<kbd>S</kbd> / <kbd>Ctrl</kbd>+<kbd>S</kbd> | Guardar en el archivo original o abrir Guardar como cuando esté disponible |
-| <kbd>⌘</kbd>+<kbd>E</kbd> / <kbd>Ctrl</kbd>+<kbd>E</kbd> | Cambiar el modo de edición |
-| <kbd>⌘</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Z</kbd> | Deshacer |
-| <kbd>⌘</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd> | Rehacer |
-| <kbd>⌘</kbd>+<kbd>K</kbd> / <kbd>Ctrl</kbd>+<kbd>K</kbd> | Insertar un enlace en el modo visual |
-| <kbd>⌘</kbd>+<kbd>V</kbd> / <kbd>Ctrl</kbd>+<kbd>V</kbd> | Pegar Markdown como un archivo nuevo |
+| --- | --- |
+| ⌘+O / Ctrl+O | Abrir archivos |
+| ⌘+W / Ctrl+W | Cerrar el archivo activo |
+| ⌘+S / Ctrl+S | Guardar en el archivo original o abrir Guardar como cuando esté disponible |
+| ⌘+E / Ctrl+E | Cambiar el modo de edición |
+| ⌘+Z / Ctrl+Z | Deshacer |
+| ⌘+Shift+Z / Ctrl+Y | Rehacer |
+| ⌘+K / Ctrl+K | Insertar un enlace en el modo visual |
+| ⌘+V / Ctrl+V | Pegar Markdown como un archivo nuevo |
 
 ## Guardar los cambios
 
