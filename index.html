@@ -1557,6 +1557,15 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
   .file-controls select{display:block;width:100%;font:inherit;color:var(--fg);background:var(--bg);
     border:1px solid var(--border);border-radius:var(--ui-radius);padding:3px}
   .file-group{padding:6px 9px;color:var(--muted);font-size:12px;font-weight:600;overflow-wrap:anywhere}
+  summary.file-group{cursor:pointer;border-radius:var(--ui-radius)}
+  summary.file-group:hover{background:var(--hover);color:var(--fg)}
+  summary.file-group:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  .file-cloud{display:grid;place-items:center;flex:none;width:26px;height:28px;padding:0;
+    border:0;border-radius:var(--ui-radius);background:transparent;color:var(--accent);cursor:pointer}
+  .file-cloud:hover,.file-cloud:focus-visible{background:var(--hover)}
+  .file-cloud svg{width:15px;height:15px}
+  #cloudDialog p{margin:0;color:var(--muted);font-size:13px}
+  #cloudDialog [hidden]{display:none}
   #app.menu-collapsed .file-controls{display:none}
   #files{padding:0 10px 12px}
   .file-item{padding:10px 9px;margin-bottom:3px;min-height:40px;border:1px solid transparent}
@@ -1706,6 +1715,7 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
       </div>
       <div class="btn-row" id="sidebarActions">
         <button class="btn primary" id="openBtn" title="Abrir archivos" aria-label="Abrir archivos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></button>
+        <button class="btn" id="openCloudBtn" type="button" title="Abrir desde la nube" aria-label="Abrir desde la nube" aria-haspopup="dialog"></button>
         <button class="btn" id="newBtn" title="Nuevo archivo" aria-label="Nuevo archivo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></button>
         <button class="btn" id="clearBtn" title="Cerrar todos los archivos" aria-label="Cerrar todos los archivos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       </div>
@@ -1772,6 +1782,7 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
       <button class="btn small" id="previousFileBtn" title="Volver al archivo anterior" aria-label="Volver al archivo anterior" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 10-5 5 5 5M4 15h12a4 4 0 0 0 0-8h-4"/></svg></button>
       <button class="btn small" id="reloadBtn" title="Recargar desde el archivo original" aria-label="Recargar desde el archivo original"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button>
       <button class="btn small" id="saveBtn" title="Guardar en el archivo original" aria-label="Guardar en el archivo original"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></button>
+      <button class="btn small" id="saveCloudBtn" type="button" title="Guardar en la nube" aria-label="Guardar en la nube" aria-haspopup="dialog"></button>
       <button type="button" class="btn small" id="printBtn" title="Exportar a PDF" aria-label="Exportar a PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6zM6 12h.01"/></svg></button>
       <button class="btn small primary" id="downloadBtn" title="Descargar una copia" aria-label="Descargar una copia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
     </div>
@@ -1934,8 +1945,122 @@ saludar("Ana");</code></pre>
       </div>
     </form>
   </dialog>
+  <dialog class="editor-dialog" id="cloudDialog" aria-labelledby="cloudTitle">
+    <form id="cloudForm">
+      <h2 id="cloudTitle">Nube</h2>
+      <p id="cloudDescription"></p>
+      <label for="cloudURL" id="cloudURLLabel">Código de nube</label>
+      <input id="cloudURL" type="text" autocomplete="off" spellcheck="false">
+      <label for="cloudExpiry" id="cloudExpiryLabel">Caducidad</label>
+      <select id="cloudExpiry">
+        <option value="keep">Conservar la actual</option>
+        <option value="none">Sin caducidad</option>
+        <option value="1">1 hora</option>
+        <option value="6">6 horas</option>
+        <option value="24">24 horas</option>
+      </select>
+      <p id="cloudStatus" role="status" aria-live="polite"></p>
+      <div class="btn-row">
+        <button id="cloudClose" type="button" class="btn">Cerrar</button>
+        <button id="cloudUnshare" type="button" class="btn" hidden>Dejar de compartir</button>
+        <button id="cloudSubmit" type="submit" class="btn primary">Guardar en la nube</button>
+      </div>
+    </form>
+  </dialog>
   <div id="dropzone">Suelta aquí los archivos de texto</div>
 </div>
+<script id="nologin-api">
+/* Experimental adapter for NoLogin's public editor storage. No SDK required.
+ * Only use pages you created for this app. This is not an official NoLogin API.
+ */
+(function (root) {
+  'use strict';
+  const base = 'https://firestore.googleapis.com/v1/projects/no-login-044/databases/(default)/documents/documents';
+  function page(id) {
+    if (!/^(?:torbellino-editor|editor(?:-check)?)-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/.test(id)){
+      throw new Error('El identificador de nube no es válido.');
+    }
+    return `${base}/${encodeURIComponent(id)}`;
+  }
+  function encode(value) {
+    if (value === null) return {nullValue:null};
+    if (typeof value === 'string') return {stringValue:value};
+    if (typeof value === 'boolean') return {booleanValue:value};
+    if (typeof value === 'number' && Number.isSafeInteger(value)) return {integerValue:String(value)};
+    if (Array.isArray(value)) return {arrayValue:{values:value.map(encode)}};
+    if (value && typeof value === 'object') return {mapValue:{fields:fields(value)}};
+    throw new Error('Unsupported field type');
+  }
+  function fields(value) { return Object.fromEntries(Object.entries(value).map(([k,v])=>[k,encode(v)])); }
+  function decode(value) {
+    if ('stringValue' in value) return value.stringValue;
+    if ('integerValue' in value) return Number(value.integerValue);
+    if ('booleanValue' in value) return value.booleanValue;
+    if ('arrayValue' in value) return (value.arrayValue.values || []).map(decode);
+    if ('mapValue' in value) return Object.fromEntries(Object.entries(value.mapValue.fields || {}).map(([k,v])=>[k,decode(v)]));
+    return null;
+  }
+  async function request(url, method='GET', body) {
+    const response = await fetch(url, {method, credentials:'omit', cache:'no-store',
+      signal:AbortSignal.timeout(20000),
+      ...(body ? {headers:{'Content-Type':'application/json'},body:JSON.stringify(body)} : {})})
+      .catch(() => { throw new Error('No se pudo conectar con el servicio de nube.'); });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const error = new Error(response.status === 404 ? 'El enlace no está disponible.'
+        : 'El servicio de nube rechazó la operación (HTTP ' + response.status + ').');
+      error.status=response.status; error.code=data.error?.status; throw error;
+    }
+    return data;
+  }
+  function unpack(doc) {
+    if (typeof doc.name !== 'string') throw new Error('El servicio devolvió una respuesta inválida.');
+    const data=Object.fromEntries(Object.entries(doc.fields || {}).map(([k,v])=>[k,decode(v)]));
+    // Deliberately do not expose or implement password/lock bypasses.
+    if (data.passwordSet || data.isLocked || data.isTimeLocked) throw new Error('El enlace está bloqueado.');
+    if (data.expirationTimestamp && data.expirationTimestamp <= Date.now()){
+      const error = new Error('El enlace venció.');
+      error.code = 'EXPIRED';
+      throw error;
+    }
+    return {id:doc.name.split('/').pop(),content:data.textTabs?.[0]?.content ?? data.text ?? '',
+      version:doc.updateTime, expiresAt:data.expirationTimestamp || null, encryptedName:data.editorFileName,
+      tabs:data.textTabs || []};
+  }
+  async function read(id) { return unpack(await request(page(id))); }
+  async function create(id, content, hours=1, encryptedName='') {
+    page(id);
+    if (hours !== null && (!Number.isFinite(hours) || hours<=0 || hours>24)) throw new Error('La caducidad no es válida.');
+    const now=Date.now();
+    return unpack(await request(`${base}?documentId=${encodeURIComponent(id)}`, 'POST', {fields:fields({
+      text:String(content), textTabs:[{id:'editor-main',title:'Text 1',content:String(content)}],
+      files:[],passwordSet:false,password:'',createdAt:now,
+      expirationTimestamp:hours === null ? null : now+Math.round(hours*3600000),
+      editorFileName:encryptedName
+    })}));
+  }
+  async function update(id, content, version, {expiresAt, encryptedName} = {}) {
+    if (!version) throw new Error('Pass the version returned by read() to prevent lost updates.');
+    const current=await read(id);
+    if (current.version !== version) { const e=new Error('Page changed; read it again and merge.'); e.code='FAILED_PRECONDITION'; throw e; }
+    const tabs=current.tabs.length ? current.tabs.map((t,i)=>i ? t : {...t,content:String(content)})
+      : [{id:'editor-main',title:'Text 1',content:String(content)}];
+    const changes = {text:String(content),textTabs:tabs};
+    if (expiresAt !== undefined) changes.expirationTimestamp = expiresAt;
+    if (encryptedName !== undefined) changes.editorFileName = encryptedName;
+    const params=new URLSearchParams({'currentDocument.updateTime':version});
+    for (const key of Object.keys(changes)) params.append('updateMask.fieldPaths', key);
+    return unpack(await request(`${page(id)}?${params}`, 'PATCH', {fields:fields(changes)}));
+  }
+  async function remove(id, version) {
+    if (!version) throw new Error('Falta la versión del enlace.');
+    const params = new URLSearchParams({'currentDocument.updateTime':version});
+    try { await request(`${page(id)}?${params}`, 'DELETE'); }
+    catch(e){ if (e.status !== 404) throw e; }
+  }
+  root.NoLoginAPI=Object.freeze({create,read,update,remove,url:page});
+})(globalThis);
+</script>
 <script>
 (() => {
   const files = [];
@@ -2041,10 +2166,14 @@ saludar("Ana");</code></pre>
   }
 
   // Las frases clave se conservan únicamente en sessionStorage durante la sesión.
-  let sessionCryptoKeys = {};
+  const sessionCryptoKeys = Object.create(null);
   try {
-    sessionCryptoKeys = JSON.parse(sessionStorage.getItem('editor_crypto_keys') || '{}');
-    if (!sessionCryptoKeys || typeof sessionCryptoKeys !== 'object' || Array.isArray(sessionCryptoKeys)) sessionCryptoKeys = {};
+    const stored = JSON.parse(sessionStorage.getItem('editor_crypto_keys') || '{}');
+    if (stored && typeof stored === 'object' && !Array.isArray(stored)){
+      for (const [alias, key] of Object.entries(stored)){
+        if (typeof key === 'string' && key) sessionCryptoKeys[alias] = key;
+      }
+    }
     const oldKey = sessionStorage.getItem('editor_crypto_key');
     if (oldKey && !Object.keys(sessionCryptoKeys).length) sessionCryptoKeys.predeterminada = oldKey;
     sessionStorage.removeItem('editor_crypto_key');
@@ -2079,8 +2208,10 @@ saludar("Ana");</code></pre>
     return typeof alias === 'string' && alias.trim().length > 0 && alias.trim().length <= 64 && !/[\r\n]/.test(alias);
   }
 
-  function requestCryptoKey({ descText = '', alias = null, chooseAlias = false } = {}){
-    if (alias && sessionCryptoKeys[alias]) return Promise.resolve({ alias, key: sessionCryptoKeys[alias] });
+  function requestCryptoKey({ descText = '', alias = null, chooseAlias = false, forcePrompt = false } = {}){
+    if (!forcePrompt && alias && typeof sessionCryptoKeys[alias] === 'string' && sessionCryptoKeys[alias]){
+      return Promise.resolve({ alias, key: sessionCryptoKeys[alias] });
+    }
     return new Promise(resolve => {
       if (!$cryptoKeyDialog) {
         const fixedAlias = alias || window.prompt('Alias de la clave:');
@@ -2103,7 +2234,12 @@ saludar("Ana");</code></pre>
         $cryptoKeyInput.value = selected ? (sessionCryptoKeys[selected] || '') : '';
       };
       $cryptoAliasSelect.addEventListener('change', onAliasChange);
-      const onCancel = () => { cleanup(); resolve(null); };
+      const onCancel = e => {
+        e.preventDefault();
+        cleanup();
+        $cryptoKeyDialog.close();
+        resolve(null);
+      };
       const onSubmit = (e) => {
         e.preventDefault();
         const selectedAlias = $cryptoAliasInput.value.trim();
@@ -2125,11 +2261,13 @@ saludar("Ana");</code></pre>
       };
       function cleanup(){
         $cryptoKeyCancelBtn.removeEventListener('click', onCancel);
+        $cryptoKeyDialog.removeEventListener('cancel', onCancel);
         $cryptoKeyDialog.querySelector('form').removeEventListener('submit', onSubmit);
         $cryptoAliasSelect.removeEventListener('change', onAliasChange);
       }
       $cryptoKeyCancelBtn.addEventListener('click', onCancel, { once: true });
-      $cryptoKeyDialog.querySelector('form').addEventListener('submit', onSubmit, { once: true });
+      $cryptoKeyDialog.addEventListener('cancel', onCancel);
+      $cryptoKeyDialog.querySelector('form').addEventListener('submit', onSubmit);
       $cryptoKeyDialog.showModal();
       (chooseAlias ? $cryptoAliasInput : $cryptoKeyInput).focus();
       if (!chooseAlias) $cryptoKeyInput.select();
@@ -2280,6 +2418,295 @@ saludar("Ana");</code></pre>
   const $reloadBtn = document.getElementById('reloadBtn');
   const $saveBtn  = document.getElementById('saveBtn');
   const $dlBtn    = document.getElementById('downloadBtn');
+  const $saveCloudBtn = document.getElementById('saveCloudBtn');
+  const $openCloudBtn = document.getElementById('openCloudBtn');
+  const $cloudDialog = document.getElementById('cloudDialog');
+  const $cloudForm = document.getElementById('cloudForm');
+  const $cloudTitle = document.getElementById('cloudTitle');
+  const $cloudDescription = document.getElementById('cloudDescription');
+  const $cloudURL = document.getElementById('cloudURL');
+  const $cloudExpiry = document.getElementById('cloudExpiry');
+  const $cloudStatus = document.getElementById('cloudStatus');
+  const $cloudClose = document.getElementById('cloudClose');
+  const $cloudSubmit = document.getElementById('cloudSubmit');
+  const $cloudUnshare = document.getElementById('cloudUnshare');
+  const legacyCloudPrefix = 'editor-cloud-v1\n';
+  const cloudIdPattern = /^(?:torbellino-)?editor-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/;
+  const cloudExpiryFormat = new Intl.DateTimeFormat('es-AR', { dateStyle: 'short', timeStyle: 'short' });
+  let cloudAction, cloudFile, cloudBusy = false;
+
+  function cloudIcon(arrow = ''){
+    const cloud = '<path d="M7 18H5a4 4 0 0 1-.6-8A7 7 0 0 1 18 8a5 5 0 0 1 1 10h-2"/>';
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + cloud + arrow + '</svg>';
+  }
+  $saveCloudBtn.innerHTML = cloudIcon('<path d="M12 21V11m-3 3 3-3 3 3"/>');
+  $openCloudBtn.innerHTML = cloudIcon('<path d="M12 11v10m-3-3 3 3 3-3"/>');
+
+  function validCloudLink(value){
+    return !!value && typeof value.id === 'string' && cloudIdPattern.test(value.id) &&
+      (value.expiresAt === null || Number.isFinite(value.expiresAt)) &&
+      typeof value.version === 'string' && !!value.version;
+  }
+
+  function activeCloudLink(f){
+    const link = f?.cloud;
+    return link && (link.expiresAt === null || link.expiresAt > Date.now()) ? link : null;
+  }
+
+  function showCloudDialog(action, f = cur()){
+    if (cloudBusy) return;
+    cloudAction = action;
+    cloudFile = f;
+    const link = action === 'link';
+    const opening = action === 'open';
+    const stopping = action === 'stop';
+    const saving = action === 'save';
+    const update = saving && activeCloudLink(f);
+    $cloudTitle.textContent = link ? 'Código de nube' : opening ? 'Abrir desde la nube'
+      : stopping ? 'Dejar de compartir' : update ? 'Actualizar en la nube' : 'Guardar en la nube';
+    if (link){
+      const expiry = f.cloud.expiresAt === null ? 'Sin caducidad.'
+        : activeCloudLink(f) ? 'Vence el ' + cloudExpiryFormat.format(f.cloud.expiresAt) + '.' : 'Este enlace venció.';
+      $cloudDescription.textContent = expiry + ' Usa el código en «Abrir desde la nube».';
+    } else {
+      $cloudDescription.textContent = stopping
+        ? 'Elige dónde guardar el archivo cifrado. El enlace se eliminará después de guardar en disco.'
+        : opening ? 'Pega el código de nube que generó Editor.'
+          : 'Editor usa el mismo alias y cifrado que al guardar un archivo local.';
+    }
+    $cloudForm.reset();
+    $cloudURL.readOnly = link;
+    $cloudURL.required = opening;
+    $cloudURL.hidden = document.getElementById('cloudURLLabel').hidden = !link && !opening;
+    $cloudExpiry.hidden = document.getElementById('cloudExpiryLabel').hidden = !saving;
+    $cloudExpiry.options[0].hidden = !update;
+    $cloudExpiry.value = update ? 'keep' : '24';
+    $cloudUnshare.hidden = !link;
+    $cloudSubmit.textContent = link ? 'Copiar código' : opening ? 'Abrir'
+      : stopping ? 'Guardar en disco y dejar de compartir' : update ? 'Actualizar' : 'Guardar en la nube';
+    $cloudStatus.textContent = '';
+    if (link) $cloudURL.value = f.cloud.id.replace(/^torbellino-editor-/, 'editor-anterior-');
+    if (!$cloudDialog.open) $cloudDialog.showModal();
+    (link || opening ? $cloudURL : saving ? $cloudExpiry : $cloudSubmit).focus();
+    if (link) $cloudURL.select();
+  }
+
+  async function copyCloudLink(){
+    const code = $cloudURL.value;
+    $cloudURL.focus();
+    $cloudURL.select();
+    let status;
+    try {
+      await navigator.clipboard.writeText(code);
+      status = 'Código copiado.';
+    } catch {
+      status = 'El código está seleccionado para copiarlo manualmente.';
+    }
+    if ($cloudDialog.open && cloudAction === 'link' && $cloudURL.value === code) $cloudStatus.textContent = status;
+  }
+
+  function cloudIdFromReference(value){
+    const reference = value.trim();
+    const compactId = reference.replace(/^editor-anterior-/, 'torbellino-editor-');
+    if (cloudIdPattern.test(compactId)) return compactId;
+    let url;
+    try { url = new URL(reference); } catch {}
+    const id = url?.pathname.split('/').pop();
+    if (id && cloudIdPattern.test(id) && url.href === NoLoginAPI.url(id)) return id;
+    throw new Error('Usa un código de nube generado por Editor.');
+  }
+
+  async function checkCloudAPI(){
+    const id = 'editor-check-' + crypto.randomUUID();
+    const encrypted = wrapCryptoEnvelope('prueba', await encriptar('Comprobación de disponibilidad', crypto.randomUUID()));
+    try {
+      await NoLoginAPI.create(id, encrypted, 1);
+      if ((await NoLoginAPI.read(id)).content !== encrypted) throw new Error('Contenido inesperado');
+    } catch {
+      throw new Error('No se pudo comprobar la lectura y escritura en la nube. El archivo no se envió.');
+    }
+  }
+
+  function isLegacyCloudNote(note){
+    return !note.encryptedName && note.content.startsWith(legacyCloudPrefix);
+  }
+
+  async function unlockCloudNote(note){
+    if (!validCloudLink(note) || typeof note.content !== 'string' || note.content.length > 500000){
+      throw new Error('El enlace no contiene un archivo cifrado de Editor.');
+    }
+    const legacy = isLegacyCloudNote(note);
+    const envelope = legacy ? null : readCryptoEnvelope(note.content);
+    if (!legacy && !envelope) throw new Error('El enlace no contiene un archivo cifrado de Editor.');
+    const alias = envelope?.alias;
+    const options = { alias, chooseAlias: legacy, descText: alias
+      ? 'Introduce la frase clave del alias «' + alias + '».' : 'Introduce la frase clave del archivo y el alias que quieres usar.' };
+    const decrypt = async credentials => {
+      if (legacy){
+        const data = JSON.parse(await desencriptar(note.content.slice(legacyCloudPrefix.length), credentials.key));
+        return { ...data, credentials };
+      }
+      const text = await desencriptar(envelope.payload, credentials.key);
+      const name = note.encryptedName ? await desencriptar(note.encryptedName, credentials.key) : 'Archivo de nube.md';
+      return { name, text, credentials };
+    };
+    const cached = alias && sessionCryptoKeys[alias];
+    let credentials = await requestCryptoKey(options);
+    if (!credentials) return null;
+    let data;
+    try { data = await decrypt(credentials); }
+    catch(e){
+      if (!cached) throw e;
+      credentials = await requestCryptoKey({ ...options, forcePrompt: true });
+      if (!credentials) return null;
+      data = await decrypt(credentials);
+    }
+    if (typeof data.name !== 'string' || !data.name.trim() || typeof data.text !== 'string'){
+      throw new Error('La nota contiene un archivo inválido.');
+    }
+    return data;
+  }
+
+  function cloudMetadata({ id, expiresAt, version }, alias){
+    const link = { id, expiresAt, version, alias };
+    if (!validCloudLink(link)) throw new Error('El servicio devolvió un enlace inválido.');
+    return link;
+  }
+
+  async function saveToCloud(f, expiry){
+    if (!files.includes(f)) throw new Error('El archivo se cerró.');
+    const link = activeCloudLink(f);
+    const { name, text } = f;
+    if (new TextEncoder().encode(text).length > 374900){
+      throw new Error('El archivo supera el tamaño permitido para una nota cifrada.');
+    }
+    let current, credentials;
+    if (link){
+      current = await NoLoginAPI.read(link.id);
+      if (current.version !== link.version) throw new Error('El archivo cambió en otro dispositivo. Abre el enlace para revisar esa versión.');
+      credentials = (await unlockCloudNote(current))?.credentials;
+    } else {
+      credentials = await requestCryptoKey({ alias: f.encryptionAlias, chooseAlias: !f.encryptionAlias,
+        descText: 'Elige el alias y la frase clave para guardar el archivo cifrado.' });
+    }
+    if (!credentials) return false;
+    const { alias, key } = credentials;
+    const encrypted = wrapCryptoEnvelope(alias, await encriptar(text, key));
+    const encryptedName = await encriptar(name, key);
+    const hours = expiry === 'none' ? null : expiry === 'keep' ? 24 : Number(expiry);
+    const expiresAt = expiry === 'keep' ? undefined : hours === null ? null : Date.now() + hours * 3600000;
+    $cloudStatus.textContent = 'Comprobando el servicio de nube…';
+    await checkCloudAPI();
+    $cloudStatus.textContent = 'Guardando archivo cifrado…';
+    const note = current
+      ? await NoLoginAPI.update(current.id, encrypted, current.version, { expiresAt, encryptedName })
+      : await NoLoginAPI.create('editor-' + crypto.randomUUID(), encrypted, hours, encryptedName);
+    if (note.content !== encrypted) throw new Error('El servicio devolvió contenido distinto del que se envió.');
+    f.cloud = cloudMetadata(note, alias);
+    if (f.cloudOnly){
+      f.savedText = text;
+      f.dirty = f.text !== text;
+    }
+    renderSidebar();
+    updateToolbar();
+    return true;
+  }
+
+  async function openFromCloud(value){
+    const id = cloudIdFromReference(value);
+    const note = await NoLoginAPI.read(id);
+    const data = await unlockCloudNote(note);
+    if (!data) return false;
+    const { name, text, credentials: { alias } } = data;
+    const existing = files.find(f => f.cloud?.id === id && f.cloud.version === note.version);
+    const f = existing || addFile({ name, text, encrypted: true, encryptionAlias: alias,
+      cloud: cloudMetadata(note, alias), cloudOnly: true });
+    activate(f.id);
+    if (mode === 'view') setMode('split');
+    return true;
+  }
+
+  async function stopSharing(f){
+    if (!hasSavePicker) throw new Error('Abre Editor en un navegador con Guardar como o en la aplicación de escritorio para guardar en disco y eliminar el enlace.');
+    const handle = await chooseSaveHandle(f.name);
+    if (!handle) return false;
+    const { id, version, alias } = f.cloud;
+    const { text } = f;
+    let remote;
+    try { remote = await NoLoginAPI.read(id); }
+    catch(e){ if (e.status !== 404 && e.code !== 'EXPIRED') throw e; }
+    if (remote && remote.version !== version){
+      throw new Error('El archivo cambió en otro dispositivo. Abre el enlace para revisar esa versión.');
+    }
+    const unlocked = remote ? await unlockCloudNote(remote) : null;
+    const credentials = remote ? unlocked?.credentials : await requestCryptoKey({
+      alias: alias || f.encryptionAlias, chooseAlias: !alias && !f.encryptionAlias,
+      descText: 'Introduce la clave para guardar el archivo cifrado en disco.'
+    });
+    if (!credentials) return false;
+    $cloudStatus.textContent = 'Guardando el archivo en disco…';
+    const encrypted = remote && !isLegacyCloudNote(remote) && unlocked.text === text
+      ? remote.content : wrapCryptoEnvelope(credentials.alias, await encriptar(text, credentials.key));
+    await writeLocalFile(handle, encrypted);
+    f.encrypted = true;
+    f.encryptionAlias = credentials.alias;
+    await adoptLocalFile(f, handle, text);
+    $cloudStatus.textContent = 'Eliminando el enlace de la nube…';
+    try { await NoLoginAPI.remove(id, version); }
+    catch {
+      throw new Error('El archivo se guardó en disco. No se pudo eliminar el enlace de la nube.');
+    }
+    for (const file of files){
+      if (file.cloud?.id === id) file.cloud = null;
+    }
+    activate(f.id);
+    return true;
+  }
+
+  $saveCloudBtn.addEventListener('click', () => showCloudDialog('save'));
+  $openCloudBtn.addEventListener('click', () => showCloudDialog('open'));
+  $cloudClose.addEventListener('click', () => $cloudDialog.close());
+  $cloudUnshare.addEventListener('click', () => showCloudDialog('stop', cloudFile));
+  $cloudDialog.addEventListener('cancel', e => { if (cloudBusy) e.preventDefault(); });
+  $cloudDialog.addEventListener('close', () => {
+    if (!$cloudDialog.open){
+      $cloudForm.reset();
+      cloudFile = null;
+    }
+  });
+  $cloudForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    if (cloudBusy) return;
+    if (cloudAction === 'link'){ await copyCloudLink(); return; }
+    cloudBusy = true;
+    $cloudSubmit.disabled = $cloudClose.disabled = true;
+    const file = cloudFile;
+    const action = cloudAction;
+    let done = false;
+    try {
+      if (action === 'open'){
+        $cloudStatus.textContent = 'Abriendo enlace…';
+        done = await openFromCloud($cloudURL.value);
+      } else if (action === 'stop'){
+        done = await stopSharing(file);
+      } else {
+        done = await saveToCloud(file, $cloudExpiry.value);
+      }
+      $cloudStatus.textContent = '';
+    } catch(e){
+      $cloudStatus.textContent = e.name === 'AbortError' ? '' : e.code === 'FAILED_PRECONDITION'
+        ? 'El archivo cambió en otro dispositivo. Abre el enlace para revisar esa versión.' : e.message;
+    } finally {
+      cloudBusy = false;
+      $cloudSubmit.disabled = $cloudClose.disabled = false;
+      if (action === 'stop'){
+        updateToolbar();
+        renderSidebar();
+      }
+    }
+    if (done && action === 'save') showCloudDialog('link', file);
+    else if (done) $cloudDialog.close();
+  });
   const $clearBtn = document.getElementById('clearBtn');
   const $encryptBtn = document.getElementById('encryptBtn');
 
@@ -2596,11 +3023,12 @@ saludar("Ana");</code></pre>
 
   const $fileSort = document.getElementById('fileSort');
   const $fileGroup = document.getElementById('fileGroup');
+  const collapsedFileGroups = new Set();
   const dayFormat = new Intl.DateTimeFormat('es-AR', { dateStyle: 'medium' });
   function fileCategory(f, criterion){
     if (criterion === 'type') return /\.([^.]+)$/.exec(f.name)?.[1].toLowerCase() || 'Sin extensión';
     if (criterion === 'folder') return f.handle?.folder || f.source?.folder ||
-      (f.draftId ? 'Temporarios' : 'Carpeta no disponible');
+      (f.draftId ? 'Temporarios' : f.cloudOnly ? 'Nube' : 'Carpeta no disponible');
     const date = new Date(f.lastModified);
     return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
   }
@@ -2640,14 +3068,22 @@ saludar("Ana");</code></pre>
         const key = fileCategory(f, group);
         if (key !== previousGroup){
           const title = group === 'day' ? dayFormat.format(key) : key;
-          list = document.createElement('div');
-          list.setAttribute('role', 'group');
-          list.setAttribute('aria-label', title);
-          const heading = document.createElement('div');
+          const groupId = JSON.stringify([group, key]);
+          list = document.createElement('details');
+          list.open = !collapsedFileGroups.has(groupId);
+          const heading = document.createElement('summary');
           heading.className = 'file-group';
           heading.textContent = title;
-          heading.setAttribute('aria-hidden', 'true');
           list.append(heading);
+          const section = list;
+          heading.addEventListener('click', e => {
+            e.preventDefault();
+            section.open = !section.open;
+            if (section.open) collapsedFileGroups.delete(groupId);
+            else collapsedFileGroups.add(groupId);
+            panes.collapsedFileGroups = [...collapsedFileGroups];
+            writePanes(panes);
+          });
           $files.append(list);
           options = document.createElement('optgroup');
           options.label = title;
@@ -2670,7 +3106,8 @@ saludar("Ana");</code></pre>
       + (f.dirty ? ' dirty' : '');
     el.setAttribute('role', 'listitem');
     el.setAttribute('tabindex', '0');
-    el.setAttribute('aria-label', (f.draftId ? label + ' (temporario)' : f.name) + (f.dirty ? ' (sin guardar)' : ''));
+    el.setAttribute('aria-label', (f.draftId ? label + ' (temporario)' : f.name) +
+      (f.cloud ? ' (nube)' : '') + (f.dirty ? ' (sin guardar)' : ''));
     const dot = document.createElement('span');
     dot.className = 'dot';
     dot.title = 'Cambios sin guardar';
@@ -2720,13 +3157,28 @@ saludar("Ana");</code></pre>
       badge.setAttribute('aria-hidden', 'true');
       el.append(badge);
     }
+    if (f.cloud){
+      const cloudBtn = document.createElement('button');
+      cloudBtn.className = 'file-cloud';
+      cloudBtn.type = 'button';
+      cloudBtn.title = 'Copiar código de nube';
+      cloudBtn.setAttribute('aria-label', `Copiar código de nube de ${label}`);
+      cloudBtn.setAttribute('aria-haspopup', 'dialog');
+      cloudBtn.innerHTML = cloudIcon();
+      cloudBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        showCloudDialog('link', f);
+        copyCloudLink();
+      });
+      el.append(cloudBtn);
+    }
     el.append(closeBtn);
     el.addEventListener('click', e => {
-      if (e.target === closeBtn) return;
+      if (e.target.closest('button')) return;
       activate(f.id);
     });
     el.addEventListener('keydown', e => {
-      if (e.target === closeBtn) return;
+      if (e.target !== el) return;
       if (e.key === 'Enter' || e.key === ' '){
         e.preventDefault();
         activate(f.id);
@@ -2865,6 +3317,8 @@ saludar("Ana");</code></pre>
       return;
     }
     $toolbar.classList.remove('hidden');
+    $saveCloudBtn.title = activeCloudLink(f) ? 'Actualizar en la nube' : 'Guardar en la nube';
+    $saveCloudBtn.setAttribute('aria-label', $saveCloudBtn.title);
     $curSize.textContent = fmtBytes(f.size);
     $viewAs.value = f.viewAs;
     $viewAs.title = `Ver como… · ${$viewAs.selectedOptions[0].text}`;
@@ -2898,7 +3352,7 @@ saludar("Ana");</code></pre>
         : status + ' Puedes descargar una copia.';
     }
     $saveBtn.classList.toggle('hidden', !canOverwrite && !hasSavePicker);
-    $saveBtn.disabled = !(f.dirty || f.draftId) || !!f.saving || !!f.closing;
+    $saveBtn.disabled = !(f.dirty || f.draftId || f.cloudOnly) || !!f.saving || !!f.closing;
     $saveBtn.classList.toggle('primary', !!f.draftId && (canOverwrite || hasSavePicker));
     $dlBtn.classList.toggle('primary', !f.draftId || (!canOverwrite && !hasSavePicker));
     $saveBtn.title = canOverwrite ? 'Guardar en el archivo original' : 'Guardar como';
@@ -3950,6 +4404,8 @@ saludar("Ana");</code></pre>
     const f = {
       id: nextId++,
       draftId: opts.draftId || null,
+      cloud: validCloudLink(opts.cloud) ? opts.cloud : null,
+      cloudOnly: !!opts.cloudOnly,
       backedUpText: opts.backedUpText,
       name: opts.name,
       size: opts.size ?? new Blob([opts.text]).size,
@@ -4067,9 +4523,12 @@ saludar("Ana");</code></pre>
       try {
         const file = await h.getFile();
         if (!isAcceptedFile(file)){ rejected++; continue; }
-        const meta = metaList?.find(m => m.name === h.name || m.name === file.name);
+        const matches = metaList?.filter(m => !m.draftId && (m.name === h.name || m.name === file.name)
+          && (m.folder || '') === (h.folder || '')) || [];
+        const meta = matches[0];
         const knownEnc = meta !== undefined ? !!meta.encrypted : undefined;
         const f = await addFromFileObject(file, h, knownEnc);
+        if (f && matches.length === 1 && !f.cloud && validCloudLink(meta.cloud)) f.cloud = meta.cloud;
         if (f && !first) first = f;
       } catch(e){
         console.error(e);
@@ -4082,8 +4541,8 @@ saludar("Ana");</code></pre>
     return first;
   }
 
-  async function openDesktopFiles(result){
-    const first = await openHandles((result.files || []).map(desktopHandle));
+  async function openDesktopFiles(result, meta){
+    const first = await openHandles((result.files || []).map(desktopHandle), meta);
     if (result.errors?.length) await notify(`No se pudieron abrir algunas rutas:\n${result.errors.join('\n')}`);
     return first;
   }
@@ -4195,7 +4654,7 @@ saludar("Ana");</code></pre>
   });
 
   window.addEventListener('paste', async e => {
-    if ($syntaxThemeDialog.open || $codeBlockDialog.open || $linkDialog.open || document.activeElement === $editor ||
+    if ($cloudDialog.open || $syntaxThemeDialog.open || $codeBlockDialog.open || $linkDialog.open || document.activeElement === $editor ||
         $findBar.contains(document.activeElement) || $wysiwyg.contains(document.activeElement)) return;
     const cd = e.clipboardData;
     const pastedFiles = [];
@@ -4649,8 +5108,29 @@ saludar("Ana");</code></pre>
     return target ? desktopHandle(target) : null;
   }
 
+  async function writeLocalFile(handle, text){
+    const writable = await handle.createWritable();
+    await writable.write(text);
+    await writable.close();
+  }
+
+  async function adoptLocalFile(f, handle, text){
+    f.handle = handle;
+    f.cloudOnly = false;
+    f.name = handle.name || f.name;
+    f.lastModified = Date.now();
+    f.updatedAt = Math.max(f.updatedAt ?? 0, f.lastModified);
+    f.savedText = text;
+    f.dirty = f.text !== text;
+    try {
+      await discardDrafts([f]);
+    } catch(e){
+      await notify(`El archivo local se guardó, pero no se pudo eliminar el temporario (${e.message || e}).`);
+    }
+  }
+
   async function doSave(){
-    const f = cur(); if (!f || !(f.dirty || f.draftId) || f.saving || f.closing) return;
+    const f = cur(); if (!f || !(f.dirty || f.draftId || f.cloudOnly) || f.saving || f.closing) return;
     const original = typeof f.handle?.createWritable === 'function' ? f.handle : null;
     const saveAs = !original;
     if (saveAs && !hasSavePicker) return;
@@ -4675,20 +5155,8 @@ saludar("Ana");</code></pre>
         if (!credentials) return;
         textToWrite = wrapCryptoEnvelope(alias, await encriptar(text, credentials.key));
       }
-      const writable = await handle.createWritable();
-      await writable.write(textToWrite);
-      await writable.close();
-      f.handle = handle;
-      f.name = handle.name || f.name;
-      f.lastModified = Date.now();
-      f.updatedAt = Math.max(f.updatedAt ?? 0, f.lastModified);
-      f.savedText = text;
-      f.dirty = f.text !== text;
-      try {
-        await discardDrafts([f]);
-      } catch(e){
-        await notify(`El archivo local se guardó, pero no se pudo eliminar el temporario (${e.message || e}).`);
-      }
+      await writeLocalFile(handle, textToWrite);
+      await adoptLocalFile(f, handle, text);
     } catch(e){
       if (saveAs && e.name === 'AbortError') return;
       console.error('save failed', e);
@@ -4977,7 +5445,7 @@ saludar("Ana");</code></pre>
   });
 
   window.addEventListener('keydown', e => {
-    if ($syntaxThemeDialog.open || $codeBlockDialog.open || $linkDialog.open) return;
+    if ($cloudDialog.open || $syntaxThemeDialog.open || $codeBlockDialog.open || $linkDialog.open) return;
     const mod = e.metaKey || e.ctrlKey;
     if (!mod) return;
     const k = e.key.toLowerCase();
@@ -4996,7 +5464,7 @@ saludar("Ana");</code></pre>
   });
 
   window.addEventListener('beforeunload', e => {
-    if (!desktop && files.some(f => f.saving || f.closing || hasUnbackedChanges(f))){
+    if (!desktop && (cloudBusy || files.some(f => f.saving || f.closing || hasUnbackedChanges(f)))){
       e.preventDefault();
       e.returnValue = true;
     }
@@ -5113,6 +5581,7 @@ saludar("Ana");</code></pre>
             text: decoded.text,
             dirty: true,
             draftId: id,
+            cloud: startupFilesMeta.find(meta => meta.draftId === id)?.cloud,
             encrypted: decoded.encrypted,
             encryptionAlias: decoded.alias,
             backedUpText: decoded.text,
@@ -5132,8 +5601,19 @@ saludar("Ana");</code></pre>
     }
   }
 
+  function readFilesMeta(){
+    try {
+      const meta = JSON.parse(localStorage.getItem('mdv.filesMeta') || '[]');
+      return Array.isArray(meta) ? meta.filter(item => item && typeof item === 'object') : [];
+    } catch { return []; }
+  }
+
+  const startupFilesMeta = readFilesMeta();
   function rememberBrowserFiles(){
-    const meta = files.map(f => ({ name: f.name, encrypted: !!f.encrypted, encryptionAlias: f.encryptionAlias || null }));
+    const meta = files.filter(f => !f.cloudOnly).map(f => ({
+      name: f.name, folder: f.handle?.folder || '', draftId: f.draftId, cloud: f.cloud,
+      encrypted: !!f.encrypted, encryptionAlias: f.encryptionAlias || null,
+    }));
     try {
       localStorage.setItem('mdv.filesMeta', JSON.stringify(meta));
     } catch(_) {}
@@ -5161,9 +5641,7 @@ saludar("Ana");</code></pre>
         request.onsuccess = () => resolve(request.result || null);
         request.onerror = () => resolve(null);
       });
-      if (!metaList){
-        try { metaList = JSON.parse(localStorage.getItem('mdv.filesMeta') || '[]'); } catch(_) {}
-      }
+      if (!Array.isArray(metaList)) metaList = startupFilesMeta;
       const handles = [];
       for (const handle of stored){
         if (await handle.queryPermission({ mode: 'read' }).catch(() => 'denied') === 'granted') handles.push(handle);
@@ -5192,6 +5670,11 @@ saludar("Ana");</code></pre>
     try { localStorage.setItem(STORE_KEY, JSON.stringify(p)); } catch(_){}
   };
   const panes = readPanes();
+  if (Array.isArray(panes.collapsedFileGroups)){
+    for (const group of panes.collapsedFileGroups){
+      if (typeof group === 'string') collapsedFileGroups.add(group);
+    }
+  }
   for (const [control, key] of [[$fileSort, 'fileSort'], [$fileGroup, 'fileGroup']]){
     if (Array.from(control.options).some(option => option.value === panes[key])) control.value = panes[key];
     control.addEventListener('change', () => {
@@ -5387,7 +5870,7 @@ saludar("Ana");</code></pre>
   if (desktop){
     let closing = false;
     window.runtime.EventsOn('editor:close', async () => {
-      if (closing || files.some(f => f.saving || f.closing)) return;
+      if (closing || cloudBusy || files.some(f => f.saving || f.closing)) return;
       closing = true;
       try {
         await Promise.all(files.map(f => f.draftWrite));
@@ -5412,7 +5895,7 @@ saludar("Ana");</code></pre>
     $content.addEventListener('click', openLink, true);
     $content.addEventListener('auxclick', openLink, true);
     desktop.StartupFiles().then(async result => {
-      if (await openDesktopFiles(result)) setMode('split');
+      if (await openDesktopFiles(result, startupFilesMeta)) setMode('split');
     }).catch(e => notify(`No se pudieron abrir los archivos (${e.message || e}).`));
   } else if (hasFSA && window.indexedDB) restoreBrowserFiles();
   restoreDrafts();

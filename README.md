@@ -23,6 +23,7 @@ Todas las dependencias están incluidas en `index.html`, que puedes abrir direct
 - **Recargar desde el disco** para incorporar los cambios realizados con otro editor
   cuando el archivo se abrió con acceso al original.
 - **Descargar una copia** del documento y recibir avisos cuando haya cambios pendientes.
+- **Nube** guarda un archivo cifrado y permite copiar su código desde la lista de archivos.
 - **Pegar Markdown** con ⌘V o Ctrl+V, fuera del área de edición,
   para abrirlo como un archivo nuevo.
 - **Varios archivos abiertos** en una barra lateral que permite cambiar entre ellos y
@@ -30,6 +31,7 @@ Todas las dependencias están incluidas en `index.html`, que puedes abrir direct
 - **Ordenar y agrupar archivos** por nombre o actualización, en ambos sentidos.
   Al agrupar por extensión, el tipo aparece en el encabezado del grupo. El subtítulo
   muestra la primera línea que contiene letras o números, sin signos en los extremos.
+  Pulsa el encabezado del grupo para plegarlo o desplegarlo.
 - **Recuperar la sesión web** al volver a abrir Editor en el mismo navegador. La lista
   de archivos, la pestaña activa y los borradores se conservan en el almacenamiento local del sitio.
 - **Nuevo archivo** para empezar un documento desde cero.
@@ -133,6 +135,23 @@ JavaScript en el navegador necesita autorización para escribir en el disco.
 
 Una barra amarilla avisa cuando hay cambios pendientes. El navegador también
 muestra una advertencia si intentas cerrar la pestaña con modificaciones sin guardar.
+
+## Guardar y abrir desde la nube
+
+Pulsa **Guardar en la nube**, elige la caducidad o selecciona **Sin caducidad**,
+y usa el alias y la frase clave del cifrado local. El contenido utiliza la
+misma cabecera `editor-<alias>` que un archivo cifrado guardado en disco. El
+nombre también se cifra. Antes de cada envío se comprueba la lectura y la
+escritura con una nota cifrada de prueba de una hora.
+
+Copia el código que aparece al guardar o usa el icono de nube en la lista de
+archivos. En el otro dispositivo, abre **Abrir desde la nube** en Editor, pega el
+código `editor-…` e introduce la misma frase clave. Editor reconstruye la dirección.
+
+Al actualizar puedes conservar o cambiar la caducidad. Para retirar un archivo
+de la nube, abre su código desde el icono en la lista y pulsa **Dejar de
+compartir**. El editor guarda el archivo cifrado en el destino que elijas y
+después elimina la copia de la nube.
 
 ## Recargar desde el disco
 
