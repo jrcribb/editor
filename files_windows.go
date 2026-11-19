@@ -42,9 +42,9 @@ type OpenedFiles struct {
 	Errors []string     `json:"errors"`
 }
 
-var textFilters = []runtime.FileFilter{
-	{DisplayName: "Markdown y texto", Pattern: "*.md;*.markdown;*.mdx;*.txt;*.text"},
-	{DisplayName: "Todos los archivos", Pattern: "*.*"},
+// Wails derives the save extension from the first filter. A bare "*" leaves it empty.
+var allFilesFilter = []runtime.FileFilter{
+	{DisplayName: "Todos los archivos", Pattern: "*"},
 }
 
 func (d *Desktop) StartupFiles() OpenedFiles {
@@ -174,7 +174,7 @@ func matchWindowsFiles(pattern string) ([]string, error) {
 
 func (d *Desktop) OpenFiles() (OpenedFiles, error) {
 	paths, err := runtime.OpenMultipleFilesDialog(d.ctx, runtime.OpenDialogOptions{
-		Title: "Abrir archivos", Filters: textFilters,
+		Title: "Abrir archivos", Filters: allFilesFilter,
 	})
 	return d.openPaths(paths), err
 }
@@ -195,10 +195,7 @@ func (d *Desktop) openPaths(paths []string) OpenedFiles {
 func (d *Desktop) SaveTarget(name string) (*FileHandle, error) {
 	path, err := runtime.SaveFileDialog(d.ctx, runtime.SaveDialogOptions{
 		Title: "Guardar como", DefaultFilename: filepath.Base(name),
-		Filters: []runtime.FileFilter{
-			{DisplayName: "Markdown (*.md)", Pattern: "*.md"},
-			{DisplayName: "Todos los archivos", Pattern: "*.*"},
-		},
+		Filters: allFilesFilter,
 	})
 	if err != nil || path == "" {
 		return nil, err

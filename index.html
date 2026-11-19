@@ -1371,12 +1371,14 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
   #outline[hidden],#files[hidden],.file-controls[hidden]{display:none}
   .outline-entry{display:flex;align-items:center;gap:6px;width:100%;text-align:left;white-space:normal;overflow-wrap:anywhere;border:0;border-radius:5px;background:transparent;color:var(--fg);cursor:pointer;padding:5px 8px;font:inherit;font-size:13px}
   .outline-entry:hover,.outline-entry:focus-visible{background:var(--hover)}
+  .outline-entry[aria-current="location"]{background:var(--active);color:var(--accent);box-shadow:inset 3px 0 var(--accent)}
   .outline-tag{display:inline-flex;align-items:center;justify-content:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;font-weight:700;min-width:18px;height:18px;padding:0 3px;border-radius:4px;flex-shrink:0;line-height:1}
   .outline-tag-function{background:#1f6feb;color:#fff}
   .outline-tag-procedure{background:#8957e5;color:#fff}
   .outline-tag-package{background:#d29922;color:#fff}
   .outline-tag-trigger{background:#da3633;color:#fff}
   .outline-tag-class{background:#238636;color:#fff}
+  .outline-tag-object{background:var(--active);color:var(--accent)}
   .outline-name{flex:1;min-width:0;overflow-wrap:anywhere}
   .lock-badge{display:inline-flex;align-items:center;color:var(--muted);flex-shrink:0}
   #encryptBtn.on{background:var(--active);color:var(--accent)}
@@ -1429,9 +1431,11 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
   #toolbar .size{flex-shrink:0}
   #findBar{display:flex;align-items:center;flex-wrap:wrap;flex-shrink:0;gap:6px;padding:6px 12px;
     background:var(--sidebar);border-bottom:1px solid var(--border)}
-  #findText{flex:1 1 130px;min-width:0;max-width:330px;min-height:32px;padding:4px 8px;
+  #findText,#replaceText{flex:1 1 130px;min-width:0;max-width:330px;min-height:32px;padding:4px 8px;
     border:1px solid var(--border);border-radius:var(--ui-radius);font:inherit;color:var(--fg);background:var(--bg)}
+  #replaceRow{display:flex;align-items:center;flex-wrap:wrap;gap:6px;flex-basis:100%}
   #findStatus{font-size:12px;color:var(--muted)}
+  #findRegex[aria-pressed="true"]{background:var(--active);color:var(--accent)}
   ::highlight(document-current){color:var(--bg);background:var(--accent)}
   #pinLineBtn[aria-pressed="true"]{background:var(--active);color:var(--accent)}
   .source-measure{position:fixed;left:-10000px;top:0;visibility:hidden;box-sizing:border-box}
@@ -1457,11 +1461,22 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
   #body.wysiwyg{overflow:auto}
   #body.wysiwyg #content{display:none}
   #body.wysiwyg #wysiwyg{display:block}
+  #body.code-visual{overflow:hidden}
+  #body.code-visual #editor{color:transparent;caret-color:var(--fg)}
+  #body.code-visual #editor::selection{color:transparent;background:color-mix(in srgb,var(--accent) 30%,transparent)}
+  #body.code-visual #wysiwyg{position:absolute;inset:0 auto auto 0;margin:0;padding:0;min-height:0;
+    max-width:none;overflow:hidden;pointer-events:none}
+  #body.code-visual #wysiwyg pre,#body.code-visual #wysiwyg code.hljs{margin:0;border:0;padding:0;
+    border-radius:0;background:transparent;font:inherit;line-height:inherit;white-space:pre-wrap;overflow-wrap:break-word}
+  #body.code-visual #wysiwyg code span{font-weight:inherit;font-style:inherit}
+  #body.code-visual #wysiwyg pre{box-sizing:border-box;padding:var(--code-editor-padding)}
   #wysiwyg:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
   #richToolbar{display:none;align-items:center;gap:6px;flex-wrap:wrap;
     padding:6px 16px;border-bottom:1px solid var(--border);background:var(--sidebar)}
   #richToolbar.show{display:flex}
   #richToolbar.source-only > :not([data-rich-cmd="codeBlock"],[data-rich-cmd="task"],[data-history]){display:none}
+  #richToolbar.code-file > [data-rich-cmd],#richToolbar.code-file > #blockFmt{display:none}
+  #richToolbar.source-only > #insertCodeBlock{display:none}
   .editor-dialog{width:min(540px,calc(100% - 32px));padding:20px;
     background:var(--bg);color:var(--fg);border:1px solid var(--border);border-radius:var(--ui-radius)}
   .editor-dialog::backdrop{background:#0006}
@@ -1612,7 +1627,7 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
     #activeFileHeading{flex:1 1 100%;min-width:0;max-width:100%}
     #activeFileName{min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     #findBar{padding:4px 8px;gap:4px;width:100%;max-width:100vw;box-sizing:border-box}
-    #findText{flex:1 1 100px;max-width:100%}
+    #findText,#replaceText{flex:1 1 100px;max-width:100%}
     #richToolbar{padding:4px 8px;gap:4px;width:100%;max-width:100vw;box-sizing:border-box}
     #content,#wysiwyg{padding:14px 10px 60px;width:100%;max-width:100%;box-sizing:border-box}
     #editor{padding:12px 8px;width:100%;max-width:100%;box-sizing:border-box}
@@ -1762,10 +1777,17 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
     </div>
     <div id="findBar" class="hidden" role="search" aria-label="Buscar en el documento">
       <input id="findText" type="search" placeholder="Buscar en el documento" aria-label="Texto a buscar" autocomplete="off" spellcheck="false">
+      <button class="btn small" id="findRegex" title="Usar expresión regular" aria-label="Usar expresión regular" aria-pressed="false">.*</button>
       <span id="findStatus" role="status"></span>
       <button class="btn small" id="findPrev" title="Coincidencia anterior" aria-label="Coincidencia anterior" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 15 7-7 7 7"/></svg></button>
       <button class="btn small" id="findNext" title="Coincidencia siguiente" aria-label="Coincidencia siguiente" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 9 7 7 7-7"/></svg></button>
       <button class="btn small" id="findClose" title="Cerrar búsqueda" aria-label="Cerrar búsqueda"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+      <button class="btn small" id="showReplace" aria-expanded="false" aria-controls="replaceRow" title="Buscar y reemplazar en el código fuente">Reemplazar…</button>
+      <div id="replaceRow" class="hidden">
+        <input id="replaceText" type="text" placeholder="Reemplazar por" aria-label="Texto de reemplazo" autocomplete="off" spellcheck="false">
+        <button class="btn small" id="replaceOne">Reemplazar</button>
+        <button class="btn small" id="replaceAll">Reemplazar todo</button>
+      </div>
     </div>
     <div id="warnBar" role="alert" aria-live="polite">
       <strong>Cambios sin guardar.</strong>
@@ -1782,6 +1804,7 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
         <option value="blockquote">Cita</option>
         <option value="pre">Texto preformateado</option>
       </select>
+      <select id="insertCodeBlock" class="hidden" aria-label="Insertar bloque de código"></select>
       <button class="btn small" data-rich-cmd="bold" title="Negrita" aria-label="Negrita"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/><path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/></svg></button>
       <button class="btn small" data-rich-cmd="italic" title="Cursiva" aria-label="Cursiva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg></button>
       <button class="btn small" data-rich-cmd="code" title="Código en línea" aria-label="Código en línea"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></button>
@@ -2174,6 +2197,12 @@ saludar("Ana");</code></pre>
   const $findStatus = document.getElementById('findStatus');
   const $findPrev = document.getElementById('findPrev');
   const $findNext = document.getElementById('findNext');
+  const $findRegex = document.getElementById('findRegex');
+  const $showReplace = document.getElementById('showReplace');
+  const $replaceRow = document.getElementById('replaceRow');
+  const $replaceText = document.getElementById('replaceText');
+  const $replaceOne = document.getElementById('replaceOne');
+  const $replaceAll = document.getElementById('replaceAll');
   const $pinLineBtn = document.getElementById('pinLineBtn');
   const $goLineBtn = document.getElementById('goLineBtn');
   const $drop     = document.getElementById('dropzone');
@@ -2181,7 +2210,6 @@ saludar("Ana");</code></pre>
   const $warnBar  = document.getElementById('warnBar');
   const $warnMsg  = document.getElementById('warnMsg');
   const $modeSeg  = document.getElementById('modeSeg');
-  const $visualMode = $modeSeg.querySelector('[data-mode="wysiwyg"]');
   const $richToolbar = document.getElementById('richToolbar');
   const $undoBtn = document.getElementById('undoBtn');
   const $redoBtn = document.getElementById('redoBtn');
@@ -2203,6 +2231,52 @@ saludar("Ana");</code></pre>
     if (id !== 'plaintext') $viewAs.add(new Option(name, id));
   }
   const $blockFmt = document.getElementById('blockFmt');
+  const $insertCodeBlock = document.getElementById('insertCodeBlock');
+  const codeBlocks = new Map();
+  function defineCodeBlocks(ids, blocks){
+    for (const id of ids.split(' ')) codeBlocks.set(id, blocks);
+  }
+  defineCodeBlocks('sql', {
+    'FUNCTION (Oracle)': 'CREATE OR REPLACE FUNCTION nombre\nRETURN NUMBER AS\nBEGIN\n  RETURN 0;\nEND;\n/',
+    'PROCEDURE (Oracle)': 'CREATE OR REPLACE PROCEDURE nombre AS\nBEGIN\n  NULL;\nEND;\n/',
+    'TRIGGER (Oracle)': 'CREATE OR REPLACE TRIGGER nombre\nBEFORE INSERT ON tabla\nFOR EACH ROW\nBEGIN\n  NULL;\nEND;\n/',
+    'PACKAGE (Oracle)': 'CREATE OR REPLACE PACKAGE nombre AS\n  PROCEDURE ejecutar;\nEND nombre;\n/',
+    'PACKAGE BODY (Oracle)': 'CREATE OR REPLACE PACKAGE BODY nombre AS\n  PROCEDURE ejecutar AS\n  BEGIN\n    NULL;\n  END ejecutar;\nEND nombre;\n/',
+    'TABLE': 'CREATE TABLE nombre (\n  id INTEGER PRIMARY KEY\n);',
+    'VIEW': 'CREATE VIEW nombre AS\nSELECT id FROM tabla;',
+  });
+  defineCodeBlocks('javascript typescript', {
+    'Function': 'function nombre() {\n  \n}',
+    'Arrow function': 'const nombre = () => {\n  \n};',
+    'Class': 'class nombre {\n  \n}',
+  });
+  defineCodeBlocks('python python-repl', { 'Función': 'def nombre():\n    pass', 'Clase': 'class nombre:\n    pass' });
+  defineCodeBlocks('bash shell', { 'Función': 'nombre() {\n  :\n}' });
+  defineCodeBlocks('powershell', { 'Function': 'function nombre {\n    param()\n}', 'Class': 'class nombre {\n    \n}' });
+  defineCodeBlocks('c', { 'Función': 'void nombre(void) {\n  \n}', 'Struct': 'struct nombre {\n  int id;\n};' });
+  defineCodeBlocks('cpp', { 'Función': 'void nombre() {\n  \n}', 'Class': 'class nombre {\npublic:\n  \n};' });
+  defineCodeBlocks('objectivec', { 'Función': 'void nombre(void) {\n  \n}', '@interface': '@interface nombre : NSObject\n@end' });
+  defineCodeBlocks('java csharp', { 'Class': 'class nombre {\n    \n}', 'Interface': 'interface nombre {\n    \n}' });
+  defineCodeBlocks('kotlin', { 'Fun': 'fun nombre() {\n    \n}', 'Class': 'class nombre {\n    \n}' });
+  defineCodeBlocks('go', { 'Func': 'func nombre() {\n\t\n}', 'Struct': 'type nombre struct {\n\tID int\n}' });
+  defineCodeBlocks('swift', { 'Func': 'func nombre() {\n    \n}', 'Struct': 'struct nombre {\n    \n}' });
+  defineCodeBlocks('rust', { 'Fn': 'fn nombre() {\n    \n}', 'Struct': 'struct nombre {\n    id: u32,\n}' });
+  defineCodeBlocks('ruby', { 'Def': 'def nombre\n  \nend', 'Class': 'class nombre\n  \nend' });
+  defineCodeBlocks('perl', { 'Sub': 'sub nombre {\n    \n}' });
+  defineCodeBlocks('lua', { 'Function': 'function nombre()\n  \nend' });
+  defineCodeBlocks('r', { 'Función': 'nombre <- function() {\n  \n}' });
+  defineCodeBlocks('php php-template', { 'Function': 'function nombre() {\n    \n}', 'Class': 'class nombre {\n    \n}' });
+  defineCodeBlocks('vbnet', { 'Sub': 'Sub nombre()\n    \nEnd Sub', 'Function': 'Function nombre() As Integer\n    Return 0\nEnd Function', 'Class': 'Class nombre\n    \nEnd Class' });
+  defineCodeBlocks('css scss less', { 'Regla': '.nombre {\n  color: inherit;\n}', '@media': '@media (min-width: 600px) {\n  .nombre { color: inherit; }\n}' });
+  defineCodeBlocks('xml', { 'Elemento': '<nombre>\n  \n</nombre>' });
+  defineCodeBlocks('graphql', { 'Query': 'query nombre {\n  __typename\n}', 'Type': 'type nombre {\n  id: ID!\n}' });
+  defineCodeBlocks('ini', { 'Sección': '[nombre]\nclave=valor' });
+  defineCodeBlocks('json', { 'Objeto': '{\n  "nombre": null\n}', 'Arreglo': '[\n  \n]' });
+  defineCodeBlocks('yaml', { 'Mapa': 'nombre:\n  clave: valor', 'Lista': 'nombre:\n  - valor' });
+  defineCodeBlocks('makefile', { 'Regla': 'nombre:\n\t@echo listo' });
+  defineCodeBlocks('wasm', { 'Func': '(func $nombre (result i32)\n  i32.const 0\n)' });
+  defineCodeBlocks('markdown', { 'Título': '# nombre', 'Cita': '> nombre', 'Lista': '- nombre' });
+  defineCodeBlocks('diff', { 'Cambio': '@@ -1 +1 @@\n-nombre\n+valor' });
   const $reloadBtn = document.getElementById('reloadBtn');
   const $saveBtn  = document.getElementById('saveBtn');
   const $dlBtn    = document.getElementById('downloadBtn');
@@ -2212,13 +2286,13 @@ saludar("Ana");</code></pre>
   if ($encryptBtn){
     $encryptBtn.addEventListener('click', async () => {
       const f = cur();
-      if (!f) return;
+      if (!f || f.saving || f.closing) return;
       if (!f.encrypted){
         const credentials = await requestCryptoKey({
           chooseAlias: true,
           descText: 'Elige una clave guardada o crea un alias y su frase clave para este archivo.'
         });
-        if (!credentials) return;
+        if (!credentials || f.saving || f.closing || !files.includes(f)) return;
         f.encrypted = true;
         f.encryptionAlias = credentials.alias;
       } else {
@@ -2276,6 +2350,8 @@ saludar("Ana");</code></pre>
     ['h', 'c'], ['m', 'objectivec'], ['pl', 'perl'], ['pm', 'perl'],
     ['pyw', 'python'], ['pyi', 'python'], ['bash', 'bash'], ['zsh', 'bash'],
     ['cfg', 'ini'], ['patch', 'diff'], ['log', 'plaintext'],
+    ['ps1', 'powershell'], ['psm1', 'powershell'], ['psd1', 'powershell'],
+    ...['plsql', 'pls', 'pks', 'pkb', 'ddl', 'dml', 'prc', 'fnc', 'trg'].map(ext => [ext, 'sql']),
   ]);
 
   function detectViewAs(name, text){
@@ -2726,11 +2802,50 @@ saludar("Ana");</code></pre>
     updateBlockFormat();
   }
 
+  function layoutCodeVisual(){
+    if (!$body.classList.contains('code-visual')) return;
+    const style = getComputedStyle($editor);
+    Object.assign($wysiwyg.style, {
+      width: $editor.clientWidth + 'px',
+      height: $editor.clientHeight + 'px',
+      font: style.font,
+      tabSize: style.tabSize,
+    });
+    $wysiwyg.style.setProperty('--code-editor-padding', style.padding);
+    $wysiwyg.scrollTop = $editor.scrollTop;
+  }
+
+  function renderCodeVisual(){
+    renderDocument($wysiwyg, { viewAs: cur().viewAs, text: $editor.value });
+    // Measure the final empty line the same way as the textarea.
+    $wysiwyg.querySelector('code').append('\u200b');
+    layoutCodeVisual();
+  }
+
+  new ResizeObserver(layoutCodeVisual).observe($editor);
+  $editor.addEventListener('scroll', () => {
+    if ($body.classList.contains('code-visual')) $wysiwyg.scrollTop = $editor.scrollTop;
+  }, { passive: true });
+
+  function updateCodeControls(f){
+    const language = f?.viewAs || '';
+    $richToolbar.classList.toggle('code-file', !!language);
+    $editor.setAttribute('aria-label', language ? 'Editor de código' : 'Editor de código Markdown');
+    $editor.placeholder = language ? '' : '# Empieza a escribir en Markdown';
+    if ($insertCodeBlock.dataset.language === language) return;
+    $insertCodeBlock.dataset.language = language;
+    const blocks = codeBlocks.get(language);
+    $insertCodeBlock.classList.toggle('hidden', !blocks);
+    $insertCodeBlock.replaceChildren(new Option('Insertar bloque…', ''),
+      ...Object.keys(blocks || {}).map(label => new Option(label, label)));
+  }
+
   function updateToolbar(){
     scheduleLineMarkers();
     renderBookmarks();
     $clearBtn.disabled = files.length === 0;
     const f = cur();
+    updateCodeControls(f);
 
 
     updateLineNumbers();
@@ -2753,7 +2868,6 @@ saludar("Ana");</code></pre>
     $curSize.textContent = fmtBytes(f.size);
     $viewAs.value = f.viewAs;
     $viewAs.title = `Ver como… · ${$viewAs.selectedOptions[0].text}`;
-    $visualMode.disabled = !!f.viewAs;
     const previous = files.find(file => file.id === recentFileIds[1]);
     $previousFileBtn.disabled = !previous;
     $previousFileBtn.title = previous ? `Volver a ${previous.name}` : 'Volver al archivo anterior';
@@ -2784,7 +2898,9 @@ saludar("Ana");</code></pre>
         : status + ' Puedes descargar una copia.';
     }
     $saveBtn.classList.toggle('hidden', !canOverwrite && !hasSavePicker);
-    $saveBtn.disabled = !f.dirty || !!f.saving;
+    $saveBtn.disabled = !(f.dirty || f.draftId) || !!f.saving || !!f.closing;
+    $saveBtn.classList.toggle('primary', !!f.draftId && (canOverwrite || hasSavePicker));
+    $dlBtn.classList.toggle('primary', !f.draftId || (!canOverwrite && !hasSavePicker));
     $saveBtn.title = canOverwrite ? 'Guardar en el archivo original' : 'Guardar como';
     $saveBtn.setAttribute('aria-label', $saveBtn.title);
     $reloadBtn.disabled = !f.handle;
@@ -2794,7 +2910,9 @@ saludar("Ana");</code></pre>
   }
 
   function navigationSurface(){
-    return mode === 'split' || mode === 'edit' ? $editor : mode === 'wysiwyg' ? $wysiwyg : $content;
+    if (mode === 'split' || mode === 'edit') return $editor;
+    if (mode === 'wysiwyg') return cur()?.viewAs ? $editor : $wysiwyg;
+    return $content;
   }
 
   function textIndex(surface){
@@ -2878,50 +2996,118 @@ saludar("Ana");</code></pre>
     $body.scrollTop += rect.top - $body.getBoundingClientRect().top - $body.clientHeight / 3;
   }
 
+  const escapePattern = text => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const sourceOffset = (text, offset) => text.slice(0, offset).replace(/\r\n/g, '\n').length;
   let findIndex = 0;
-  function refreshFind(step = 0, reveal = false){
+  function refreshFind(step = 0, reveal = false, resumeAfter = null){
     scheduleLineMarkers();
     CSS.highlights?.delete('document-current');
     if ($findBar.classList.contains('hidden') || !cur()) return;
     const surface = navigationSurface();
-    const index = textIndex(surface);
+    const index = surface === $editor ? { text: cur().text } : textIndex(surface);
     const query = $findText.value;
-    const pattern = query && new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'giu');
-    const matches = pattern ? Array.from(index.text.matchAll(pattern), match => match.index) : [];
+    const regex = $findRegex.getAttribute('aria-pressed') === 'true';
+    let pattern, invalid = false;
+    try {
+      if (query) pattern = new RegExp(regex ? query : escapePattern(query), regex ? 'gimu' : 'giu');
+    } catch {
+      invalid = true;
+    }
+    $findText.setAttribute('aria-invalid', String(invalid));
+    const matches = pattern ? Array.from(index.text.matchAll(pattern)) : [];
     const count = matches.length;
     $findPrev.disabled = $findNext.disabled = !count;
+    $replaceOne.disabled = $replaceAll.disabled = !count || surface !== $editor;
     if (!count){
-      $findStatus.textContent = query ? 'Sin coincidencias' : '';
+      $findStatus.textContent = invalid ? 'Expresión regular no válida' : query ? 'Sin coincidencias' : '';
       return;
     }
-    findIndex = (findIndex % count + step + count) % count;
+    findIndex = resumeAfter === null ? (findIndex % count + step + count) % count
+      : Math.max(0, matches.findIndex(match => match.index >= resumeAfter));
     $findStatus.textContent = `${findIndex + 1} de ${count}`;
-    const start = matches[findIndex], end = start + query.length;
+    const match = matches[findIndex];
+    const start = match.index, end = start + match[0].length;
     if (surface === $editor){
-      if (reveal) revealSource(start, end);
-    } else {
+      if (reveal) revealSource(sourceOffset(index.text, start), sourceOffset(index.text, end));
+    } else if (index.entries.length){
       const range = textRange(index, start, end);
       if (CSS.highlights) CSS.highlights.set('document-current', new Highlight(range));
       if (reveal) revealRange(range);
+    }
+    return { pattern, regex, match };
+  }
+
+  function toggleReplace(open){
+    $replaceRow.classList.toggle('hidden', !open);
+    $showReplace.setAttribute('aria-expanded', String(open));
+    if (open && navigationSurface() !== $editor) setMode('split', { focus: false });
+    if (open) {
+      refreshFind(0, true);
+      $replaceText.focus({ preventScroll: true });
+    }
+  }
+
+  function replaceMatches(all){
+    const f = cur();
+    if (!f || navigationSurface() !== $editor) return;
+    const result = refreshFind();
+    if (!result) return;
+    const { pattern, regex, match } = result;
+    const replacement = regex ? $replaceText.value : () => $replaceText.value;
+    const oldText = f.text;
+    let text;
+    if (all){
+      text = oldText.replace(pattern, replacement);
+    } else {
+      // A sticky match gives native capture substitutions at this exact offset.
+      const selected = new RegExp(pattern.source, pattern.flags.replace('g', 'y'));
+      selected.lastIndex = match.index;
+      text = oldText.replace(selected, replacement);
+    }
+    if (recordEdit(f, text)){
+      $editor.value = text;
+      clearTimeout(renderTimer);
+      if (mode === 'split') renderPreview();
+      if ($body.classList.contains('code-visual')) renderCodeVisual();
+    }
+    const next = all ? 0 : match.index + match[0].length + text.length - oldText.length + Number(!match[0]);
+    if (!refreshFind(0, true, next)){
+      revealSource(sourceOffset(text, Math.min(next, text.length)));
     }
   }
 
   function toggleFind(open){
     $findBar.classList.toggle('hidden', !open);
     $findBtn.setAttribute('aria-expanded', String(open));
+    if (!open) toggleReplace(false);
     refreshFind(0, open);
     if (open){ $findText.focus(); $findText.select(); }
     else if (cur()) $findBtn.focus({ preventScroll: true });
   }
   $findBtn.addEventListener('click', () => toggleFind($findBar.classList.contains('hidden')));
+  $showReplace.addEventListener('click', () => toggleReplace($replaceRow.classList.contains('hidden')));
+  $findRegex.addEventListener('click', () => {
+    const on = $findRegex.getAttribute('aria-pressed') !== 'true';
+    $findRegex.setAttribute('aria-pressed', String(on));
+    findIndex = 0;
+    refreshFind(0, true);
+  });
+  $replaceOne.addEventListener('click', () => replaceMatches(false));
+  $replaceAll.addEventListener('click', () => replaceMatches(true));
   $findText.addEventListener('input', () => { findIndex = 0; refreshFind(0, true); });
   $findText.addEventListener('keydown', e => {
     if (e.key === 'Enter'){
       e.preventDefault();
       refreshFind(e.shiftKey ? -1 : 1, true);
-    } else if (e.key === 'Escape'){
+    }
+  });
+  $findBar.addEventListener('keydown', e => {
+    if (e.key === 'Escape'){
       e.preventDefault();
       toggleFind(false);
+    } else if (e.key === 'Enter' && e.target === $replaceText){
+      e.preventDefault();
+      replaceMatches(false);
     }
   });
   $findPrev.addEventListener('click', () => refreshFind(-1, true));
@@ -3007,7 +3193,7 @@ saludar("Ana");</code></pre>
       }
       const visible = markers.filter(([element, mark]) => {
         element.hidden = true;
-        return mark && (source ? mark.mode === 'edit' || mark.mode === 'split' : mark.mode === mode);
+        return mark && (source ? isSourceLocation(mark) : mark.mode === mode && !mark.source);
       });
       if (!visible.length) return;
 
@@ -3062,7 +3248,7 @@ saludar("Ana");</code></pre>
         }
         return low;
       });
-      return { mode, offset };
+      return { mode, offset, source: true };
     }
     const { entries } = textIndex(surface);
     const viewport = $body.getBoundingClientRect();
@@ -3087,13 +3273,15 @@ saludar("Ana");</code></pre>
     return { mode, offset };
   }
 
+  const isSourceLocation = mark => mark && (mark.source || mark.mode === 'edit' || mark.mode === 'split');
+
   function sameLine(first, second){
     if (navigationSurface() === $editor){
-      if (!['edit', 'split'].includes(second.mode)) return false;
+      if (!isSourceLocation(second)) return false;
       const text = $editor.value;
       return text.slice(0, first.offset).lastIndexOf('\n') === text.slice(0, second.offset).lastIndexOf('\n');
     }
-    if (first.mode !== second.mode) return false;
+    if (first.mode !== second.mode || second.source) return false;
     const index = textIndex(navigationSurface());
     return !index.entries.length || Math.abs(
       textRange(index, first.offset).getBoundingClientRect().top -
@@ -3102,7 +3290,7 @@ saludar("Ana");</code></pre>
   }
 
   function jumpToLine(location){
-    const targetMode = location.mode === 'wysiwyg' && cur().viewAs ? 'view' : location.mode;
+    const targetMode = location.mode === 'wysiwyg' && !!cur().viewAs !== !!location.source ? 'edit' : location.mode;
     if (mode !== targetMode) setMode(targetMode);
     const surface = navigationSurface();
     if (surface === $editor) revealSource(Math.min(location.offset, $editor.value.length));
@@ -3163,6 +3351,46 @@ saludar("Ana");</code></pre>
   const $filesTab = document.getElementById('filesTab');
   const $outlineTab = document.getElementById('outlineTab');
   const $bookmarks = document.getElementById('bookmarks');
+  let indexedBlocks = [], outlineFrame = 0, activeOutlineEntry = null;
+
+  function scheduleActiveOutline(){
+    if ($outline.hidden || outlineFrame) return;
+    outlineFrame = requestAnimationFrame(() => {
+      outlineFrame = 0;
+      let entry;
+      const surface = navigationSurface();
+      if (!$outline.hidden && surface === $editor){
+        const caret = $editor.selectionDirection === 'backward' ? $editor.selectionStart : $editor.selectionEnd;
+        entry = indexedBlocks.findLast(block => block.offset <= caret);
+      } else if (!$outline.hidden && surface === $wysiwyg){
+        const selection = getSelection();
+        const point = document.createRange();
+        if (selectionInWysiwyg()){
+          point.setStart(selection.focusNode, selection.focusOffset);
+          point.collapse(true);
+        } else if (savedRichRange && $wysiwyg.contains(savedRichRange.endContainer)){
+          point.setStart(savedRichRange.endContainer, savedRichRange.endOffset);
+          point.collapse(true);
+        }
+        if ($wysiwyg.contains(point.startContainer)){
+          const headings = $wysiwyg.querySelectorAll('h1,h2,h3,h4,h5,h6');
+          entry = indexedBlocks.findLast(({ heading }) =>
+            headings[heading] && point.comparePoint(headings[heading], 0) <= 0);
+        }
+      }
+      const button = entry?.button;
+      if (button === activeOutlineEntry) return;
+      activeOutlineEntry?.removeAttribute('aria-current');
+      activeOutlineEntry = button;
+      if (!button) return;
+      button.setAttribute('aria-current', 'location');
+      const bounds = $outline.getBoundingClientRect();
+      const rect = button.getBoundingClientRect();
+      if (rect.top < bounds.top) $outline.scrollTop += rect.top - bounds.top;
+      else if (rect.bottom > bounds.bottom) $outline.scrollTop += rect.bottom - bounds.bottom;
+    });
+  }
+  $editor.addEventListener('selectionchange', scheduleActiveOutline);
   function selectSidebarTab(showOutline){
     $files.hidden = showOutline;
     document.querySelector('.file-controls').hidden = showOutline;
@@ -3170,9 +3398,28 @@ saludar("Ana");</code></pre>
     $filesTab.setAttribute('aria-selected', String(!showOutline));
     $outlineTab.setAttribute('aria-selected', String(showOutline));
     if (showOutline) renderOutline();
+    else {
+      activeOutlineEntry?.removeAttribute('aria-current');
+      activeOutlineEntry = null;
+    }
   }
   $filesTab.addEventListener('click', () => selectSidebarTab(false));
   $outlineTab.addEventListener('click', () => selectSidebarTab(true));
+
+  const outlineKinds = new Map([
+    ['procedure', ['procedure', 'P', 'Procedimiento']],
+    ['package', ['package', 'PK', 'Paquete']],
+    ['package body', ['package', 'PK', 'Cuerpo del paquete']],
+    ['trigger', ['trigger', 'TR', 'Disparador']],
+    ['class', ['class', 'C', 'Clase']],
+    ['interface', ['class', 'I', 'Interfaz']],
+    ['struct', ['class', 'S', 'Estructura']],
+    ['table', ['object', 'T', 'Tabla']],
+    ['view', ['object', 'V', 'Vista']],
+    ['type', ['object', 'T', 'Tipo']],
+    ['query', ['object', 'Q', 'Consulta']],
+  ]);
+  const functionOutline = ['function', 'F', 'Función'];
 
   function outlineEntries(f){
     const lines = f.text.replace(/\r\n?/g, '\n').split('\n');
@@ -3204,30 +3451,23 @@ saludar("Ana");</code></pre>
           if (c === "'" || c === '"'){ quote = c; code += ' '; continue; }
           code += c;
         }
-        let m = code.match(/^\s*(?:(?:create\s+(?:or\s+replace\s+)?)(?:(?:editionable|noneditionable)\s+)?)?(?:(?:async|export|default|public|private|static|protected|final|abstract)\s+)*(function|procedure|package(?:\s+body)?|trigger|class|def|func|fn|sub)\s+([\w.$-]+)/i);
-        let kind = null, tag = null, tagTitle = null, name = null;
-        if (m){
-          const rawKind = m[1].toLowerCase();
-          name = m[2];
-          if (rawKind.startsWith('procedure')){
-            kind = 'procedure'; tag = 'P'; tagTitle = 'Procedimiento';
-          } else if (rawKind.startsWith('package')){
-            kind = 'package'; tag = 'PK'; tagTitle = 'Paquete';
-          } else if (rawKind.startsWith('trigger')){
-            kind = 'trigger'; tag = 'TR'; tagTitle = 'Disparador';
-          } else if (rawKind.startsWith('class')){
-            kind = 'class'; tag = 'C'; tagTitle = 'Clase';
-          } else {
-            kind = 'function'; tag = 'F'; tagTitle = 'Función';
-          }
-        } else if (/^(javascript|typescript)$/i.test(f.viewAs)){
-          const arrowMatch = code.match(/^\s*(?:export\s+)?(?:const|let|var)\s+([\w$]+)\s*=\s*(?:async\s*)?(?:\([^)]*\)|[\w$]+)\s*=>/);
-          if (arrowMatch){
-            name = arrowMatch[1];
-            kind = 'function'; tag = 'F'; tagTitle = 'Función';
-          }
+        const declaration = code.match(/^\s*(?:create\s+(?:or\s+(?:replace|alter)\s+)?(?:editionable\s+|noneditionable\s+)?)?(?:(?:async|export|default|public|private|static|protected|final|abstract|pub|local)\s+)*(function|procedure|package(?:\s+body)?|trigger|class|interface|struct|table|view|type|query|def|func|fun|fn|sub)\s+(?:\([^)]*\)\s+)?([\w.$-]+)/i);
+        let name = declaration?.[2];
+        let label = declaration?.[1].toLowerCase().replace(/\s+/g, ' ');
+        if (!name && /^(javascript|typescript)$/.test(f.viewAs)){
+          name = /^\s*(?:export\s+)?(?:const|let|var)\s+([\w$]+)\s*=\s*(?:async\s*)?(?:\([^)]*\)|[\w$]+)\s*=>/.exec(code)?.[1];
+        } else if (!name && f.viewAs === 'objectivec' && /^\s*@interface\s/.test(code)){
+          name = /^\s*@interface\s+(\w+)/.exec(code)?.[1];
+          label = 'interface';
+        } else if (!name && /^(bash|shell|r|c|cpp|objectivec)$/.test(f.viewAs)){
+          const signature = f.viewAs === 'r'
+            ? /^\s*([\w.]+)\s*(?:<-|=)\s*function\s*\(/
+            : /^\s*(?:[\w:*&]+\s+)*([\w.]+)\s*\([^;]*?\)\s*\{/;
+          const candidate = signature.exec(code)?.[1];
+          if (candidate && !/^(if|for|while|switch|catch|with)$/.test(candidate)) name = candidate;
         }
-        if (name && tag){
+        if (name){
+          const [kind, tag, tagTitle] = outlineKinds.get(label) || functionOutline;
           entries.push({ kind, tag, tagTitle, name, label: name, level: 1, offset });
         }
       }
@@ -3236,9 +3476,12 @@ saludar("Ana");</code></pre>
     return entries;
   }
   function renderOutline(){
+    if ($outline.hidden) return;
     const f = cur();
     $outline.replaceChildren();
-    const entries = f ? outlineEntries(f) : [];
+    activeOutlineEntry = null;
+    indexedBlocks = f ? outlineEntries(f) : [];
+    const entries = indexedBlocks;
     if (!entries.length){
       const empty = document.createElement('div'); empty.className = 'empty';
       empty.textContent = f ? 'No se encontraron encabezados o bloques.' : 'No hay un archivo abierto.';
@@ -3247,6 +3490,7 @@ saludar("Ana");</code></pre>
     for (const entry of entries){
       const button = document.createElement('button');
       button.className = 'outline-entry';
+      entry.button = button;
       button.style.paddingLeft = (8 + (entry.level - 1) * 14) + 'px';
       if (entry.tag){
         const tagSpan = document.createElement('span');
@@ -3261,16 +3505,28 @@ saludar("Ana");</code></pre>
         button.textContent = entry.label;
       }
       button.addEventListener('click', () => {
-        if (entry.heading !== undefined && (mode === 'view' || mode === 'wysiwyg')){
-          const surface = mode === 'view' ? $content : $wysiwyg;
+        const surface = navigationSurface();
+        if (entry.heading !== undefined && surface !== $editor){
           const heading = surface.querySelectorAll('h1,h2,h3,h4,h5,h6')[entry.heading];
-          if (heading){ heading.scrollIntoView({block:'center'}); return; }
+          if (heading){
+            if (surface === $wysiwyg){
+              $wysiwyg.focus({ preventScroll: true });
+              getSelection().collapse(heading, 0);
+              saveRichSelection();
+            }
+            heading.scrollIntoView({block:'center'});
+            scheduleActiveOutline();
+            return;
+          }
         }
-        if (mode !== 'split' && mode !== 'edit') setMode('edit');
+        if (surface !== $editor) setMode('edit');
+        $editor.focus({ preventScroll: true });
         revealSource(Math.min(entry.offset, $editor.value.length));
+        scheduleActiveOutline();
       });
       $outline.append(button);
     }
+    scheduleActiveOutline();
   }
   function renderBookmarks(){
     $bookmarks.replaceChildren();
@@ -3319,16 +3575,148 @@ saludar("Ana");</code></pre>
     }, { passive: true });
   }
 
-  function setMode(m){
+  // Map rendered text runs in document order, accounting for Markdown escapes and entities.
+  function renderedSourcePositions(surface, source){
+    const decoder = document.createElement('textarea');
+    const offsets = [];
+    let removed = 0;
+    const visible = source.replace(/\\[!"#$%&'()*+,\-./:;<=>?@[\]\\^_`{|}~]|&(?:#x[\da-f]+|#\d+|[a-z][\da-z]*);/gi, (raw, start) => {
+      let value = raw.slice(1);
+      if (raw.startsWith('&')){
+        decoder.innerHTML = raw;
+        value = decoder.value;
+      }
+      offsets.push({ start, end: start + raw.length, index: start - removed, length: value.length });
+      removed += raw.length - value.length;
+      return value;
+    });
+    function original(offset){
+      let low = 0, high = offsets.length;
+      while (low < high){
+        const mid = (low + high) >>> 1;
+        if (offsets[mid].index <= offset) low = mid + 1;
+        else high = mid;
+      }
+      const token = offsets[low - 1];
+      if (!token) return offset;
+      return offset < token.index + token.length ? token.start : token.end + offset - token.index - token.length;
+    }
+    const entries = [];
+    let cursor = 0;
+    let previousLink = null;
+    const walker = document.createTreeWalker(surface, NodeFilter.SHOW_TEXT);
+    for (let node; (node = walker.nextNode());){
+      if (!node.length || (node.data === '\n' && !node.parentElement.closest('pre'))) continue;
+      const link = node.parentElement.closest('a');
+      if (previousLink && previousLink !== link){
+        const destination = /^[*_~]*\]\((?:\\.|[^\\()\n]|\([^()\n]*\))*\)/.exec(visible.slice(cursor));
+        if (destination) cursor += destination[0].length;
+      }
+      previousLink = link;
+      const start = visible.indexOf(node.data, cursor);
+      if (start < 0) continue;
+      entries.push({ node, start: original(start), end: original(start + node.length), offset: n => original(start + n) });
+      cursor = start + node.length;
+    }
+    return entries;
+  }
+
+  function captureCaret(f){
+    if (!f) return;
+    if (navigationSurface() === $editor){
+      f.caret = [$editor.selectionStart, $editor.selectionEnd, $editor.selectionDirection];
+    } else if (mode === 'wysiwyg'){
+      const range = selectionInWysiwyg() ? getSelection().getRangeAt(0) : savedRichRange;
+      if (!range || !$wysiwyg.contains(range.commonAncestorContainer)) return;
+      const previous = f.richCaret;
+      if (previous?.text === f.text && previous.range.startContainer === range.startContainer &&
+          previous.range.startOffset === range.startOffset && previous.range.endContainer === range.endContainer &&
+          previous.range.endOffset === range.endOffset) return;
+      const entries = renderedSourcePositions($wysiwyg, f.text.replace(/\r\n?/g, '\n'));
+      function offset(node, index){
+        const entry = entries.find(item => item.node === node);
+        if (entry) return entry.offset(index);
+        const point = document.createRange();
+        point.setStart(node, index);
+        point.collapse(true);
+        return entries.findLast(item => point.comparePoint(item.node, item.node.length) <= 0)?.end
+          ?? entries[0]?.start ?? 0;
+      }
+      f.caret = [offset(range.startContainer, range.startOffset), offset(range.endContainer, range.endOffset)];
+    }
+  }
+
+  function restoreCaret(f, reveal = false){
+    const [start, end, direction] = f?.caret || [0, 0];
+    const surface = navigationSurface();
+    if (surface === $editor){
+      $editor.setSelectionRange(start, end, direction);
+      if (reveal){
+        const caret = direction === 'backward' ? $editor.selectionStart : $editor.selectionEnd;
+        const top = measureSource(lineTop => lineTop(caret));
+        if (top < $editor.scrollTop || top >= $editor.scrollTop + $editor.clientHeight - 24){
+          $editor.scrollTop = top - $editor.clientHeight / 3;
+        }
+        if (mode === 'split') syncSplitScroll($editor);
+      }
+      return;
+    }
+    if (!f?.caret && surface === $content) return;
+    const entries = renderedSourcePositions(surface, f.text.replace(/\r\n?/g, '\n'));
+    function point(offset){
+      const entry = entries.find(item => item.end >= offset) || entries.at(-1);
+      if (!entry) return [surface, 0];
+      let low = 0, high = entry.node.length;
+      while (low < high){
+        const mid = (low + high) >>> 1;
+        if (entry.offset(mid) < offset) low = mid + 1;
+        else high = mid;
+      }
+      return [entry.node, low];
+    }
+    const range = document.createRange();
+    range.setStart(...point(start));
+    range.setEnd(...point(end));
+    if (mode === 'wysiwyg'){
+      const selection = getSelection();
+      const anchor = direction === 'backward' ? point(end) : point(start);
+      const focus = direction === 'backward' ? point(start) : point(end);
+      selection.setBaseAndExtent(...anchor, ...focus);
+      saveRichSelection();
+      f.richCaret = { text: f.text, range: range.cloneRange() };
+    }
+    if (reveal){
+      const caret = range.cloneRange();
+      caret.collapse(direction === 'backward');
+      const rect = caret.getClientRects()[0] || range.getClientRects()[0];
+      const viewport = $body.getBoundingClientRect();
+      if (rect && (rect.top < viewport.top || rect.bottom > viewport.bottom)) revealRange(caret);
+    }
+  }
+
+  function setMode(m, { focus = true, capture = true } = {}){
     if (!cur()) m = 'view';
     const previousMode = mode;
-    if (m !== previousMode && cur()) cur().lastTyping = 0;
+    const f = cur();
+    if (f){
+      if (capture) captureCaret(f);
+      if (m !== previousMode) f.lastTyping = 0;
+    }
     const progress = previousMode === 'split' ? (scrollProgress($editor) ?? scrollProgress($content))
-      : scrollProgress(previousMode === 'edit' ? $editor : $body);
+      : scrollProgress($body.classList.contains('edit') ? $editor : $body);
     mode = m;
-    $body.classList.toggle('edit',  m === 'edit');
+    const codeVisual = m === 'wysiwyg' && !!f?.viewAs;
+    if (navigationSurface() !== $editor) toggleReplace(false);
+    $body.classList.toggle('code-visual', codeVisual);
+    $body.classList.toggle('edit', m === 'edit' || codeVisual);
     $body.classList.toggle('split', m === 'split');
     $body.classList.toggle('wysiwyg', m === 'wysiwyg');
+    $wysiwyg.setAttribute('contenteditable', String(!codeVisual));
+    if (codeVisual) $wysiwyg.setAttribute('aria-hidden', 'true');
+    else {
+      $wysiwyg.removeAttribute('aria-hidden');
+      $wysiwyg.removeAttribute('style');
+    }
     $richToolbar.classList.toggle('show', m !== 'view');
     $richToolbar.classList.toggle('source-only', m !== 'wysiwyg');
     $modeSeg.querySelectorAll('.btn').forEach(b => {
@@ -3336,14 +3724,13 @@ saludar("Ana");</code></pre>
       b.classList.toggle('on', on);
       b.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
-    if (m === 'edit' || m === 'split'){
-      const f = cur();
-      if (f && $editor.value !== f.text) $editor.value = f.text;
-      setTimeout(() => $editor.focus({ preventScroll: true }), 0);
-    }
-    if (m === 'wysiwyg'){
+    if (navigationSurface() === $editor){
+      if (f && $editor.value !== f.text.replace(/\r\n?/g, '\n')) $editor.value = f.text;
+      if (codeVisual) renderCodeVisual();
+      if (focus) $editor.focus({ preventScroll: true });
+    } else if (m === 'wysiwyg'){
       renderWysiwyg();
-      setTimeout(() => $wysiwyg.focus(), 0);
+      if (focus) $wysiwyg.focus({ preventScroll: true });
     }
     if (m === 'view' || m === 'split') renderPreview();
     if (m === 'split'){
@@ -3351,21 +3738,23 @@ saludar("Ana");</code></pre>
       setScrollProgress($content, progress);
       syncSplitScroll($editor);
     } else if (previousMode === 'split' && cur()){
-      setScrollProgress(m === 'edit' ? $editor : $body, progress);
+      setScrollProgress(navigationSurface() === $editor ? $editor : $body, progress);
     }
+    if (f) restoreCaret(f, m !== previousMode);
+    if (m === 'wysiwyg' && !codeVisual) updateBlockFormat();
     refreshFind();
     updateLineNumbers();
+    scheduleActiveOutline();
   }
 
   function captureScroll(f){
     if (!f) return;
+    captureCaret(f);
     f.scroll = {
       body:    $body.scrollTop,
       content: $content.scrollTop,
       editor:  $editor.scrollTop,
       wysiwyg: $wysiwyg.scrollTop,
-      selStart: $editor.selectionStart,
-      selEnd:   $editor.selectionEnd,
     };
   }
 
@@ -3375,10 +3764,7 @@ saludar("Ana");</code></pre>
     $content.scrollTop = s.content || 0;
     $editor.scrollTop  = s.editor  || 0;
     $wysiwyg.scrollTop = s.wysiwyg || 0;
-    if (typeof s.selStart === 'number'){
-      try { $editor.setSelectionRange(s.selStart, s.selEnd ?? s.selStart); }
-      catch(_){}
-    }
+    restoreCaret(f);
     if (mode === 'split') syncSplitScroll($editor);
   }
 
@@ -3408,11 +3794,8 @@ saludar("Ana");</code></pre>
     recentFileIds.unshift(id);
     $content.classList.remove('welcome');
     $editor.value = f.text;
-    if (mode === 'wysiwyg' && f.viewAs) setMode('split');
-    else {
-      renderPreview();
-      if (mode === 'wysiwyg') renderWysiwyg();
-    }
+    if (mode === 'wysiwyg') setMode(mode, { capture: false, focus: false });
+    else renderPreview();
     updateToolbar();
     renderSidebar();
     restoreScroll(f);
@@ -3422,21 +3805,32 @@ saludar("Ana");</code></pre>
 
   async function closeFile(id){
     const f = files.find(file => file.id === id);
-    if (!f) return;
-    await f.draftWrite;
-    if (hasUnbackedChanges(f) && !await ask(`"${f.name}" tiene cambios sin guardar. ¿Quieres cerrar el archivo?`)) return;
-    const i = files.findIndex(f => f.id === id);
-    if (i < 0) return;
-    const wasActive = activeId === id;
-    files.splice(i, 1);
-    const recentIndex = recentFileIds.indexOf(id);
-    if (recentIndex !== -1) recentFileIds.splice(recentIndex, 1);
-    if (wasActive){
-      activate(files[i]?.id || files[i-1]?.id || null);
-    } else {
-      renderSidebar(); updateToolbar();
+    if (f) await closeFiles([f], `"${f.name}" tiene cambios sin guardar. ¿Quieres cerrar el archivo?`);
+  }
+
+  async function closeFiles(targets, message){
+    if (!targets.length || targets.some(f => f.saving || f.closing)) return;
+    for (const f of targets) f.closing = true;
+    try {
+      await Promise.all(targets.map(f => f.draftWrite));
+      if (targets.some(hasUnbackedChanges) && !await ask(message)) return;
+      await discardDrafts(targets);
+      const activeIndex = files.findIndex(f => f.id === activeId);
+      const ids = new Set(targets.map(f => f.id));
+      for (let i = files.length - 1; i >= 0; i--){
+        if (ids.has(files[i].id)) files.splice(i, 1);
+      }
+      for (let i = recentFileIds.length - 1; i >= 0; i--){
+        if (ids.has(recentFileIds[i])) recentFileIds.splice(i, 1);
+      }
+      if (ids.has(activeId)) activate(files[Math.min(activeIndex, files.length - 1)]?.id ?? null);
+    } catch(e){
+      await notify(`No se pudo eliminar el temporario (${e.message || e}).`);
+    } finally {
+      for (const f of targets) f.closing = false;
+      updateToolbar();
+      renderSidebar();
     }
-    rememberBrowserFiles();
   }
 
   function updateHistoryButtons(f){
@@ -3469,7 +3863,7 @@ saludar("Ana");</code></pre>
   }
 
   function movePinnedOffsets(f, text){
-    const marks = [...new Set([f.pin, f.returnLine, ...(f.bookmarks || [])])].filter(mark => mark && (mark.mode === 'split' || mark.mode === 'edit'));
+    const marks = [...new Set([f.pin, f.returnLine, ...(f.bookmarks || [])])].filter(isSourceLocation);
     if (!marks.length) return;
     const before = f.text.replace(/\r\n?/g, '\n');
     const after = text.replace(/\r\n?/g, '\n');
@@ -3523,7 +3917,7 @@ saludar("Ana");</code></pre>
     updateText(f, f.text.slice(0, start) + replacement + f.text.slice(end));
     clearTimeout(renderTimer);
 
-    if (mode === 'wysiwyg'){
+    if (navigationSurface() === $wysiwyg){
       const scroll = $body.scrollTop;
       renderWysiwyg();
       $wysiwyg.focus({ preventScroll: true });
@@ -3535,6 +3929,7 @@ saludar("Ana");</code></pre>
       $editor.setSelectionRange(caret, caret);
       $editor.focus({ preventScroll: true });
       $editor.scrollTop = scroll;
+      if ($body.classList.contains('code-visual')) renderCodeVisual();
       if (mode === 'split'){
         renderPreview();
         syncSplitScroll($editor);
@@ -3726,12 +4121,8 @@ saludar("Ana");</code></pre>
     setMode('edit');
   });
 
-  document.getElementById('clearBtn').addEventListener('click', async () => {
-    await Promise.all(files.map(f => f.draftWrite));
-    if (files.some(hasUnbackedChanges) &&
-        !await ask('¿Quieres cerrar todos los archivos? Los cambios sin copia de recuperación se perderán.')) return;
-    files.length = 0; recentFileIds.length = 0; activate(null); rememberBrowserFiles();
-  });
+  $clearBtn.addEventListener('click', () => closeFiles([...files],
+    '¿Quieres cerrar todos los archivos? Los cambios sin copia de recuperación se perderán.'));
   $openFileSelect.addEventListener('change', () => activate(Number($openFileSelect.value)));
   $previousFileBtn.addEventListener('click', () => {
     if (recentFileIds[1] !== undefined) activate(recentFileIds[1]);
@@ -3851,13 +4242,14 @@ saludar("Ana");</code></pre>
 
   $viewAs.addEventListener('change', () => {
     const f = cur(); if (!f) return;
-    const sourceMark = mark => mark && ['edit', 'split'].includes(mark.mode);
-    f.bookmarks = (f.bookmarks || []).filter(sourceMark);
-    if (!sourceMark(f.pin)) f.pin = f.bookmarks.at(-1);
-    if (!sourceMark(f.returnLine)) f.returnLine = null;
+    captureCaret(f);
+    f.bookmarks = (f.bookmarks || []).filter(isSourceLocation);
+    if (!isSourceLocation(f.pin)) f.pin = f.bookmarks.at(-1);
+    if (!isSourceLocation(f.returnLine)) f.returnLine = null;
     f.viewAs = $viewAs.value;
     updateToolbar();
-    if (mode === 'edit' || mode === 'wysiwyg') setMode('split');
+    if (mode === 'wysiwyg') setMode(mode, { capture: false });
+    else if (mode === 'edit') setMode('split', { capture: false });
     else {
       renderPreview();
       if (mode === 'split') syncSplitScroll($editor);
@@ -3865,10 +4257,30 @@ saludar("Ana");</code></pre>
     refreshFind();
   });
 
-  $editor.addEventListener('input', e => {
+  function sourceTextAfterInput(previous, value){
+    if (!previous.includes('\r')) return value;
+    const normalized = previous.replace(/\r\n?/g, '\n');
+    let start = 0, oldEnd = normalized.length, newEnd = value.length;
+    while (start < oldEnd && start < newEnd && normalized[start] === value[start]) start++;
+    while (oldEnd > start && newEnd > start && normalized[oldEnd - 1] === value[newEnd - 1]){
+      oldEnd--;
+      newEnd--;
+    }
+    let rawStart = start, rawEnd = oldEnd;
+    for (const { index } of previous.matchAll(/\r\n/g)){
+      if (index >= rawEnd) break;
+      if (index < rawStart) rawStart++;
+      rawEnd++;
+    }
+    const newline = previous.match(/\r\n?|\n/)[0];
+    return previous.slice(0, rawStart) + value.slice(start, newEnd).replace(/\n/g, newline) + previous.slice(rawEnd);
+  }
+
+  function syncSource(inputType){
     const f = cur(); if (!f) return;
-    if (!recordEdit(f, $editor.value, e.inputType)) return;
+    if (!recordEdit(f, sourceTextAfterInput(f.text, $editor.value), inputType)) return;
     refreshFind();
+    if ($body.classList.contains('code-visual')) renderCodeVisual();
     if (mode === 'split'){
       clearTimeout(renderTimer);
       renderTimer = setTimeout(() => {
@@ -3877,6 +4289,25 @@ saludar("Ana");</code></pre>
         syncSplitScroll($editor);
       }, 120);
     }
+  }
+  $editor.addEventListener('input', e => syncSource(e.inputType));
+
+  $insertCodeBlock.addEventListener('change', () => {
+    const code = codeBlocks.get(cur()?.viewAs)?.[$insertCodeBlock.value];
+    $insertCodeBlock.value = '';
+    if (!code || !$body.classList.contains('code-visual')) return;
+    const text = $editor.value;
+    const caret = $editor.selectionEnd;
+    const lineEnd = text.indexOf('\n', caret);
+    const position = !caret || text[caret - 1] === '\n' ? caret : lineEnd < 0 ? text.length : lineEnd + 1;
+    const prefix = position && text[position - 1] !== '\n' ? '\n' : '';
+    const suffix = position < text.length || text.endsWith('\n') ? '\n' : '';
+    $editor.setRangeText(prefix + code + suffix, position, position, 'end');
+    syncSource();
+    $editor.focus({ preventScroll: true });
+    const name = code.indexOf('nombre');
+    const start = position + prefix.length + (name < 0 ? code.length : name);
+    revealSource(start, start + (name < 0 ? 0 : 'nombre'.length));
   });
 
   $editor.addEventListener('keydown', e => {
@@ -4131,9 +4562,11 @@ saludar("Ana");</code></pre>
   });
   $blockFmt.addEventListener('change', () => setRichBlock($blockFmt.value));
   document.addEventListener('selectionchange', () => {
-    if (mode !== 'wysiwyg') return;
-    saveRichSelection();
-    updateBlockFormat();
+    scheduleActiveOutline();
+    if (navigationSurface() === $wysiwyg){
+      saveRichSelection();
+      updateBlockFormat();
+    }
   });
 
   async function ensureReadPermission(handle){
@@ -4146,7 +4579,7 @@ saludar("Ana");</code></pre>
 
   async function doReload(){
     const f = cur();
-    if (!f) return;
+    if (!f || f.saving || f.closing) return;
     if (!f.handle){
       await notify('Para habilitar la recarga, usa Abrir archivos en un navegador basado en Chromium.');
       return;
@@ -4190,7 +4623,8 @@ saludar("Ana");</code></pre>
       f.dirty = false;
       if (activeId === f.id){
         $editor.value = f.text;
-        if (mode === 'wysiwyg') renderWysiwyg();
+        if ($body.classList.contains('code-visual')) renderCodeVisual();
+        else if (mode === 'wysiwyg') renderWysiwyg();
         else {
           renderPreview();
           if (mode === 'split') syncSplitScroll($editor);
@@ -4215,40 +4649,31 @@ saludar("Ana");</code></pre>
     return target ? desktopHandle(target) : null;
   }
 
-  async function doSave(saveAs = false){
-    const f = cur(); if (!f || !f.dirty || f.saving) return;
+  async function doSave(){
+    const f = cur(); if (!f || !(f.dirty || f.draftId) || f.saving || f.closing) return;
     const original = typeof f.handle?.createWritable === 'function' ? f.handle : null;
-    if (saveAs ? !hasSavePicker : !original) return;
-    let textToWrite = f.text;
-    if (f.encrypted){
-      const alias = f.encryptionAlias;
-      if (!alias){ await notify(`El archivo "${f.name}" no tiene un alias de cifrado asignado.`); return; }
-      const credentials = await requestCryptoKey({ alias, descText: `Introduce la frase clave del alias "${alias}" para guardar "${f.name}":` });
-      if (!credentials) return;
-      try {
-        textToWrite = wrapCryptoEnvelope(alias, await encriptar(f.text, credentials.key));
-      } catch(err){
-        console.error('Error al cifrar:', err);
-        await notify(`Error al cifrar "${f.name}": ${err.message || err}`);
-        return;
-      }
-    }
-    const text = f.text;
+    const saveAs = !original;
+    if (saveAs && !hasSavePicker) return;
     f.lastTyping = 0;
     f.saving = true;
     $saveBtn.disabled = true;
     try {
-      let handle;
-      if (saveAs){
-        handle = await chooseSaveHandle(f.name);
-        if (!handle) return;
-      } else {
-        handle = original;
+      const handle = original || await chooseSaveHandle(f.name);
+      if (!handle) return;
+      if (original){
         const perm = await handle.queryPermission?.({ mode: 'readwrite' });
         if (perm !== 'granted'){
           const req = await handle.requestPermission?.({ mode: 'readwrite' });
           if (req !== 'granted') throw new Error('permiso denegado');
         }
+      }
+      const { text, encrypted, encryptionAlias: alias } = f;
+      let textToWrite = text;
+      if (encrypted){
+        if (!alias) throw new Error('el archivo no tiene un alias de cifrado asignado');
+        const credentials = await requestCryptoKey({ alias, descText: `Introduce la frase clave del alias "${alias}" para guardar "${f.name}":` });
+        if (!credentials) return;
+        textToWrite = wrapCryptoEnvelope(alias, await encriptar(text, credentials.key));
       }
       const writable = await handle.createWritable();
       await writable.write(textToWrite);
@@ -4256,19 +4681,13 @@ saludar("Ana");</code></pre>
       f.handle = handle;
       f.name = handle.name || f.name;
       f.lastModified = Date.now();
-      f.updatedAt = Math.max(f.updatedAt, f.lastModified);
+      f.updatedAt = Math.max(f.updatedAt ?? 0, f.lastModified);
       f.savedText = text;
       f.dirty = f.text !== text;
-      rememberBrowserFiles();
-      if (f.draftId && !f.dirty){
-        const id = f.draftId;
-        f.draftId = null;
-        try {
-          await draftRequest('readwrite', store => store.delete(id));
-        } catch(e){
-          f.draftId = id;
-          await notify(`El archivo local se guardó, pero no se pudo eliminar el temporario (${e.message || e}).`);
-        }
+      try {
+        await discardDrafts([f]);
+      } catch(e){
+        await notify(`El archivo local se guardó, pero no se pudo eliminar el temporario (${e.message || e}).`);
       }
     } catch(e){
       if (saveAs && e.name === 'AbortError') return;
@@ -4320,11 +4739,7 @@ saludar("Ana");</code></pre>
   }
 
   $reloadBtn.addEventListener('click', doReload);
-  $saveBtn.addEventListener('click', () => {
-    const f = cur();
-    const canOverwrite = typeof f?.handle?.createWritable === 'function';
-    doSave(!canOverwrite);
-  });
+  $saveBtn.addEventListener('click', doSave);
   $dlBtn.addEventListener('click', () => { const f = cur(); if (f) triggerDownload(f); });
   window.addEventListener('beforeprint', () => {
     if (cur()) renderPreview();
@@ -4581,7 +4996,10 @@ saludar("Ana");</code></pre>
   });
 
   window.addEventListener('beforeunload', e => {
-    if (!desktop && files.some(hasUnbackedChanges)){ e.preventDefault(); e.returnValue = true; }
+    if (!desktop && files.some(f => f.saving || f.closing || hasUnbackedChanges(f))){
+      e.preventDefault();
+      e.returnValue = true;
+    }
   });
 
   let sessionDB;
@@ -4611,9 +5029,24 @@ saludar("Ana");</code></pre>
     return draftDB.then(db => new Promise((resolve, reject) => {
       const transaction = db.transaction('drafts', mode, { durability: 'strict' });
       const request = operation(transaction.objectStore('drafts'));
-      transaction.oncomplete = () => resolve(request.result);
+      transaction.oncomplete = () => resolve(request?.result);
       transaction.onabort = () => reject(transaction.error);
     }));
+  }
+
+  async function discardDrafts(targets){
+    const drafts = targets.filter(f => f.draftId);
+    if (!drafts.length) return;
+    // Prevent slow writes (including encryption) from re-creating a deleted draft.
+    for (const f of drafts) f.draftDiscarding = true;
+    try {
+      await draftRequest('readwrite', store => {
+        for (const f of drafts) store.delete(f.draftId);
+      });
+      for (const f of drafts) f.draftId = null;
+    } finally {
+      for (const f of drafts) f.draftDiscarding = false;
+    }
   }
 
   function hasUnbackedChanges(f){
@@ -4629,28 +5062,34 @@ saludar("Ana");</code></pre>
 
   function persistDraft(f){
     const id = f.draftId;
-    const isEnc = !!f.encrypted;
+    if (!id || f.draftDiscarding) return;
+    const { text, name, lastModified, encrypted, encryptionAlias: alias } = f;
     const prepareText = async () => {
-      if (!isEnc) return f.text;
-      const alias = f.encryptionAlias;
+      if (!encrypted) return text;
       if (!alias) throw new Error('El archivo temporario no tiene un alias de cifrado asignado.');
-      const credentials = await requestCryptoKey({ alias, descText: `Introduce la frase clave del alias "${alias}" para proteger el temporario "${f.name}":` });
+      const credentials = await requestCryptoKey({ alias, descText: `Introduce la frase clave del alias "${alias}" para proteger el temporario "${name}":` });
       if (!credentials) throw new Error('Se canceló la solicitud de la frase clave.');
-      return wrapCryptoEnvelope(alias, await encriptar(f.text, credentials.key));
+      return wrapCryptoEnvelope(alias, await encriptar(text, credentials.key));
     };
 
-    f.draftWrite = prepareText().then(textToStore => {
-      const file = new File([textToStore], f.name, { type: 'text/markdown', lastModified: f.lastModified });
-      return draftRequest('readwrite', store => store.put({ id, file, encrypted: isEnc, encryptionAlias: f.encryptionAlias || null }, id));
-    }).then(() => {
-      f.backedUpText = f.text;
+    const isCurrent = () => f.draftId === id && !f.draftDiscarding && f.draftWrite === write;
+    const write = prepareText().then(async textToStore => {
+      if (!isCurrent()) return;
+      const file = new File([textToStore], name, { type: 'text/markdown', lastModified });
+      const storedId = await draftRequest('readwrite', store => {
+        if (isCurrent()) return store.put({ id, file, encrypted, encryptionAlias: alias }, id);
+      });
+      if (storedId !== id || !isCurrent()) return;
+      f.backedUpText = text;
       f.draftError = false;
     }).catch(e => {
+      if (!isCurrent()) return;
       f.draftError = true;
       console.warn('No se pudo guardar el temporario.', e);
     }).finally(() => {
-      if (cur() === f) updateToolbar();
+      if (isCurrent() && cur() === f) updateToolbar();
     });
+    f.draftWrite = write;
   }
 
   async function restoreDrafts(){
@@ -4948,7 +5387,7 @@ saludar("Ana");</code></pre>
   if (desktop){
     let closing = false;
     window.runtime.EventsOn('editor:close', async () => {
-      if (closing || files.some(f => f.saving)) return;
+      if (closing || files.some(f => f.saving || f.closing)) return;
       closing = true;
       try {
         await Promise.all(files.map(f => f.draftWrite));
