@@ -138,11 +138,12 @@ muestra una advertencia si intentas cerrar la pestaña con modificaciones sin gu
 
 ## Guardar y abrir desde la nube
 
-Pulsa **Guardar en la nube**, elige la caducidad o selecciona **Sin caducidad**,
-y usa el alias y la frase clave del cifrado local. El contenido utiliza la
+Pulsa **Guardar en la nube**. Marca **Tiene caducidad** para elegir un plazo o
+deja la casilla desmarcada para guardar sin vencimiento. Usa el alias y la
+frase clave del cifrado local. El contenido utiliza la
 misma cabecera `editor-<alias>` que un archivo cifrado guardado en disco. El
-nombre también se cifra. Antes de cada envío se comprueba la lectura y la
-escritura con una nota cifrada de prueba de una hora.
+nombre también se cifra. Al actualizar, Editor lee el archivo remoto y usa su
+versión para proteger el guardado frente a cambios simultáneos.
 
 Copia el código que aparece al guardar o usa el icono de nube en la lista de
 archivos. En el otro dispositivo, abre **Abrir desde la nube** en Editor, pega el
