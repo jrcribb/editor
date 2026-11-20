@@ -1470,12 +1470,12 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
     border-radius:0;background:transparent;font:inherit;line-height:inherit;white-space:pre-wrap;overflow-wrap:break-word}
   #body.code-visual #wysiwyg code span{font-weight:inherit;font-style:inherit}
   #body.code-visual #wysiwyg pre{box-sizing:border-box;padding:var(--code-editor-padding)}
-  #wysiwyg:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
   #richToolbar{display:none;align-items:center;gap:6px;flex-wrap:wrap;
     padding:6px 16px;border-bottom:1px solid var(--border);background:var(--sidebar)}
   #richToolbar.show{display:flex}
-  #richToolbar.source-only > :not([data-rich-cmd="codeBlock"],[data-rich-cmd="task"],[data-history]){display:none}
-  #richToolbar.code-file > [data-rich-cmd],#richToolbar.code-file > #blockFmt{display:none}
+  #richToolbar.source-only > :not([data-rich-cmd="codeBlock"],[data-rich-cmd="task"],[data-history],[data-block-format]){display:none}
+  #richToolbar.code-file > :is([data-rich-cmd],[data-block-format]){display:none}
+  #richToolbar [data-block-format][aria-pressed="true"]{background:var(--active);color:var(--accent)}
   #richToolbar.source-only > #insertCodeBlock{display:none}
   .editor-dialog{width:min(540px,calc(100% - 32px));padding:20px;
     background:var(--bg);color:var(--fg);border:1px solid var(--border);border-radius:var(--ui-radius)}
@@ -1665,7 +1665,11 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
     width:var(--gutter-width);background:var(--bg);color:var(--muted);
     text-align:right;font:13px ui-monospace,SFMono-Regular,Menlo,monospace}
   #sourceNumbers span{position:absolute;right:6px;transform:translateY(-50%)}
+  #sourceNumbers .heading-level{right:auto;left:4px;width:1.4em;border-radius:50%;text-align:center;
+    background:var(--active);color:var(--fg)}
   #body.numbered #editor{padding-left:calc(var(--gutter-width) + 24px)}
+  #body.heading-gutter #editor{padding-left:calc(var(--gutter-width) + 12px)}
+  #saveCloudBtn.sync-highlight{background:var(--active);box-shadow:inset 0 0 0 2px var(--accent)}
   @media print{
     :root[data-theme]{--bg:#fff;--fg:#111;--muted:#444;--border:#bbb;
       --sidebar:#fff;--code-bg:#f5f5f5;--accent:#174f89}
@@ -1811,14 +1815,15 @@ begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt
     <div id="richToolbar" aria-label="Herramientas de edición">
       <button id="undoBtn" class="btn small" data-history="undo" title="Deshacer" aria-label="Deshacer" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 14-5-5 5-5M4 9h10a5 5 0 0 1 0 10h-3"/></svg></button>
       <button id="redoBtn" class="btn small" data-history="redo" title="Rehacer" aria-label="Rehacer" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 14 5-5-5-5m5 5H10a5 5 0 0 0 0 10h3"/></svg></button>
-      <select id="blockFmt" title="Estilo de bloque" aria-label="Estilo de bloque">
-        <option value="p">Párrafo</option>
-        <option value="h1">Título 1</option>
-        <option value="h2">Título 2</option>
-        <option value="h3">Título 3</option>
-        <option value="blockquote">Cita</option>
-        <option value="pre">Texto preformateado</option>
-      </select>
+      <button type="button" class="btn small" data-block-format="p" title="Párrafo" aria-label="Párrafo">P</button>
+      <button type="button" class="btn small" data-block-format="h1" title="Título 1" aria-label="Título 1">T1</button>
+      <button type="button" class="btn small" data-block-format="h2" title="Título 2" aria-label="Título 2">T2</button>
+      <button type="button" class="btn small" data-block-format="h3" title="Título 3" aria-label="Título 3">T3</button>
+      <button type="button" class="btn small" data-block-format="h4" title="Título 4" aria-label="Título 4">T4</button>
+      <button type="button" class="btn small" data-block-format="h5" title="Título 5" aria-label="Título 5">T5</button>
+      <button type="button" class="btn small" data-block-format="h6" title="Título 6" aria-label="Título 6">T6</button>
+      <button type="button" class="btn small" data-block-format="blockquote" title="Cita" aria-label="Cita"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M9.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0c0 3.8-1.5 7-4 10m14-10a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0c0 3.8-1.5 7-4 10"/></svg></button>
+      <button type="button" class="btn small" data-block-format="pre" title="Texto preformateado" aria-label="Texto preformateado">C</button>
       <select id="insertCodeBlock" class="hidden" aria-label="Insertar bloque de código"></select>
       <button class="btn small" data-rich-cmd="bold" title="Negrita" aria-label="Negrita"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/><path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/></svg></button>
       <button class="btn small" data-rich-cmd="italic" title="Cursiva" aria-label="Cursiva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg></button>
@@ -1880,6 +1885,12 @@ saludar("Ana");</code></pre>
         <input id="defaultLineNumbers" type="checkbox"> Mostrar números de línea de forma predeterminada
       </label>
       <label class="draft-option"><input id="autoSaveDrafts" type="checkbox"> Autoguardar documentos temporarios</label>
+      <label for="cloudSyncInterval">Sincronización automática de archivos compartidos</label>
+      <select id="cloudSyncInterval">
+        <option value="1">Muy activa (1 min)</option>
+        <option value="5">Activa (5 min)</option>
+        <option value="15">Poco activa (15 min)</option>
+      </select>
       <div class="btn-row">
         <button class="btn primary" title="Cerrar" aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></button>
       </div>
@@ -1955,11 +1966,13 @@ saludar("Ana");</code></pre>
       <p id="cloudDescription"></p>
       <label for="cloudURL" id="cloudURLLabel">Código de nube</label>
       <input id="cloudURL" type="text" autocomplete="off" spellcheck="false">
+      <button type="button" class="btn" id="cloudPaste" hidden>Pegar enlace</button>
       <label for="cloudResolution" id="cloudResolutionLabel" hidden>El contenido en la nube cambió. ¿Qué quieres hacer?</label>
       <select id="cloudResolution" hidden>
         <option value="">Elige una opción</option>
         <option value="replace">Reemplazar el archivo en la nube</option>
         <option value="new">Crear un archivo con un enlace nuevo</option>
+        <option value="pull">Reemplazar el archivo local con el de la nube</option>
       </select>
       <label for="cloudName" id="cloudNameLabel">Nombre del archivo</label>
       <input id="cloudName" type="text" autocomplete="off" maxlength="255">
@@ -1976,6 +1989,7 @@ saludar("Ana");</code></pre>
       <div class="btn-row">
         <button id="cloudClose" type="button" class="btn">Cerrar</button>
         <button id="cloudUnshare" type="button" class="btn" hidden>Dejar de compartir</button>
+        <button id="cloudPull" type="submit" formnovalidate class="btn" hidden>Reemplazar con el archivo de la nube</button>
         <button id="cloudSubmit" type="submit" class="btn primary">Guardar en la nube</button>
       </div>
     </form>
@@ -2331,7 +2345,7 @@ saludar("Ana");</code></pre>
   const $sourceNumbers = document.getElementById('sourceNumbers');
   const $lineNumbersBtn = document.getElementById('lineNumbersBtn');
   const $defaultLineNumbers = document.getElementById('defaultLineNumbers');
-  let numberedText;
+  let numberedText, headingGutterText, headingGutterLevels;
   let lineStarts = [];
   const $returnMarker = document.getElementById('returnMarker');
   let markerFrame = 0;
@@ -2381,7 +2395,7 @@ saludar("Ana");</code></pre>
   for (const { id, name } of languages.sort((a, b) => a.name.localeCompare(b.name, 'es'))){
     if (id !== 'plaintext') $viewAs.add(new Option(name, id));
   }
-  const $blockFmt = document.getElementById('blockFmt');
+  const blockFormatButtons = $richToolbar.querySelectorAll('[data-block-format]');
   const $insertCodeBlock = document.getElementById('insertCodeBlock');
   const codeBlocks = new Map();
   function defineCodeBlocks(ids, blocks){
@@ -2446,13 +2460,15 @@ saludar("Ana");</code></pre>
   const $cloudClose = document.getElementById('cloudClose');
   const $cloudSubmit = document.getElementById('cloudSubmit');
   const $cloudUnshare = document.getElementById('cloudUnshare');
+  const $cloudPull = document.getElementById('cloudPull');
+  const $cloudPaste = document.getElementById('cloudPaste');
   const legacyCloudPrefix = 'editor-cloud-v1\n';
   const cloudIdPattern = /^(?:(?:torbellino-)?editor-)?[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/;
   const cloudExpiryFormat = new Intl.DateTimeFormat('es-AR', { dateStyle: 'short', timeStyle: 'short' });
   const $cloudName = document.getElementById('cloudName');
   const $cloudTemporary = document.getElementById('cloudTemporary');
   const $cloudResolution = document.getElementById('cloudResolution');
-  let cloudAction, cloudFile, cloudConflictVersion, cloudBusy = false;
+  let cloudAction, cloudFile, cloudConflictVersion, cloudBusy = false, autoCloudBusy = false;
   let cloudExpirySuggestion = '24';
   try {
     const stored = localStorage.getItem('mdv.cloudExpiry');
@@ -2530,7 +2546,7 @@ saludar("Ana");</code></pre>
     const saving = action === 'save';
     const update = saving && activeCloudLink(f);
     $cloudTitle.textContent = link ? 'Código de nube' : opening ? 'Abrir desde la nube'
-      : stopping ? 'Dejar de compartir' : update ? 'Actualizar en la nube' : 'Guardar en la nube';
+      : stopping ? 'Dejar de compartir' : update ? 'Sincronizar archivo compartido' : 'Guardar en la nube';
     if (link){
       const expiry = f.cloud.expiresAt === null ? 'Sin caducidad.'
         : activeCloudLink(f) ? 'Vence el ' + cloudExpiryFormat.format(f.cloud.expiresAt) + '.' : 'Este enlace venció.';
@@ -2539,6 +2555,7 @@ saludar("Ana");</code></pre>
       $cloudDescription.textContent = stopping
         ? 'Elige dónde guardar el archivo cifrado. El enlace se eliminará después de guardar en disco.'
         : opening ? 'Pega el código de nube que generó Editor.'
+          : update ? 'Sincroniza el contenido local con el que está guardado en la nube.'
           : 'Editor usa el mismo alias y cifrado que al guardar un archivo local.';
     }
     $cloudForm.reset();
@@ -2549,6 +2566,8 @@ saludar("Ana");</code></pre>
     $cloudURL.readOnly = link;
     $cloudURL.required = opening;
     $cloudURL.hidden = document.getElementById('cloudURLLabel').hidden = !link && !opening;
+    $cloudPaste.hidden = !opening;
+    $cloudPull.hidden = !update;
     document.getElementById('cloudExpiryLabel').hidden = !saving;
     $cloudExpiry.checked = saving && (update ? update.expiresAt !== null : cloudExpirySuggestion !== 'none');
     $cloudDuration.value = update && update.expiresAt !== null ? 'keep' : suggestedCloudDuration();
@@ -2556,7 +2575,7 @@ saludar("Ana");</code></pre>
     syncCloudExpiryFields();
     $cloudUnshare.hidden = !link;
     $cloudSubmit.textContent = link ? 'Copiar código' : opening ? 'Abrir'
-      : stopping ? 'Guardar en disco y dejar de compartir' : update ? 'Actualizar' : 'Guardar en la nube';
+      : stopping ? 'Guardar en disco y dejar de compartir' : update ? 'Sincronizar' : 'Guardar en la nube';
     $cloudStatus.textContent = '';
     if (link) $cloudURL.value = f.cloud.id.replace(/^torbellino-editor-/, 'editor-anterior-');
     if (!$cloudDialog.open) $cloudDialog.showModal();
@@ -2595,7 +2614,7 @@ saludar("Ana");</code></pre>
     return !note.encryptedName && note.content.startsWith(legacyCloudPrefix);
   }
 
-  async function unlockCloudNote(note){
+  async function unlockCloudNote(note, interactive = true){
     if (!validCloudLink(note) || typeof note.content !== 'string' || note.content.length > 500000){
       throw new Error('El enlace no contiene un archivo cifrado de Editor.');
     }
@@ -2615,12 +2634,12 @@ saludar("Ana");</code></pre>
       return { name, text, credentials };
     };
     const cached = alias && sessionCryptoKeys[alias];
-    let credentials = await requestCryptoKey(options);
+    let credentials = interactive ? await requestCryptoKey(options) : cached ? { alias, key: cached } : null;
     if (!credentials) return null;
     let data;
     try { data = await decrypt(credentials); }
     catch(e){
-      if (!cached) throw e;
+      if (!interactive || !cached) throw e;
       credentials = await requestCryptoKey({ ...options, forcePrompt: true });
       if (!credentials) return null;
       data = await decrypt(credentials);
@@ -2664,71 +2683,128 @@ saludar("Ana");</code></pre>
     $cloudResolution.focus();
   }
 
-  async function saveToCloud(f, expiry){
-    if (!files.includes(f)) throw new Error('El archivo se cerró.');
-    const link = activeCloudLink(f);
-    const { text } = f;
-    if (new TextEncoder().encode(text).length > 374900){
-      throw new Error('El archivo supera el tamaño permitido para una nota cifrada.');
-    }
-    const resolution = $cloudResolution.value;
-    const createCopy = resolution === 'new';
-    const requestedName = $cloudTemporary.checked ? temporaryCloudName(expiry, f.name) : $cloudName.value.trim();
-    let current, credentials, name;
-    if (link){
-      current = await NoLoginAPI.read(link.id);
-      if (cloudConflictVersion && (current.version !== cloudConflictVersion || !resolution)){
-        showCloudConflict(current.version);
-        return false;
-      }
-      const remote = await unlockCloudNote(current);
-      if (!remote) return false;
-      credentials = remote.credentials;
-      name = remote.name;
-      if (!cloudConflictVersion && current.version !== link.version){
-        const original = f.cloudOriginal ||
-          await cloudOriginalRequest('readonly', store => store.get(cloudOriginalKey(link)));
-        const baseline = original && await unlockCloudNote(original);
-        if (original && !baseline) return false;
-        if (!baseline || remote.text !== baseline.text){
-          showCloudConflict(current.version);
-          return false;
-        }
-      }
-      if (createCopy) current = null;
-    } else {
-      credentials = await requestCryptoKey({ alias: f.encryptionAlias, chooseAlias: !f.encryptionAlias,
-        descText: 'Elige el alias y la frase clave para guardar el archivo cifrado.' });
-    }
-    if (!credentials) return false;
-    if (!current){
-      name = requestedName;
-      if (!name) throw new Error('Introduce un nombre o marca Temporal.');
-    }
-    const { alias, key } = credentials;
-    const encrypted = wrapCryptoEnvelope(alias, await encriptar(text, key));
-    const encryptedName = await encriptar(name, key);
-    const hours = expiry === 'none' ? null : expiry === 'keep' ? 24 : Number(expiry);
-    const expiresAt = expiry === 'keep' ? undefined : hours === null ? null : Date.now() + hours * 3600000;
-    $cloudStatus.textContent = 'Guardando archivo cifrado…';
-    const note = current
-      ? await NoLoginAPI.update(current.id, encrypted, current.version, { expiresAt, encryptedName })
-      : await NoLoginAPI.create(crypto.randomUUID(), encrypted, hours, encryptedName);
-    if (note.content !== encrypted) throw new Error('El servicio devolvió contenido distinto del que se envió.');
+  async function rememberCloudVersion(f, note, alias, text){
     f.cloud = cloudMetadata(note, alias);
     f.cloudOriginal = note;
+    f.cloudSyncedText = text;
     try { await storeCloudOriginal(note); }
     catch(e){ console.warn('No se pudo guardar la versión de nube en el almacenamiento local.', e); }
-    if (expiry !== 'keep'){
-      cloudExpirySuggestion = expiry;
-      try { localStorage.setItem('mdv.cloudExpiry', expiry); } catch {}
-    }
     if (f.cloudOnly){
       f.savedText = text;
       f.dirty = f.text !== text;
     }
     renderSidebar();
     updateToolbar();
+  }
+
+  async function replaceFromCloud(f, note, remote, previousText, explicit){
+    if (!files.includes(f) || f.saving || f.closing) return false;
+    if (f.text !== previousText) throw new Error('El archivo local cambió durante la sincronización. Vuelve a intentarlo.');
+    if (explicit && !await ask(`¿Reemplazar «${f.name}» con el contenido de la nube?`)) return false;
+    const { text, credentials: { alias } } = remote;
+    f.saving = true;
+    try {
+      if (f.handle?.createWritable && (explicit || text !== previousText || f.dirty)){
+        const currentFile = await f.handle.getFile();
+        const local = await decryptCryptoFile(await currentFile.text(), currentFile.name, f.encrypted);
+        if (!local) return false;
+        if (local.text !== f.savedText && local.text !== text && !explicit &&
+            !await ask(`«${f.name}» cambió en disco. ¿Reemplazarlo con el contenido de la nube?`)) return false;
+        await ensureWritePermission(f.handle);
+        const stored = await prepareLocalText(f, text);
+        if (stored === null) return false;
+        if (f.text !== previousText) throw new Error('El archivo local cambió durante la sincronización. Vuelve a intentarlo.');
+        await writeLocalFile(f.handle, stored);
+        f.savedText = text;
+      }
+      // Keep edits made while the disk write was in progress.
+      if (f.text === previousText && f.text !== text){
+        movePinnedOffsets(f, text);
+        f.text = text;
+        f.size = new Blob([text]).size;
+        f.lastModified = Date.now();
+        f.undo.length = f.redo.length = 0;
+        f.lastTyping = 0;
+        if (cur() === f) setMode(mode, { focus: false, capture: false });
+      }
+      f.dirty = f.text !== f.savedText;
+      if (f.draftId && (explicit || $autoSaveDrafts.checked)) persistDraft(f);
+      await rememberCloudVersion(f, note, alias, text);
+      return 'updated';
+    } finally {
+      f.saving = false;
+      updateToolbar();
+    }
+  }
+
+  async function saveToCloud(f, expiry, { automatic = false, pull = false } = {}){
+    if (!files.includes(f)) throw new Error('El archivo se cerró.');
+    if (f.saving || f.closing) throw new Error('Espera a que termine la operación local.');
+    const link = activeCloudLink(f);
+    const { text } = f;
+    const resolution = automatic ? '' : pull ? 'pull' : $cloudResolution.value;
+    const createCopy = resolution === 'new';
+    let current, credentials, name;
+    if (link){
+      current = await NoLoginAPI.read(link.id);
+      if (!automatic && !pull && cloudConflictVersion && current.version !== cloudConflictVersion){
+        showCloudConflict(current.version);
+        return false;
+      }
+      const remote = await unlockCloudNote(current, !automatic);
+      if (!remote) return false;
+      credentials = remote.credentials;
+      name = remote.name;
+      if (resolution === 'pull') return replaceFromCloud(f, current, remote, text, true);
+      let baseline = f.cloudSyncedText;
+      if (baseline === undefined && current.version === link.version) baseline = remote.text;
+      if (baseline === undefined && !resolution){
+        const original = f.cloudOriginal ||
+          await cloudOriginalRequest('readonly', store => store.get(cloudOriginalKey(link)));
+        baseline = (original && await unlockCloudNote(original, !automatic))?.text;
+      }
+      if (!resolution){
+        if (remote.text !== text && remote.text !== baseline){
+          if (automatic) return false;
+          if (text === baseline) return replaceFromCloud(f, current, remote, text, false);
+          showCloudConflict(current.version);
+          return false;
+        }
+        if (remote.text === text && expiry === 'keep'){
+          await rememberCloudVersion(f, current, credentials.alias, text);
+          return 'updated';
+        }
+      }
+      if (createCopy) current = null;
+    } else {
+      if (automatic || resolution === 'pull') return false;
+      credentials = await requestCryptoKey({ alias: f.encryptionAlias, chooseAlias: !f.encryptionAlias,
+        descText: 'Elige el alias y la frase clave para guardar el archivo cifrado.' });
+    }
+    if (!credentials) return false;
+    if (!files.includes(f) || f.closing) return false;
+    if (!current){
+      name = $cloudTemporary.checked ? temporaryCloudName(expiry, f.name) : $cloudName.value.trim();
+      if (!name) throw new Error('Introduce un nombre o marca Temporal.');
+    }
+    if (new TextEncoder().encode(text).length > 374900){
+      throw new Error('El archivo supera el tamaño permitido para una nota cifrada.');
+    }
+    const { alias, key } = credentials;
+    const encrypted = wrapCryptoEnvelope(alias, await encriptar(text, key));
+    const encryptedName = await encriptar(name, key);
+    const hours = expiry === 'none' ? null : expiry === 'keep' ? 24 : Number(expiry);
+    const expiresAt = expiry === 'keep' ? undefined : hours === null ? null : Date.now() + hours * 3600000;
+    if (!automatic) $cloudStatus.textContent = 'Guardando archivo cifrado…';
+    const note = current
+      ? await NoLoginAPI.update(current.id, encrypted, current.version, { expiresAt, encryptedName })
+      : await NoLoginAPI.create(crypto.randomUUID(), encrypted, hours, encryptedName);
+    if (note.content !== encrypted) throw new Error('El servicio devolvió contenido distinto del que se envió.');
+    await rememberCloudVersion(f, note, alias, text);
+    if (expiry !== 'keep'){
+      cloudExpirySuggestion = expiry;
+      try { localStorage.setItem('mdv.cloudExpiry', expiry); } catch {}
+    }
     return current ? 'updated' : 'created';
   }
 
@@ -2743,6 +2819,7 @@ saludar("Ana");</code></pre>
     const f = existing || addFile({ name, text, encrypted: true, encryptionAlias: alias,
       cloud: cloudMetadata(note, alias), cloudOnly: true });
     f.cloudOriginal = note;
+    f.cloudSyncedText = text;
     activate(f.id);
     if (mode === 'view') setMode('split');
     return true;
@@ -2779,7 +2856,10 @@ saludar("Ana");</code></pre>
       throw new Error('El archivo se guardó en disco. No se pudo eliminar el enlace de la nube.');
     }
     for (const file of files){
-      if (file.cloud?.id === id) file.cloud = null;
+      if (file.cloud?.id === id){
+        file.cloud = file.cloudOriginal = null;
+        delete file.cloudSyncedText;
+      }
     }
     activate(f.id);
     return true;
@@ -2789,6 +2869,18 @@ saludar("Ana");</code></pre>
   $openCloudBtn.addEventListener('click', () => showCloudDialog('open'));
   $cloudClose.addEventListener('click', () => $cloudDialog.close());
   $cloudUnshare.addEventListener('click', () => showCloudDialog('stop', cloudFile));
+  $cloudPaste.addEventListener('click', async () => {
+    try {
+      const text = await (desktop ? window.runtime.ClipboardGetText() : navigator.clipboard.readText());
+      if (cloudAction !== 'open' || !$cloudDialog.open) return;
+      $cloudURL.value = text.trim();
+      $cloudStatus.textContent = '';
+    } catch {
+      if (cloudAction !== 'open' || !$cloudDialog.open) return;
+      $cloudStatus.textContent = 'El navegador no permitió leer el portapapeles. Usa Ctrl+V o ⌘V en el campo del enlace.';
+    }
+    $cloudURL.focus();
+  });
   $cloudDialog.addEventListener('cancel', e => { if (cloudBusy) e.preventDefault(); });
   $cloudDialog.addEventListener('close', () => {
     if (!$cloudDialog.open){
@@ -2800,8 +2892,12 @@ saludar("Ana");</code></pre>
     e.preventDefault();
     if (cloudBusy) return;
     if (cloudAction === 'link'){ await copyCloudLink(); return; }
+    if (autoCloudBusy){
+      $cloudStatus.textContent = 'Hay una sincronización automática en curso. Vuelve a intentarlo en unos segundos.';
+      return;
+    }
     cloudBusy = true;
-    $cloudSubmit.disabled = $cloudClose.disabled = true;
+    $cloudSubmit.disabled = $cloudClose.disabled = $cloudPull.disabled = true;
     const file = cloudFile;
     const action = cloudAction;
     let done = false;
@@ -2812,7 +2908,7 @@ saludar("Ana");</code></pre>
       } else if (action === 'stop'){
         done = await stopSharing(file);
       } else {
-        done = await saveToCloud(file, selectedCloudExpiry());
+        done = await saveToCloud(file, selectedCloudExpiry(), { pull: e.submitter === $cloudPull });
       }
       $cloudStatus.textContent = '';
     } catch(e){
@@ -2828,7 +2924,7 @@ saludar("Ana");</code></pre>
       }
     } finally {
       cloudBusy = false;
-      $cloudSubmit.disabled = $cloudClose.disabled = false;
+      $cloudSubmit.disabled = $cloudClose.disabled = $cloudPull.disabled = false;
       if (action === 'stop'){
         updateToolbar();
         renderSidebar();
@@ -2837,6 +2933,23 @@ saludar("Ana");</code></pre>
     if (done === 'created') showCloudDialog('link', file);
     else if (done) $cloudDialog.close();
   });
+
+  async function syncEditedCloudFiles(){
+    if (!navigator.onLine || cloudBusy || autoCloudBusy || $cloudDialog.open || $cryptoKeyDialog.open) return;
+    autoCloudBusy = true;
+    try {
+      for (const f of files.slice()){
+        if (!navigator.onLine || $cloudDialog.open || $cryptoKeyDialog.open) break;
+        const link = activeCloudLink(f);
+        if (!files.includes(f) || f.saving || f.closing || !link || !sessionCryptoKeys[link.alias] ||
+            f.text === f.cloudSyncedText) continue;
+        try { await saveToCloud(f, 'keep', { automatic: true }); }
+        catch(e){ console.warn('No se pudo sincronizar automáticamente el archivo compartido.', e); }
+      }
+    } finally {
+      autoCloudBusy = false;
+    }
+  }
   const $clearBtn = document.getElementById('clearBtn');
   const $encryptBtn = document.getElementById('encryptBtn');
 
@@ -3446,8 +3559,10 @@ saludar("Ana");</code></pre>
       return;
     }
     $toolbar.classList.remove('hidden');
-    $saveCloudBtn.title = activeCloudLink(f) ? 'Actualizar en la nube' : 'Guardar en la nube';
+    const shared = activeCloudLink(f);
+    $saveCloudBtn.title = shared ? 'Sincronizar archivo compartido' : 'Guardar en la nube';
     $saveCloudBtn.setAttribute('aria-label', $saveCloudBtn.title);
+    $saveCloudBtn.classList.toggle('sync-highlight', !!shared && f.cloudHighlightUntil > Date.now());
     $curSize.textContent = fmtBytes(f.size);
     $viewAs.value = f.viewAs;
     $viewAs.title = `Ver como… · ${$viewAs.selectedOptions[0].text}`;
@@ -3700,9 +3815,11 @@ saludar("Ana");</code></pre>
   function updateLineNumbers(){
     const show = panes.lineNumbers ?? (panes.defaultLineNumbers === true);
     const source = !!cur() && navigationSurface() === $editor;
+    const headings = source && !cur().viewAs;
     $lineNumbersBtn.setAttribute('aria-pressed', String(show));
     $body.classList.toggle('numbered', source && show);
-    $sourceNumbers.hidden = !source || !show;
+    $body.classList.toggle('heading-gutter', headings);
+    $sourceNumbers.hidden = !source || (!show && !headings);
     scheduleLineMarkers();
   }
 
@@ -3714,7 +3831,13 @@ saludar("Ana");</code></pre>
       lineStarts = [0];
       for (let i = value.indexOf('\n'); i !== -1; i = value.indexOf('\n', i + 1)) lineStarts.push(i + 1);
     }
-    $body.style.setProperty('--gutter-width', Math.max(3, String(lineStarts.length).length + 2) + 'ch');
+    const showNumbers = $body.classList.contains('numbered');
+    const showHeadings = $body.classList.contains('heading-gutter');
+    if (showHeadings && headingGutterText !== value){
+      headingGutterText = value;
+      headingGutterLevels = new Map(outlineEntries({ text: value }).map(entry => [entry.offset, entry.level]));
+    }
+    $body.style.setProperty('--gutter-width', (showNumbers ? String(lineStarts.length).length + (showHeadings ? 4 : 2) : 3) + 'ch');
     const bounds = $editor.getBoundingClientRect();
     const body = $body.getBoundingClientRect();
     const height = $editor.clientHeight;
@@ -3734,10 +3857,20 @@ saludar("Ana");</code></pre>
       for (let i = low; i < lineStarts.length; i++){
         const y = top(lineStarts[i]) + center - scroll;
         if (y - center >= height) break;
-        const number = document.createElement('span');
-        number.style.top = y + 'px';
-        number.textContent = i + 1;
-        numbers.append(number);
+        const level = showHeadings && headingGutterLevels.get(lineStarts[i]);
+        if (level){
+          const badge = document.createElement('span');
+          badge.className = 'heading-level';
+          badge.style.top = y + 'px';
+          badge.textContent = level;
+          numbers.append(badge);
+        }
+        if (showNumbers){
+          const number = document.createElement('span');
+          number.style.top = y + 'px';
+          number.textContent = i + 1;
+          numbers.append(number);
+        }
       }
       $sourceNumbers.replaceChildren(numbers);
     });
@@ -4324,7 +4457,7 @@ saludar("Ana");</code></pre>
       setScrollProgress(navigationSurface() === $editor ? $editor : $body, progress);
     }
     if (f) restoreCaret(f, m !== previousMode);
-    if (m === 'wysiwyg' && !codeVisual) updateBlockFormat();
+    updateBlockFormat();
     refreshFind();
     updateLineNumbers();
     scheduleActiveOutline();
@@ -4783,6 +4916,7 @@ saludar("Ana");</code></pre>
   });
 
   window.addEventListener('paste', async e => {
+    if (e.target instanceof Element && e.target.closest('input, textarea, [contenteditable="true"]')) return;
     if ($cloudDialog.open || $syntaxThemeDialog.open || $codeBlockDialog.open || $linkDialog.open || document.activeElement === $editor ||
         $findBar.contains(document.activeElement) || $wysiwyg.contains(document.activeElement)) return;
     const cd = e.clipboardData;
@@ -4963,20 +5097,49 @@ saludar("Ana");</code></pre>
     saveRichSelection();
     refreshFind();
   }
-  function updateBlockFormat(){
-    if (!$blockFmt || mode !== 'wysiwyg') return;
+  function activeVisualBlockFormat(){
     const sel = window.getSelection();
-    if (!sel || !sel.rangeCount || !selectionInWysiwyg()) return;
-    let el = wysiwygNode(sel.anchorNode);
+    if (!sel?.rangeCount || !selectionInWysiwyg()) return '';
+    let el = wysiwygNode(sel.focusNode);
+    if (el === $wysiwyg){
+      const children = Array.from(el.childNodes);
+      const offset = sel.focusNode === el ? sel.focusOffset : children.indexOf(sel.focusNode) + 1;
+      el = children.slice(offset).find(node => node.nodeType === Node.ELEMENT_NODE)
+        || children.slice(0, offset).findLast(node => node.nodeType === Node.ELEMENT_NODE);
+    }
     while (el && el !== $wysiwyg){
       const tag = el.tagName.toLowerCase();
-      if (/^(h1|h2|h3|blockquote|pre|p|li|div)$/.test(tag)){
-        $blockFmt.value = tag === 'li' || tag === 'div' ? 'p' : tag;
-        return;
-      }
+      if (/^(h[1-6]|blockquote|pre)$/.test(tag)) return tag;
       el = el.parentElement;
     }
-    $blockFmt.value = 'p';
+    return 'p';
+  }
+
+  let blockFormatSourceText, sourceBlockFormats = [];
+  function activeSourceBlockFormat(){
+    const { value, selectionStart, selectionEnd, selectionDirection } = $editor;
+    if (blockFormatSourceText !== value){
+      blockFormatSourceText = value;
+      let offset = 0;
+      sourceBlockFormats = marked.lexer(value).map(token => {
+        const format = token.type === 'code' ? 'pre' : token.type === 'heading' ? 'h' + token.depth : token.type;
+        const start = offset;
+        offset += token.raw.length;
+        return { start, end: start + token.raw.trimEnd().length, format };
+      });
+    }
+    const caret = selectionDirection === 'backward' ? selectionStart : selectionEnd;
+    const format = sourceBlockFormats.find(block => caret >= block.start && caret <= block.end)?.format;
+    return /^(h[1-6]|blockquote|pre)$/.test(format) ? format : 'p';
+  }
+
+  function updateBlockFormat(){
+    const surface = navigationSurface();
+    const format = !cur() || cur().viewAs ? '' : surface === $editor ? activeSourceBlockFormat()
+      : surface === $wysiwyg ? activeVisualBlockFormat() : '';
+    for (const button of blockFormatButtons){
+      button.setAttribute('aria-pressed', String(button.dataset.blockFormat === format));
+    }
   }
   function richCommand(cmd){
     restoreRichSelection();
@@ -5113,6 +5276,29 @@ saludar("Ana");</code></pre>
     updateBlockFormat();
   }
 
+  function setSourceBlock(tag){
+    const f = cur();
+    const { value, selectionStart, selectionEnd } = $editor;
+    const start = selectionStart === 0 ? 0 : value.lastIndexOf('\n', selectionStart - 1) + 1;
+    const last = selectionEnd > start && value[selectionEnd - 1] === '\n' ? selectionEnd - 1 : selectionEnd;
+    const next = value.indexOf('\n', last);
+    const end = next === -1 ? value.length : next;
+    const prefix = tag[0] === 'h' ? '#'.repeat(Number(tag[1])) + ' ' :
+      tag === 'blockquote' ? '> ' : tag === 'pre' ? '    ' : '';
+    const text = value.slice(start, end).split('\n').map(line =>
+      prefix + line.replace(/^(?: {0,3}#{1,6}[ \t]+| {0,3}>[ \t]?| {4}|\t)/, '')).join('\n');
+    $editor.setRangeText(text, start, end, 'select');
+    $editor.focus();
+    recordEdit(f, $editor.value);
+    if (mode === 'split'){
+      renderPreview();
+      syncSplitScroll($editor);
+    }
+    refreshFind();
+    scheduleLineMarkers();
+    updateBlockFormat();
+  }
+
   $wysiwyg.addEventListener('input', e => {
     if (e.target.matches('input[type="checkbox"]')) e.target.toggleAttribute('checked', e.target.checked);
     syncFromWysiwyg(e);
@@ -5143,18 +5329,26 @@ saludar("Ana");</code></pre>
   $richToolbar.addEventListener('click', e => {
     const history = e.target.closest('[data-history]');
     if (history){ changeHistory(history.dataset.history); return; }
+    const block = e.target.closest('[data-block-format]');
+    if (block){
+      if (navigationSurface() === $editor) setSourceBlock(block.dataset.blockFormat);
+      else setRichBlock(block.dataset.blockFormat);
+      return;
+    }
     const btn = e.target.closest('[data-rich-cmd]');
     if (btn?.dataset.richCmd === 'codeBlock') openCodeBlockDialog();
     else if (btn?.dataset.richCmd === 'task') insertTask();
     else if (btn) richCommand(btn.dataset.richCmd);
   });
-  $blockFmt.addEventListener('change', () => setRichBlock($blockFmt.value));
   document.addEventListener('selectionchange', () => {
     scheduleActiveOutline();
     if (navigationSurface() === $wysiwyg){
       saveRichSelection();
       updateBlockFormat();
     }
+  });
+  $editor.addEventListener('selectionchange', () => {
+    if (navigationSurface() === $editor) updateBlockFormat();
   });
 
   async function ensureReadPermission(handle){
@@ -5243,10 +5437,34 @@ saludar("Ana");</code></pre>
     await writable.close();
   }
 
+  async function ensureWritePermission(handle){
+    if (!handle.queryPermission || !handle.requestPermission) return;
+    if (await handle.queryPermission({ mode: 'readwrite' }) === 'granted') return;
+    if (await handle.requestPermission({ mode: 'readwrite' }) !== 'granted') throw new Error('permiso denegado');
+  }
+
+  async function prepareLocalText(f, text){
+    if (!f.encrypted) return text;
+    const alias = f.encryptionAlias;
+    if (!alias) throw new Error('el archivo no tiene un alias de cifrado asignado');
+    const credentials = await requestCryptoKey({ alias,
+      descText: 'Introduce la frase clave para guardar el archivo cifrado en disco.' });
+    return credentials ? wrapCryptoEnvelope(alias, await encriptar(text, credentials.key)) : null;
+  }
+
+  function fileExtension(name){
+    return /\.([^.\\/]+)$/.exec(name)?.[1].toLowerCase() || '';
+  }
+
   async function adoptLocalFile(f, handle, text){
+    const oldName = f.name;
     f.handle = handle;
     f.cloudOnly = false;
     f.name = handle.name || f.name;
+    if (fileExtension(oldName) !== fileExtension(f.name)){
+      f.viewAs = detectViewAs(f.name, f.text);
+      if (cur() === f) setMode(mode, { focus: false, capture: false });
+    }
     f.lastModified = Date.now();
     f.updatedAt = Math.max(f.updatedAt ?? 0, f.lastModified);
     f.savedText = text;
@@ -5269,23 +5487,16 @@ saludar("Ana");</code></pre>
     try {
       const handle = original || await chooseSaveHandle(f.name);
       if (!handle) return;
-      if (original){
-        const perm = await handle.queryPermission?.({ mode: 'readwrite' });
-        if (perm !== 'granted'){
-          const req = await handle.requestPermission?.({ mode: 'readwrite' });
-          if (req !== 'granted') throw new Error('permiso denegado');
-        }
-      }
-      const { text, encrypted, encryptionAlias: alias } = f;
-      let textToWrite = text;
-      if (encrypted){
-        if (!alias) throw new Error('el archivo no tiene un alias de cifrado asignado');
-        const credentials = await requestCryptoKey({ alias, descText: `Introduce la frase clave del alias "${alias}" para guardar "${f.name}":` });
-        if (!credentials) return;
-        textToWrite = wrapCryptoEnvelope(alias, await encriptar(text, credentials.key));
-      }
+      if (original) await ensureWritePermission(handle);
+      const { text } = f;
+      const textToWrite = await prepareLocalText(f, text);
+      if (textToWrite === null) return;
       await writeLocalFile(handle, textToWrite);
       await adoptLocalFile(f, handle, text);
+      if (activeCloudLink(f)){
+        f.cloudHighlightUntil = Date.now() + 5000;
+        setTimeout(() => { if (cur() === f) updateToolbar(); }, 5000);
+      }
     } catch(e){
       if (saveAs && e.name === 'AbortError') return;
       console.error('save failed', e);
@@ -5870,6 +6081,19 @@ saludar("Ana");</code></pre>
 
   $appearanceSelect.value = ['light', 'dark'].includes(panes.appearance) ? panes.appearance : 'auto';
   $autoSaveDrafts.checked = panes.autoSaveDrafts !== false;
+  const $cloudSyncInterval = document.getElementById('cloudSyncInterval');
+  $cloudSyncInterval.value = ['1', '5', '15'].includes(panes.cloudSyncInterval) ? panes.cloudSyncInterval : '5';
+  function startCloudSyncTimer(){
+    return setInterval(syncEditedCloudFiles, Number($cloudSyncInterval.value) * 60000);
+  }
+  let cloudSyncTimer = startCloudSyncTimer();
+  $cloudSyncInterval.addEventListener('change', () => {
+    panes.cloudSyncInterval = $cloudSyncInterval.value;
+    writePanes(panes);
+    clearInterval(cloudSyncTimer);
+    cloudSyncTimer = startCloudSyncTimer();
+  });
+  window.addEventListener('online', syncEditedCloudFiles);
   $defaultLineNumbers.checked = panes.defaultLineNumbers === true;
   applyAppearance();
   systemDark.addEventListener('change', applyAppearance);

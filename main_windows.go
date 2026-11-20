@@ -22,18 +22,19 @@ const editorTitle = "Editor"
 func main() {
 	editor := &Desktop{paths: make(map[int]string), arguments: os.Args[1:]}
 	err := wails.Run(&options.App{
-		Title:     editorTitle,
-		Width:     1160,
-		Height:    780,
-		MinWidth:  360,
-		MinHeight: 320,
+		Title:                    editorTitle,
+		Width:                    1160,
+		Height:                   780,
+		MinWidth:                 360,
+		MinHeight:                320,
+		EnableDefaultContextMenu: true,
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 			Middleware: func(next http.Handler) http.Handler {
 				return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 					// The document renders untrusted Markdown, while the app itself uses inline scripts.
-				// html2canvas renders a clone in a local about:blank frame.
-				w.Header().Set("Content-Security-Policy", "script-src 'self' 'unsafe-inline'; frame-src about:; object-src 'none'; base-uri 'none'; form-action 'none'")
+					// html2canvas renders a clone in a local about:blank frame.
+					w.Header().Set("Content-Security-Policy", "script-src 'self' 'unsafe-inline'; frame-src about:; object-src 'none'; base-uri 'none'; form-action 'none'")
 					next.ServeHTTP(w, r)
 				})
 			},

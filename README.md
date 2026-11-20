@@ -154,6 +154,16 @@ de la nube, abre su código desde el icono en la lista y pulsa **Dejar de
 compartir**. El editor guarda el archivo cifrado en el destino que elijas y
 después elimina la copia de la nube.
 
+**Sincronizar archivo compartido** envía tus cambios si el archivo de la nube
+sigue igual o trae los cambios remotos si solo cambió la nube. Si hubo cambios
+en ambos lados, Editor pregunta qué versión usar. También puedes elegir
+**Reemplazar con el archivo de la nube**.
+
+Mientras Editor está abierto y tiene conexión, envía los cambios locales en
+archivos compartidos con la clave disponible. Elige un intervalo de 1, 5 o 15
+minutos en **Configuración**. Si hay un conflicto, resuélvelo desde el diálogo de
+sincronización.
+
 ## Recargar desde el disco
 
 **Recargar** vuelve a leer el archivo activo sin seleccionarlo de nuevo. Esta
